@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "budo example/index.js --live --pushstate --host=localhost --port=8888 --base=/",
-    "test": "tape index.spec.js | tap-spec",
+    "test": "browserify ./src/index.spec.js | testling -u",
     "bundle": "babel src --out-dir dist",
     "browserify": "browserify src/index.js -o dist/bundle.js"
   },
@@ -17,8 +17,11 @@
     "babel-preset-stage-0": "^6.22.0",
     "browserify": "^14.1.0",
     "budo": "^9.4.7",
+    "jsdom": "^9.11.0",
+    "jsdom-global": "^2.1.1",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.3"
+    "tape": "^4.6.3",
+    "testling": "^1.7.1"
   },
   "dependencies": {
     "sheet-router": "^4.2.3",
