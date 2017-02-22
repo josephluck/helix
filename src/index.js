@@ -5,24 +5,21 @@ const walk = require('sheet-router/walk')
 const href = require('sheet-router/href')
 
 function createModel (model) {
-  let newChildModels = Object.assign({}, model.models, {
-    location: {
-      state: window.location,
-      reducers: {
-        set (state, location) {
-          window.history.pushState('', '', location)
-          return Object.assign({}, state, {
-            location: window.location
-          })
+  return Object.assign({}, model, {
+    models: Object.assign({}, model.models, {
+      location: {
+        state: window.location,
+        reducers: {
+          set (state, location) {
+            window.history.pushState('', '', location)
+            return Object.assign({}, state, {
+              location: window.location
+            })
+          }
         }
       }
-    }
+    })
   })
-
-  let newModel = Object.assign({}, model, {
-    models: newChildModels
-  })
-  return newModel
 }
 
 module.exports = function (opts) {
