@@ -1,74 +1,71 @@
 'use strict';
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var tansu = require('tansu');
+var html = require('./html');
+var sheetRouter = require('sheet-router');
+var walk = require('sheet-router/walk');
+var href = require('sheet-router/href');
 
-function noop() {
-  return null;
-}
-
-function merge(model, prop) {
-  if (model.models) {
-    var child = Object.keys(model.models).map(function (key) {
-      return _defineProperty({}, key, merge(model.models[key], prop));
-    }).reduce(function (curr, prev) {
-      return Object.assign({}, curr, prev);
-    }, {});
-
-    return Object.assign({}, model[prop], child);
-  }
-  return model[prop];
-}
-
-function createState(model) {
-  return merge(model, 'state');
-}
-
-module.exports = function () {
-  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : noop;
-
-  var onStateChange = typeof opts === 'function' ? opts : opts.onStateChange || noop;
-  var onMethodCall = typeof opts === 'function' ? noop : opts.onMethodCall || noop;
-
-  return function (model) {
-    var state = createState(model);
-    var methods = createMethods(model, state);
-
-    function decorateMethods(reducers, effects) {
-      var decoratedReducers = Object.keys(reducers || {}).map(function (key) {
-        return _defineProperty({}, key, function () {
-          newState = reducers[key].apply(reducers, [state].concat(Array.prototype.slice.call(arguments)));
-          onStateChange(newState, state);
-          onMethodCall.apply(undefined, [newState, state].concat(Array.prototype.slice.call(arguments)));
-          state = newState;
-          return newState;
-        });
-      });
-      var decoratedEffects = Object.keys(effects || {}).map(function (key) {
-        return _defineProperty({}, key, function () {
-          onMethodCall.apply(undefined, [state].concat(Array.prototype.slice.call(arguments)));
-          return effects[key].apply(effects, [state, methods].concat(Array.prototype.slice.call(arguments)));
-        });
-      });
-      return decoratedReducers.concat(decoratedEffects).reduce(function (curr, prev) {
-        return Object.assign({}, curr, prev);
-      }, {});
-    }
-
-    function createMethods(model) {
-      if (model.models) {
-        var child = Object.keys(model.models).map(function (key) {
-          return _defineProperty({}, key, createMethods(model.models[key]));
-        }).reduce(function (curr, prev) {
-          return Object.assign({}, curr, prev);
-        }, {});
-        return Object.assign({}, decorateMethods(model.reducers, model.effects), child);
+function createModel(model) {
+  return Object.assign({}, model, {
+    models: Object.assign({}, model.models, {
+      location: {
+        state: window.location,
+        reducers: {
+          set: function set(state, location) {
+            window.history.pushState('', '', location);
+            return Object.assign({}, state, {
+              location: window.location
+            });
+          }
+        }
       }
-      return decorateMethods(model.reducers, model.effects);
+    })
+  });
+}
+
+module.exports = function (opts) {
+  if (opts.model.models) {
+    opts.model.models = {};
+  }
+  var model = createModel(opts.model);
+  var routes = opts.routes;
+  var router = sheetRouter({ thunk: 'match' }, routes);
+
+  var dom = void 0;
+
+  return function () {
+    var state = void 0;
+    var prev = void 0;
+
+    function subscribe(_state, _prev) {
+      state = _state;
+      prev = _prev;
+      router(window.location.href);
     }
 
-    return {
-      state: state,
-      methods: methods
-    };
+    var store = tansu(subscribe)(model);
+
+    state = store.state;
+    prev = store.state;
+
+    walk(router, function (route, handler) {
+      return function (params) {
+        return function () {
+          var newDom = handler(state, prev, store.methods);
+          if (dom) {
+            dom = html.update(dom, newDom);
+          }
+          return newDom;
+        };
+      };
+    });
+
+    href(function (href) {
+      store.methods.location.set(href.pathname);
+    });
+
+    dom = router(window.location.href);
+    return dom;
   };
 };

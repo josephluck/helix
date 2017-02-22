@@ -23,7 +23,7 @@ function createModel (model) {
 }
 
 module.exports = function (opts) {
-  if (opts.model.models) {
+  if (!opts.model.models) {
     opts.model.models = {}
   }
   const model = createModel(opts.model)
