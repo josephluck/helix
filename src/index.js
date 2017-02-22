@@ -4,9 +4,32 @@ const sheetRouter = require('sheet-router')
 const walk = require('sheet-router/walk')
 const href = require('sheet-router/href')
 
-module.exports = function (opts) {
-  const model = opts.model
+function createModel (model) {
+  let newChildModels = Object.assign({}, model.models, {
+    location: {
+      state: window.location,
+      reducers: {
+        set (state, location) {
+          window.history.pushState('', '', location)
+          return Object.assign({}, state, {
+            location: window.location
+          })
+        }
+      }
+    }
+  })
 
+  let newModel = Object.assign({}, model, {
+    models: newChildModels
+  })
+  return newModel
+}
+
+module.exports = function (opts) {
+  if (opts.model.models) {
+    opts.model.models = {}
+  }
+  const model = createModel(opts.model)
   const routes = opts.routes
   const router = sheetRouter({ thunk: 'match' }, routes)
 
@@ -16,11 +39,13 @@ module.exports = function (opts) {
     let state
     let prev
 
-    const store = tansu(function (_state, _prev) {
+    function subscribe (_state, _prev) {
       state = _state
       prev = _prev
       router(window.location.href)
-    })(model)
+    }
+
+    const store = tansu(subscribe)(model)
 
     state = store.state
     prev = store.state
@@ -36,9 +61,9 @@ module.exports = function (opts) {
         }
       }
     })
+
     href(function (href) {
-      window.history.pushState("", "", href.pathname)
-      router(href.pathname)
+      store.methods.location.set(href.pathname)
     })
 
     dom = router(window.location.href)

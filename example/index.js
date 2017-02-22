@@ -2,6 +2,7 @@ const sakura = require('../src')
 const html = require('../src/html')
 
 function viewOne (state, prev, methods) {
+  console.log('view one', state.location.pathname)
   return html`
     <div>
       <h1>View one ${state.title}</h1>
@@ -13,6 +14,7 @@ function viewOne (state, prev, methods) {
 }
 
 function viewTwo (state, prev, methods) {
+  console.log('view two', state.location.pathname)
   return html`
     <div>
       <h1>View two ${state.title}</h1>
@@ -24,6 +26,7 @@ function viewTwo (state, prev, methods) {
 }
 
 function viewThree (state, prev, methods) {
+  console.log('view three', state.location.pathname)
   return html`
     <div>
       <h1>View three ${state.title}</h1>
@@ -41,9 +44,9 @@ const app = sakura({
     },
     reducers: {
       updateTitle (state, title) {
-        return {
+        return Object.assign({}, state, {
           title
-        }
+        })
       }
     }
   },
