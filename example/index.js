@@ -2,9 +2,8 @@ const sakura = require('../src')
 const html = require('../src/html')
 
 function viewOne (state, prev, methods) {
-  console.log('view one', state)
   return html`
-    <div onload=${() => console.log('view one loaded')}>
+    <div onload=${() => console.log('view one loaded')} onunload=${() => console.log('view one unloaded')}>
       <h1>View one ${state.title}</h1>
       <a href="/bar">Switch to view two</a>
       <span onclick=${() => methods.location.set('/foo/bar')}>Switch to view three</span>
@@ -14,9 +13,8 @@ function viewOne (state, prev, methods) {
 }
 
 function viewTwo (state, prev, methods) {
-  console.log('view two', state)
   return html`
-    <div onload=${() => console.log('view two loaded')}>
+    <div onload=${() => console.log('view two loaded')} onunload=${() => console.log('view two unloaded')}>
       <h1>View two ${state.title}</h1>
       <a href="/foo">Switch to view one</a>
       <span onclick=${() => methods.location.set('/foo/bar')}>Switch to view three</span>
@@ -26,9 +24,8 @@ function viewTwo (state, prev, methods) {
 }
 
 function viewThree (state, prev, methods) {
-  console.log('view three', state)
   return html`
-    <div onload=${() => console.log('view three loaded')}>
+    <div onload=${() => console.log('view three loaded')} onunload=${() => console.log('view three unloaded')}>
       <h1>View three ${state.title}</h1>
       <a href="/foo">Switch to view one</a>
       <a href="/bar">Switch to view two</a>
@@ -79,7 +76,10 @@ const app = sakura({
     ['/foo', viewOne],
     ['/foo/bar', viewThree],
     ['/bar', viewTwo],
-  ]
+  ],
+  onMethodCall (state, prev) {
+    console.info('State updated', state, prev)
+  }
 })
 
 document.body.appendChild(app())

@@ -42,7 +42,10 @@ module.exports = function (opts) {
       router(window.location.href)
     }
 
-    const store = tansu(subscribe)(model)
+    const store = tansu({
+      onStateChange: subscribe,
+      onMethodCall: opts.onMethodCall || function () { return null }
+    })(model)
 
     state = store.state
     prev = store.state
