@@ -3,35 +3,33 @@ const html = require('../src/html')
 
 function viewOne (state, prev, methods) {
   return html`
-    <div onload=${() => console.log('view one loaded')} onunload=${() => console.log('view one unloaded')}>
-      <h1>View one ${state.title}</h1>
-      <a href="/bar">Switch to view two</a>
-      <span onclick=${() => methods.location.set('/foo/bar')}>Switch to view three</span>
-      <input value=${state.title} oninput=${(e) => methods.updateTitle(e.target.value)} />
+    <div>
+      <a href="/foo/bar">To bar</a>
+      <hr />
+      <hr />
+      <span><input value=${state.title} oninput=${(e) => methods.set(e.target.value)} />${state.title}</span>
+      <hr />
+      <span><button onclick=${() => methods.counter.increment()}>inc ${state.counter.count}</button></span>
+      <span><button onclick=${() => methods.counter.incrementAsync()}>inc ${state.counter.count}</button></span>
+      <hr />
+      <span><input value=${state.counter.secondTitle.title} oninput=${(e) => methods.counter.secondTitle.update(e.target.value)} />${state.counter.secondTitle.title}</span>
+      <hr />
     </div>
   `
 }
-
 function viewTwo (state, prev, methods) {
   return html`
-    <div onload=${() => console.log('view two loaded')} onunload=${() => console.log('view two unloaded')}>
-      <h1>View two ${state.title}</h1>
-      <a href="/foo">Switch to view one</a>
-      <span onclick=${() => methods.location.set('/foo/bar')}>Switch to view three</span>
-      <input value=${state.title} oninput=${(e) => methods.updateTitle(e.target.value)} />
-    </div>
-  `
-}
-
-function viewThree (state, prev, methods) {
-  return html`
-    <div onload=${() => console.log('view three loaded')} onunload=${() => console.log('view three unloaded')}>
-      <h1>View three ${state.title}</h1>
-      <a href="/foo">Switch to view one</a>
-      <a href="/bar">Switch to view two</a>
-      <input value=${state.title} oninput=${(e) => methods.updateTitle(e.target.value)} />
-      <button onclick=${() => methods.counter.increment()}>Increment ${state.counter.count}</button>
-      <button onclick=${() => methods.counter.incrementAsync()}>Increment async ${state.counter.count}</button>
+    <div>
+      <a href="/foo">To foo</a>
+      <hr />
+      <hr />
+      <span><input value=${state.title} oninput=${(e) => methods.set(e.target.value)} />${state.title}</span>
+      <hr />
+      <span><button onclick=${() => methods.counter.increment()}>inc ${state.counter.count}</button></span>
+      <span><button onclick=${() => methods.counter.incrementAsync()}>inc ${state.counter.count}</button></span>
+      <hr />
+      <span><input value=${state.counter.secondTitle.title} oninput=${(e) => methods.counter.secondTitle.update(e.target.value)} />${state.counter.secondTitle.title}</span>
+      <hr />
     </div>
   `
 }
@@ -39,43 +37,61 @@ function viewThree (state, prev, methods) {
 const app = sakura({
   model: {
     state: {
-      title: 'foo'
+      title: 'not set'
     },
     reducers: {
-      updateTitle (state, title) {
+      set (state, title) {
         return Object.assign({}, state, {
-          title
+          title: title
         })
       }
     },
     models: {
       counter: {
+        scoped: true,
         state: {
-          count: 0
+          count: 1
         },
         reducers: {
-          increment (state) {
-            return Object.assign({}, state, {
-              counter: Object.assign({}, state.counter, {
-                count: state.counter.count + 1
-              })
-            })
-          }
+          increment (state, amount) {
+            return {
+              count: state.count + (amount || 1)
+            }
+          },
         },
         effects: {
           incrementAsync (state, methods) {
             setTimeout(() => {
-              methods.counter.increment()
+              methods.increment(5)
             }, 1000)
           }
+        },
+        models: {
+          secondTitle: {
+            scoped: true,
+            state: {
+              title: 'hey'
+            },
+            reducers: {
+              update (state, title) {
+                return {
+                  title: title
+                }
+              }
+            }
+          }
+        }
+      },
+      foo: {
+        state: {
+          bar: 'baz'
         }
       }
     }
   },
   routes: [
     ['/foo', viewOne],
-    ['/foo/bar', viewThree],
-    ['/bar', viewTwo],
+    ['/foo/bar', viewTwo],
   ],
   onMethodCall (state, prev) {
     console.info('State updated', state, prev)
