@@ -25,26 +25,29 @@ function createModel(model) {
 }
 
 module.exports = function (opts) {
-  if (opts.model.models) {
+  if (!opts.model.models) {
     opts.model.models = {};
   }
   var model = createModel(opts.model);
-  var routes = opts.routes;
-  var router = sheetRouter({ thunk: 'match' }, routes);
+  var router = sheetRouter({ thunk: 'match' }, opts.routes);
 
   var dom = void 0;
+  var state = void 0;
+  var prev = void 0;
 
   return function () {
-    var state = void 0;
-    var prev = void 0;
+    var hooks = {
+      onStateChange: function onStateChange(_state, _prev) {
+        state = _state;
+        prev = _prev;
+        router(window.location.href);
+      },
 
-    function subscribe(_state, _prev) {
-      state = _state;
-      prev = _prev;
-      router(window.location.href);
-    }
-
-    var store = tansu(subscribe)(model);
+      onMethodCall: opts.onMethodCall || function () {
+        return null;
+      }
+    };
+    var store = tansu(hooks)(model);
 
     state = store.state;
     prev = store.state;
