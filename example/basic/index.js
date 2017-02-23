@@ -1,7 +1,7 @@
 const sakura = require('../../src')
 const h = require('../../src/html').h
 
-function viewOne (state, prev, methods) {
+function viewOne ({state, prev, methods}) {
   return (
     <div>
       <a href="/foo/bar">To bar</a>
@@ -10,10 +10,13 @@ function viewOne (state, prev, methods) {
     </div>
   )
 }
-function viewTwo (state, prev, methods) {
-  console.log('From the basic example', state, prev, methods)
+function viewTwo ({state, prev, methods}) {
   return (
-    <div>Helloooooo</div>
+    <div>
+      <a href="/foo">To foo</a>
+      {state.title}
+      <input value={state.title} onInput={e => methods.set(e.target.value)} />
+    </div>
   )
 }
 
@@ -78,7 +81,4 @@ const app = sakura({
   ]
 })
 
-let node = document.createElement('div')
-document.body.appendChild(node)
-app(node)
-// document.body.appendChild()
+app(document.body)
