@@ -1,5 +1,5 @@
-const sakura = require('../src')
-const html = require('../src/html')
+const sakura = require('../../src')
+const html = require('../../src/html')
 
 function viewOne (state, prev, methods) {
   return html`
