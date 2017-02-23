@@ -4,11 +4,14 @@
   "description": "",
   "main": "",
   "scripts": {
-    "dev": "budo ./index.js --live --pushstate --host=localhost --port=8888 --base=/"
+    "dev": "budo ./index.js --live --pushstate --host=localhost --port=8888 --base=/ -- -t [ babelify ]"
   },
   "author": "Joseph Luck",
   "license": "ISC",
   "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-plugin-transform-react-jsx": "^6.23.0",
+    "babelify": "^7.3.0",
     "budo": "^9.4.7"
   },
   "dependencies": {}

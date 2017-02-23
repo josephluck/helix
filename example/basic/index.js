@@ -1,37 +1,20 @@
 const sakura = require('../../src')
-const html = require('../../src/html')
+const h = require('../../src/html').h
 
 function viewOne (state, prev, methods) {
-  return html`
+  return (
     <div>
       <a href="/foo/bar">To bar</a>
-      <hr />
-      <hr />
-      <span><input value=${state.title} oninput=${(e) => methods.set(e.target.value)} />${state.title}</span>
-      <hr />
-      <span><button onclick=${() => methods.counter.increment()}>inc ${state.counter.count}</button></span>
-      <span><button onclick=${() => methods.counter.incrementAsync()}>inc ${state.counter.count}</button></span>
-      <hr />
-      <span><input value=${state.counter.secondTitle.title} oninput=${(e) => methods.counter.secondTitle.update(e.target.value)} />${state.counter.secondTitle.title}</span>
-      <hr />
+      {state.title}
+      <input value={state.title} onInput={e => methods.set(e.target.value)} />
     </div>
-  `
+  )
 }
 function viewTwo (state, prev, methods) {
-  return html`
-    <div>
-      <a href="/foo">To foo</a>
-      <hr />
-      <hr />
-      <span><input value=${state.title} oninput=${(e) => methods.set(e.target.value)} />${state.title}</span>
-      <hr />
-      <span><button onclick=${() => methods.counter.increment()}>inc ${state.counter.count}</button></span>
-      <span><button onclick=${() => methods.counter.incrementAsync()}>inc ${state.counter.count}</button></span>
-      <hr />
-      <span><input value=${state.counter.secondTitle.title} oninput=${(e) => methods.counter.secondTitle.update(e.target.value)} />${state.counter.secondTitle.title}</span>
-      <hr />
-    </div>
-  `
+  console.log('From the basic example', state, prev, methods)
+  return (
+    <div>Helloooooo</div>
+  )
 }
 
 const app = sakura({
@@ -92,10 +75,10 @@ const app = sakura({
   routes: [
     ['/foo', viewOne],
     ['/foo/bar', viewTwo],
-  ],
-  onMethodCall (state, prev) {
-    console.info('State updated', state, prev)
-  }
+  ]
 })
 
-document.body.appendChild(app())
+let node = document.createElement('div')
+document.body.appendChild(node)
+app(node)
+// document.body.appendChild()
