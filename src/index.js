@@ -3,47 +3,25 @@ const sheetRouter = require('sheet-router')
 const walk = require('sheet-router/walk')
 const href = require('sheet-router/href')
 const html = require('./html')
-
-function createModel (model) {
-  return Object.assign({}, model, {
-    models: Object.assign({}, model.models, {
-      location: {
-        scoped: true,
-        state: window.location,
-        reducers: {
-          set (state, location) {
-            window.history.pushState('', '', location)
-            return window.location
-          }
-        }
-      }
-    })
-  })
-}
+const decorateModel = require('./decorateModel')
 
 module.exports = function (opts) {
-  let state
-  let prev
-  let methods
   let router = sheetRouter({ thunk: false }, opts.routes)
 
   function cycle (renderer) {
-    function render (_state, _prev, child) {
+    function render (state, prev, methods, child) {
       const props = {
-        state: _state ? _state : state,
-        prev: _prev ? _prev : prev,
+        state: state,
+        prev: prev,
         methods: methods
       }
       return renderer(props, child)
     }
 
-    // Subscribe to store updates
-    const subscribe = (state, prev) => render(state, prev, router(state.location.pathname))
-    const store = tansu(subscribe)(createModel(opts.model))
-
-    state = store.state
-    prev = store.state
-    methods = store.methods
+    function subscribe (state, prev, methods) {
+      return render(state, prev, methods, router(state.location.pathname))
+    }
+    const store = tansu(subscribe)(decorateModel(opts.model))
 
     walk(router, (route, cb) => {
       return (params) => {
@@ -55,15 +33,13 @@ module.exports = function (opts) {
       store.methods.location.set(path.pathname)
     })
 
-    let child = router(window.location.href)
-    render(state, prev, child)
+    // First render
+    render(store.state, store.state, store.methods, router(store.state.location.href))
   }
 
   function renderer (mount) {
-    let dom = null
-
     return function (props, child) {
-      dom = html.render(html.h(child, props), mount, mount.lastChild)
+      html.render(html.h(child, props), mount, mount.lastChild)
     }
   }
 

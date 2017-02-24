@@ -29,7 +29,7 @@ function viewOne ({state, prev, methods}) {
       <a href="/foo/bar">To bar</a>
       {state.title}
       <input value={state.title} onInput={e => methods.set(e.target.value)} />
-      <Counter />
+      <div><Counter /></div>
     </div>
   )
 }
