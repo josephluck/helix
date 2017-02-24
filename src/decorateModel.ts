@@ -1,4 +1,4 @@
-module.exports = function (model) {
+export default function (model) {
   return Object.assign({}, model, {
     models: Object.assign({}, model.models, {
       location: {

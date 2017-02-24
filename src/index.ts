@@ -1,8 +1,8 @@
-const sheetRouter = require('sheet-router')
-const walk = require('sheet-router/walk')
-const html = require('./html')
-const cycle = require('./cycle')
-const location = require('./location')
+import * as sheetRouter from 'sheet-router'
+import * as walk from 'sheet-router/walk'
+import html from './html'
+import cycle from './cycle'
+import location from './location'
 
 function renderer (mount) {
   return function (props, child) {
@@ -13,12 +13,12 @@ function renderer (mount) {
 function makeModel (model) {
   return Object.assign({}, model, {
     models: Object.assign({}, model.models, {
-      location: location()
+      location: location(window)
     })
   })
 }
 
-module.exports = function (opts) {
+export default function (opts) {
   return function (mount) {
     let morph = renderer(mount)
     let model = makeModel(opts.model)

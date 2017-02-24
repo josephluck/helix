@@ -1,8 +1,12 @@
-const sakura = require('../../src')
-const html = require('../../src/html')
-const h = html.h
+require('es6-shim')
+import sakura from '../../../src'
+import {h, Component} from '../../../src/html'
 
-class Counter extends html.Component {
+interface CounterState {
+  count: number
+}
+
+class Counter extends Component<undefined, CounterState> {
   constructor () {
     super()
     this.state = {
@@ -17,18 +21,29 @@ class Counter extends html.Component {
   render () {
     return (
       <div>
-        <button onclick={() => this.increment()}>{this.state.count} inc</button>
+        <button onClick={() => this.increment()}>{this.state.count} inc</button>
       </div>
     )
   }
 }
 
+function Links () {
+  return (
+    <div>
+      <a href="/foo">To foo</a>
+      <a href="/foo/bar">To bar</a>
+      <a href="/foo/bar/123">To baz 123</a>
+      <a href="/foo/bar/abc">To baz abc</a>
+    </div>
+  )
+}
+
 function viewOne ({state, prev, methods}) {
   return (
     <div>
-      <a href="/foo/bar">To bar</a>
+      <Links />
       {state.title}
-      <input value={state.title} onInput={e => methods.set(e.target.value)} />
+      <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
       <div><Counter /></div>
     </div>
   )
@@ -36,9 +51,20 @@ function viewOne ({state, prev, methods}) {
 function viewTwo ({state, prev, methods}) {
   return (
     <div>
-      <a href="/foo">To foo</a>
+      <Links />
       {state.title}
-      <input value={state.title} onInput={e => methods.set(e.target.value)} />
+      <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
+      <Counter />
+    </div>
+  )
+}
+function viewThree ({state, prev, methods}) {
+  console.log(state)
+  return (
+    <div>
+      <Links />
+      {state.title}
+      <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
       <Counter />
     </div>
   )
@@ -102,6 +128,7 @@ const app = sakura({
   routes: [
     ['/foo', viewOne],
     ['/foo/bar', viewTwo],
+    ['/foo/bar/:baz', viewThree],
   ]
 })
 

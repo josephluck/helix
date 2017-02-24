@@ -1,7 +1,7 @@
-const tansu = require('tansu')
-const href = require('sheet-router/href')
+import * as tansu from 'tansu'
+import * as href from 'sheet-router/href'
 
-module.exports = function (renderer, model, router) {
+export default function (renderer, model, router) {
   function render (state, prev, methods, child) {
     const props = {
       state: state,
