@@ -1,5 +1,6 @@
+"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var preact = require("preact");
-exports.h = preact.h;
-exports.Component = preact.Component;
-exports.default = preact;
+var inferno_1 = require("inferno");
+var create = require("inferno-create-element");
+exports.h = create;
+exports.default = inferno_1.default;

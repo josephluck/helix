@@ -1,6 +1,6 @@
 require('es6-shim')
 import sakura from '../../../src'
-import { createElement } from '../../../src/html'
+import { h } from '../../../src/html'
 
 function Links () {
   return (

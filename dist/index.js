@@ -1,3 +1,4 @@
+"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var rlite = require("rlite-router");
 var href = require("sheet-router/href");
@@ -5,9 +6,8 @@ var tansu = require("tansu");
 var html_1 = require("./html");
 var location_1 = require("./location");
 function renderer(mount) {
-    var curr;
     return function (props, vnode) {
-        curr = html_1.default.render(html_1.default.h(vnode, props), mount, curr);
+        html_1.default.render(vnode(props), mount);
     };
 }
 // Takes Tansu.Model and returns a Tansu.Model

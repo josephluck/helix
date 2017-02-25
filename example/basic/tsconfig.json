@@ -2,12 +2,9 @@
   "compilerOptions": {
     "outDir": "dist",
     "module": "commonjs",
-    "noImplicitAny": false,
     "target": "es5",
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
     "jsx": "react",
-    "jsxFactory": "createElement"
+    "jsxFactory": "h"
   },
   "include": [
     "./src/**/*"
