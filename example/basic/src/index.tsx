@@ -1,31 +1,6 @@
 require('es6-shim')
 import sakura from '../../../src'
-import {h, Component} from '../../../src/html'
-
-interface CounterState {
-  count: number
-}
-
-class Counter extends Component<undefined, CounterState> {
-  constructor () {
-    super()
-    this.state = {
-      count: 0,
-    }
-  }
-  increment () {
-    this.setState({
-      count: this.state.count + 1,
-    })
-  }
-  render () {
-    return (
-      <div>
-        <button onClick={() => this.increment()}>{this.state.count} inc</button>
-      </div>
-    )
-  }
-}
+import { h } from '../../../src/html'
 
 function Links () {
   return (
@@ -48,8 +23,6 @@ function viewOne ({state, prev, methods}) {
       <div>
         <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
       </div>
-      <br />
-      <div><Counter /></div>
     </div>
   )
 }
@@ -63,8 +36,6 @@ function viewTwo ({state, prev, methods}) {
       <div>
         <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
       </div>
-      <br />
-      <Counter />
     </div>
   )
 }
@@ -78,8 +49,6 @@ function viewThree ({state, prev, methods}) {
       <div>
         <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
       </div>
-      <br />
-      <Counter />
     </div>
   )
 }
@@ -146,4 +115,6 @@ const app = sakura({
   },
 })
 
-app(document.body)
+const node = document.createElement('div')
+document.body.appendChild(node)
+app(node)
