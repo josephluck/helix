@@ -5,27 +5,22 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "browserify ./test/index.spec.ts -p [ tsify ] | testling -u",
-    "bundle": "babel src --out-dir dist",
-    "browserify": "tsc"
+    "dist": "tsc && npm run browserify && npm run minify",
+    "browserify": "browserify -g babelify -g uglifyify dist/index.js -o dist/bundle.js",
+    "minify": "uglifyjs ./dist/bundle.js --compress --mangle -o ./dist/bundle.min.js"
   },
   "author": "Joseph Luck",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.23.0",
-    "babel-plugin-transform-react-jsx": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-stage-0": "^6.22.0",
-    "browserify": "^14.1.0",
-    "budo": "^9.4.7",
-    "jsdom": "^9.11.0",
-    "jsdom-global": "^2.1.1",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.6.3",
-    "testling": "^1.7.1"
+    "browserify": "^14.1.0"
   },
   "dependencies": {
     "@types/es6-shim": "^0.31.32",
     "@types/node": "^7.0.5",
+    "babelify": "^7.3.0",
     "es6-shim": "^0.35.3",
     "preact": "^7.2.0",
     "rlite-router": "^2.0.1",
@@ -34,6 +29,8 @@
     "tsify": "^3.0.1",
     "tslint": "^4.4.2",
     "tslint-config-standard": "^4.0.0",
-    "typescript": "^2.2.1"
+    "typescript": "^2.2.1",
+    "uglify-js": "^2.7.5",
+    "uglifyify": "^3.0.4"
   }
 }
