@@ -1,74 +1,70 @@
-'use strict';
-
-var tansu = require('tansu');
-var html = require('./html');
-var sheetRouter = require('sheet-router');
-var walk = require('sheet-router/walk');
-var href = require('sheet-router/href');
-
-function createModel(model) {
-  return Object.assign({}, model, {
-    models: Object.assign({}, model.models, {
-      location: {
-        state: window.location,
-        reducers: {
-          set: function set(state, location) {
-            window.history.pushState('', '', location);
-            return Object.assign({}, state, {
-              location: window.location
-            });
-          }
-        }
-      }
-    })
-  });
-}
-
-module.exports = function (opts) {
-  if (!opts.model.models) {
-    opts.model.models = {};
-  }
-  var model = createModel(opts.model);
-  var router = sheetRouter({ thunk: 'match' }, opts.routes);
-
-  var dom = void 0;
-  var state = void 0;
-  var prev = void 0;
-
-  return function () {
-    var hooks = {
-      onStateChange: function onStateChange(_state, _prev) {
-        state = _state;
-        prev = _prev;
-        router(window.location.href);
-      },
-
-      onMethodCall: opts.onMethodCall || function () {
-        return null;
-      }
+Object.defineProperty(exports, "__esModule", { value: true });
+var rlite = require("rlite-router");
+var href = require("sheet-router/href");
+var tansu = require("tansu");
+var html_1 = require("./html");
+var location_1 = require("./location");
+function renderer(mount) {
+    var curr;
+    return function (props, vnode) {
+        curr = html_1.default.render(html_1.default.h(vnode, props), mount, curr);
     };
-    var store = tansu(hooks)(model);
-
-    state = store.state;
-    prev = store.state;
-
-    walk(router, function (route, handler) {
-      return function (params) {
-        return function () {
-          var newDom = handler(state, prev, store.methods);
-          if (dom) {
-            dom = html.update(dom, newDom);
-          }
-          return newDom;
-        };
-      };
+}
+// Takes Tansu.Model and returns a Tansu.Model
+function makeModel(model) {
+    return Object.assign({}, model, {
+        models: Object.assign({}, model.models, {
+            location: location_1.default(window),
+        }),
     });
-
-    href(function (href) {
-      store.methods.location.set(href.pathname);
-    });
-
-    dom = router(window.location.href);
-    return dom;
-  };
-};
+}
+function combineObjects(a, b) {
+    return Object.assign({}, a, b);
+}
+function wrapRoutes(routes, wrap) {
+    return Object.keys(routes).map(function (key) {
+        var route = routes[key];
+        return _a = {},
+            _a[key] = wrap(key, route),
+            _a;
+        var _a;
+    }).reduce(combineObjects, {});
+}
+function default_1(configuration) {
+    return function mount(mount) {
+        var morph = renderer(mount);
+        var model = makeModel(configuration.model);
+        var routes = wrapRoutes(configuration.routes, wrapper);
+        var router = rlite(function () { return null; }, routes);
+        var store = tansu(subscribe)(model);
+        var _state = store.state;
+        var _prev = store.prev;
+        var _methods = store.methods;
+        function wrapper(route, handler) {
+            var currentPath = window.location.pathname;
+            return function (params, _, newPath) {
+                if (currentPath !== newPath) {
+                    currentPath = newPath;
+                    store.methods.location.set({ pathname: newPath, params: params });
+                }
+                return handler;
+            };
+        }
+        function render(state, prev, methods, vnode) {
+            var props = { state: state, prev: prev, methods: methods };
+            return morph(props, vnode);
+        }
+        function subscribe(state, prev, methods) {
+            _state = state;
+            _prev = prev;
+            _methods = methods;
+            return render(state, prev, methods, router(window.location.pathname));
+        }
+        href(function (path) {
+            store.methods.location.updateUrl({ pathname: path.pathname });
+            render(_state, _state, _methods, router(path.pathname));
+        });
+        render(store.state, store.state, store.methods, router(store.state.location.pathname));
+    };
+}
+exports.default = default_1;

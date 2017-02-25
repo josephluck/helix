@@ -1,3 +1,5 @@
-'use strict';
-
-module.exports = require('yo-yo');
+Object.defineProperty(exports, "__esModule", { value: true });
+var preact = require("preact");
+exports.h = preact.h;
+exports.Component = preact.Component;
+exports.default = preact;

@@ -22,7 +22,7 @@ export namespace Sakura {
   }
   export type LocationModelConstructor = (window) => LocationModel
   export interface LocationModelReducers {
-    set: (state: void, location: string) => any
+    set: (state: void, location: any) => any
   }
   export interface LocationModel {
     scoped: boolean
