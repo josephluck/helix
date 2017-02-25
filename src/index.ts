@@ -1,6 +1,6 @@
 import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
-import * as tansu from 'tansu'
+import tansu from 'tansu'
 import html from './html'
 import location from './location'
 import { Sakura } from './types'
@@ -42,7 +42,7 @@ export default function (configuration) {
     let store = tansu(subscribe)(model)
 
     let _state = store.state
-    let _prev = store.prev
+    let _prev = store.state
     let _methods = store.methods
 
     function wrapper (route, handler) {

@@ -14,7 +14,6 @@ function Links () {
 }
 
 function viewOne ({state, prev, methods}) {
-  // console.log('view one', state)
   return (
     <div>
       <Links />
@@ -27,7 +26,6 @@ function viewOne ({state, prev, methods}) {
   )
 }
 function viewTwo ({state, prev, methods}) {
-  // console.log('view two', state)
   return (
     <div>
       <Links />
@@ -40,7 +38,6 @@ function viewTwo ({state, prev, methods}) {
   )
 }
 function viewThree ({state, prev, methods}) {
-  // console.log('view three', state)
   return (
     <div>
       <Links />
