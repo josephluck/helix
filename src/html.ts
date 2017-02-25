@@ -1,4 +1,4 @@
-import * as preact from 'preact'
-export const h = preact.h
-export const Component = preact.Component
-export default preact
+import inferno from 'inferno'
+import * as create from 'inferno-create-element'
+export const createElement = create
+export default inferno

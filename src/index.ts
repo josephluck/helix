@@ -6,9 +6,8 @@ import location from './location'
 import { Sakura } from './types'
 
 function renderer (mount) {
-  let curr
   return function (props, vnode) {
-    curr = html.render(html.h(vnode, props), mount, curr)
+    html.render(vnode(props), mount)
   }
 }
 

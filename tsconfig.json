@@ -4,10 +4,12 @@
     "module": "commonjs",
     "outDir": "dist",
     "noImplicitUseStrict": true,
+    "allowSyntheticDefaultImports": true,
     "strictNullChecks": true,
     "noImplicitReturns": true,
     "pretty": true,
-    "allowJs": true
+    "allowJs": true,
+    "noImplicitAny": false
   },
   "include": [
     "src/**/*"
