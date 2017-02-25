@@ -28,6 +28,7 @@
     "@types/node": "^7.0.5",
     "es6-shim": "^0.35.3",
     "preact": "^7.2.0",
+    "rlite-router": "^2.0.1",
     "sheet-router": "^4.2.3",
     "tansu": "file:../tansu",
     "tsify": "^3.0.1",

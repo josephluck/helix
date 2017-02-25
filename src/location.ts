@@ -1,20 +1,21 @@
 import { Sakura } from './types'
 
-export default function (window): Sakura.LocationModel {
+export default function location (window) {
   return {
     scoped: true,
-    state: window.location,
+    state: {
+      pathname: window.location.pathname,
+      params: {},
+    },
     reducers: {
-      set (_state, location) {
-        window.history.pushState('', '', location)
-        return window.location
+      set (_state, { pathname, params }) {
+        return { pathname, params }
       },
     },
-  }
-}
-
-export function walker (route, cb: Sakura.View) {
-  return function (params) {
-    return cb
+    effects: {
+      updateUrl (_state, _mathods, { pathname }) {
+        window.history.pushState('', '', pathname)
+      },
+    },
   }
 }

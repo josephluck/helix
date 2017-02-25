@@ -3701,6 +3701,10 @@ ripemd160@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-1.0.1.tgz#93a4bbd4942bc574b69a8fa57c71de10ecca7d6e"
 
+rlite-router@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/rlite-router/-/rlite-router-2.0.1.tgz#d94708ab5e9b84dd2bbdc7680cf80afc7efccbc3"
+
 ruglify@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/ruglify/-/ruglify-1.0.0.tgz#dc8930e2a9544a274301cc9972574c0d0986b675"

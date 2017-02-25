@@ -10,12 +10,12 @@ class Counter extends Component<undefined, CounterState> {
   constructor () {
     super()
     this.state = {
-      count: 0
+      count: 0,
     }
   }
   increment () {
     this.setState({
-      count: this.state.count + 1
+      count: this.state.count + 1,
     })
   }
   render () {
@@ -30,41 +30,55 @@ class Counter extends Component<undefined, CounterState> {
 function Links () {
   return (
     <div>
-      <a href="/foo">To foo</a>
-      <a href="/foo/bar">To bar</a>
-      <a href="/foo/bar/123">To baz 123</a>
-      <a href="/foo/bar/abc">To baz abc</a>
+      <a style='margin-right: 10px;' href='/foo'>view one</a>
+      <a style='margin-right: 10px;' href='/foo/bar'>view two</a>
+      <a style='margin-right: 10px;' href='/foo/bar/123'>view three (123)</a>
+      <a style='margin-right: 10px;' href='/foo/bar/abc'>view three (abc)</a>
     </div>
   )
 }
 
 function viewOne ({state, prev, methods}) {
+  // console.log('view one', state)
   return (
     <div>
       <Links />
+      <h1>view one</h1>
       {state.title}
-      <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
+      <div>
+        <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
+      </div>
+      <br />
       <div><Counter /></div>
     </div>
   )
 }
 function viewTwo ({state, prev, methods}) {
+  // console.log('view two', state)
   return (
     <div>
       <Links />
+      <h1>view two</h1>
       {state.title}
-      <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
+      <div>
+        <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
+      </div>
+      <br />
       <Counter />
     </div>
   )
 }
 function viewThree ({state, prev, methods}) {
-  console.log(state)
+  // console.log('view three', state)
   return (
     <div>
       <Links />
+      <h1>view three {state.location.params.baz}</h1>
       {state.title}
-      <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
+      <div>
+        <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
+      </div>
+      <br />
       <Counter />
     </div>
   )
@@ -73,25 +87,25 @@ function viewThree ({state, prev, methods}) {
 const app = sakura({
   model: {
     state: {
-      title: 'not set'
+      title: 'not set',
     },
     reducers: {
       set (state, title) {
         return Object.assign({}, state, {
-          title: title
+          title: title,
         })
-      }
+      },
     },
     models: {
       counter: {
         scoped: true,
         state: {
-          count: 1
+          count: 1,
         },
         reducers: {
           increment (state, amount) {
             return {
-              count: state.count + (amount || 1)
+              count: state.count + (amount || 1),
             }
           },
         },
@@ -100,36 +114,36 @@ const app = sakura({
             setTimeout(() => {
               methods.increment(5)
             }, 1000)
-          }
+          },
         },
         models: {
           secondTitle: {
             scoped: true,
             state: {
-              title: 'hey'
+              title: 'hey',
             },
             reducers: {
               update (state, title) {
                 return {
-                  title: title
+                  title: title,
                 }
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       },
       foo: {
         state: {
-          bar: 'baz'
-        }
-      }
-    }
+          bar: 'baz',
+        },
+      },
+    },
   },
-  routes: [
-    ['/foo', viewOne],
-    ['/foo/bar', viewTwo],
-    ['/foo/bar/:baz', viewThree],
-  ]
+  routes: {
+    'foo': viewOne,
+    'foo/bar': viewTwo,
+    'foo/bar/:baz': viewThree,
+  },
 })
 
 app(document.body)
