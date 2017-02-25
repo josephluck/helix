@@ -4,12 +4,21 @@
   "description": "",
   "main": "",
   "scripts": {
-    "dev": "budo ./index.js --live --pushstate --host=localhost --port=8888 --base=/"
+    "dev": "budo ./src/index.tsx --live --pushstate --host=localhost --port=8888 --base=/ -- -t [ babelify ] -p [ tsify ]"
   },
   "author": "Joseph Luck",
   "license": "ISC",
   "devDependencies": {
-    "budo": "^9.4.7"
+    "babel-cli": "^6.23.0",
+    "babel-plugin-transform-react-jsx": "^6.23.0",
+    "babelify": "^7.3.0",
+    "budo": "^9.4.7",
+    "tsify": "^3.0.1",
+    "tslint": "^4.4.2",
+    "typescript": "^2.2.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/node": "^7.0.5",
+    "tslint-config-standard": "^4.0.0"
+  }
 }

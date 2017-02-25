@@ -1,5 +1,5 @@
 const test = require('tape')
-const view = require('./index')
+const view = require('../src/index')
 
 test('view / setup / returns a function', function (t) {
   t.pass('example pass')
