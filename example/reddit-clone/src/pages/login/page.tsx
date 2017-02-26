@@ -14,8 +14,10 @@ export default function login ({state, prev, actions}) {
 
   function submit () {
     pageActions.submit()
-      .then(function () {
+      .then(function (authResponse) {
         actions.alert.showSuccess('Successfully logged in')
+        actions.user.receiveUser(authResponse.user)
+        actions.location.set('/')
       }, function (err) {
         actions.alert.showError(err)
       })

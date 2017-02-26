@@ -1,42 +1,12 @@
-function walk (obj, fn) {
-  return Object.keys(obj).map(key => {
-    return {
-      [key]: fn(obj[key]),
-    }
-  }).reduce((prev, curr) => {
-    return Object.assign({}, prev, curr)
-  }, {})
-}
+import walk from '../utils/walk'
+import promisify from '../utils/promisify'
+import authResponse from './fixtures/authResponse'
 
-function promisify (cb) {
-  return function (...args: any[]) {
-    return new Promise((resolve, reject) => {
-      setTimeout(function () {
-        let response = cb(...args)
-        if (response instanceof Error) {
-          reject(response)
-        }
-        resolve(response)
-      }, 1000)
-    })
-  }
-}
-
-function user () {
-  return {
-    username: 'joseph@example.com',
-    name: 'Joseph Luck',
-  }
-}
-
-const methods = {
+export default walk({
   login (username, password) {
     if (username === 'joseph@example.com' && password === 'password') {
-      return user()
+      return authResponse()
     }
-    return new Error('Incorrect credentials')
+    return new Error('Whoops! Please try again...')
   },
-}
-const api = walk(methods, promisify)
-
-export default api
+}, promisify)

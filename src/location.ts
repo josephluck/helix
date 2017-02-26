@@ -8,12 +8,12 @@ export default function location (window) {
       params: {},
     },
     reducers: {
-      set (_state, { pathname, params }) {
+      receiveRoute (_state, { pathname, params }) {
         return { pathname, params }
       },
     },
     effects: {
-      updateUrl (_state, _mathods, { pathname }) {
+      set (_state, _mathods, pathname) {
         window.history.pushState('', '', pathname)
       },
     },

@@ -45,21 +45,24 @@ export default function (configuration: Helix.Configuration) {
     let _state = store.state
     let _prev = store.state
     let _actions = store.actions
+    let _pathname = window.location.pathname
 
     function wrapper (route, handler): Helix.RLiteHandler {
-      let currentPath = window.location.pathname
-      return function (params, _, newPath) {
-        if (currentPath !== newPath) {
-          currentPath = newPath
-          store.actions.location.set({ pathname: newPath, params })
+      return function (params, _, pathname) {
+        if (_pathname !== pathname) {
+          _pathname = pathname
+          store.actions.location.receiveRoute({ pathname, params })
+          return false
         }
         return handler
       }
     }
 
-    function render (state, prev, actions, vnode) {
+    function render (state, prev, actions, vnode: false | Helix.View) {
       const props = { state, prev, actions }
-      return morph(props, vnode)
+      if (vnode) {
+        return morph(props, vnode)
+      }
     }
 
     function subscribe (state, prev, actions) {
@@ -70,9 +73,13 @@ export default function (configuration: Helix.Configuration) {
     }
 
     href(function (path) {
-      store.actions.location.updateUrl({pathname: path.pathname})
+      store.actions.location.set(path.pathname)
       render(_state, _state, _actions, renderView ? renderView(path.pathname) : null)
     })
+
+    window.onpopstate = function () {
+      render(_state, _state, _actions, renderView ? renderView(window.location.pathname) : null)
+    }
 
     render(_state, _state, _actions, renderView ? renderView(window.location.pathname) : renderComponent)
   }

@@ -1,4 +1,8 @@
+// Global domains
 import alert from './alert'
+import user from './user'
+
+// Pages
 import login from '../pages/login/model'
 
 export default function model () {
@@ -6,6 +10,7 @@ export default function model () {
     state: {},
     models: {
       alert: alert(),
+      user: user(),
       pages: {
         state: {},
         models: {
