@@ -44,36 +44,36 @@ export default function (configuration: Helix.Configuration) {
 
     let _state = store.state
     let _prev = store.state
-    let _methods = store.methods
+    let _actions = store.actions
 
     function wrapper (route, handler): Helix.RLiteHandler {
       let currentPath = window.location.pathname
       return function (params, _, newPath) {
         if (currentPath !== newPath) {
           currentPath = newPath
-          store.methods.location.set({ pathname: newPath, params })
+          store.actions.location.set({ pathname: newPath, params })
         }
         return handler
       }
     }
 
-    function render (state, prev, methods, vnode) {
-      const props = { state, prev, methods }
+    function render (state, prev, actions, vnode) {
+      const props = { state, prev, actions }
       return morph(props, vnode)
     }
 
-    function subscribe (state, prev, methods) {
+    function subscribe (state, prev, actions) {
       _state = state
       _prev = prev
-      _methods = methods
-      return render(state, prev, methods, router(window.location.pathname))
+      _actions = actions
+      return render(state, prev, actions, router(window.location.pathname))
     }
 
     href(function (path) {
-      store.methods.location.updateUrl({pathname: path.pathname})
-      render(_state, _state, _methods, router(path.pathname))
+      store.actions.location.updateUrl({pathname: path.pathname})
+      render(_state, _state, _actions, router(path.pathname))
     })
 
-    render(store.state, store.state, store.methods, router(store.state.location.pathname))
+    render(store.state, store.state, store.actions, router(store.state.location.pathname))
   }
 }

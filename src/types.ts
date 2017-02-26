@@ -5,7 +5,7 @@ export namespace Helix {
   export interface Props {
     state: any
     prev: any
-    methods: Twine.Methods
+    actions: Twine.Actions
   }
   export interface Routes {
     [key: string]: View

@@ -13,38 +13,38 @@ function Links () {
   )
 }
 
-function viewOne ({state, prev, methods}) {
+function viewOne ({state, prev, actions}) {
   return (
     <div>
       <Links />
       <h1>view one</h1>
       {state.title}
       <div>
-        <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
+        <input value={state.title} onInput={(e: any) => actions.set(e.target.value)} />
       </div>
     </div>
   )
 }
-function viewTwo ({state, prev, methods}) {
+function viewTwo ({state, prev, actions}) {
   return (
     <div>
       <Links />
       <h1>view two</h1>
       {state.title}
       <div>
-        <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
+        <input value={state.title} onInput={(e: any) => actions.set(e.target.value)} />
       </div>
     </div>
   )
 }
-function viewThree ({state, prev, methods}) {
+function viewThree ({state, prev, actions}) {
   return (
     <div>
       <Links />
       <h1>view three {state.location.params.baz}</h1>
       {state.title}
       <div>
-        <input value={state.title} onInput={(e: any) => methods.set(e.target.value)} />
+        <input value={state.title} onInput={(e: any) => actions.set(e.target.value)} />
       </div>
     </div>
   )
@@ -76,9 +76,9 @@ const app = helix({
           },
         },
         effects: {
-          incrementAsync (state, methods) {
+          incrementAsync (state, actions) {
             setTimeout(() => {
-              methods.increment(5)
+              actions.increment(5)
             }, 1000)
           },
         },

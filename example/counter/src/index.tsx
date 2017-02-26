@@ -2,7 +2,7 @@ require('es6-shim')
 import helix from '../../../src'
 import { h } from '../../../src/html'
 
-function counterView ({state, prev, methods}) {
+function counterView ({state, prev, actions}) {
   return (
     <section class='section hero'>
       <div class='card'>
@@ -15,18 +15,18 @@ function counterView ({state, prev, methods}) {
           <hr />
 
           <div class='block control is-grouped'>
-            <a class='control button' onclick={() => methods.increment(state.amount)}>
+            <a class='control button' onclick={() => actions.increment(state.amount)}>
               Increment
             </a>
-            <a class='control button' onclick={() => methods.decrement(state.amount)}>
+            <a class='control button' onclick={() => actions.decrement(state.amount)}>
               Decrement
             </a>
           </div>
           <div class='block control is-grouped'>
-            <a class='control button' onclick={() => methods.incrementAsync(state.amount, state.timeout)}>
+            <a class='control button' onclick={() => actions.incrementAsync(state.amount, state.timeout)}>
               Increment in {state.timeout} second{state.timeout > 1 ? 's' : ''}
             </a>
-            <a class='control button' onclick={() => methods.decrementAsync(state.amount, state.timeout)}>
+            <a class='control button' onclick={() => actions.decrementAsync(state.amount, state.timeout)}>
               Decrement in {state.timeout} second{state.timeout > 1 ? 's' : ''}
             </a>
           </div>
@@ -41,7 +41,7 @@ function counterView ({state, prev, methods}) {
                 value={state.amount}
                 min='1'
                 max='50'
-                oninput={e => methods.setAmount(parseFloat(e.target.value))}
+                oninput={e => actions.setAmount(parseFloat(e.target.value))}
               />
             </div>
           </div>
@@ -53,7 +53,7 @@ function counterView ({state, prev, methods}) {
                 value={state.timeout}
                 min='1'
                 max='10'
-                oninput={e => methods.setAsyncTimeout(parseFloat(e.target.value))}
+                oninput={e => actions.setAsyncTimeout(parseFloat(e.target.value))}
               />
             </div>
           </div>
@@ -97,14 +97,14 @@ const app = helix({
       }
     },
     effects: {
-      incrementAsync (state, methods, amount, secs) {
+      incrementAsync (state, actions, amount, secs) {
         setTimeout(() => {
-          methods.increment(amount)
+          actions.increment(amount)
         }, secs * 1000)
       },
-      decrementAsync (state, methods, amount, secs) {
+      decrementAsync (state, actions, amount, secs) {
         setTimeout(() => {
-          methods.decrement(amount)
+          actions.decrement(amount)
         }, secs * 1000)
       }
     }
