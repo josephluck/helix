@@ -1,10 +1,29 @@
 import { h } from '../../../../../src/html'
 import TextField from '../../components/textfield'
 
+function Form ({
+  onSubmit,
+  onCancel,
+  children,
+}) {
+  return (
+    <form onSubmit={onSubmit}>
+      {children}
+      <div class='control is-grouped'>
+        <p class='control'>
+          <button class='button is-primary' type='submit'>Submit</button>
+        </p>
+        <p class='control'>
+          <a class='button is-light' onclick={onCancel}>Cancel</a>
+        </p>
+      </div>
+    </form>
+  )
+}
+
 export default function login ({state, prev, actions}) {
   let pageState = state.pages.login
   let pageActions = actions.pages.login
-  console.log(pageState)
 
   function updateFormField (key) {
     return function (e) {
@@ -14,10 +33,21 @@ export default function login ({state, prev, actions}) {
 
   return (
     <div class='section'>
-      <form>
-        <TextField label='Username' value={pageState.username} onInput={updateFormField('username')} />
-        <TextField label='Password' value={pageState.password} onInput={updateFormField('password')} />
-      </form>
+      <Form
+        onSubmit={pageActions.submit}
+        onCancel={pageActions.reset}
+      >
+        <TextField
+          label='Username'
+          value={pageState.username}
+          onInput={updateFormField('username')}
+        />
+        <TextField
+          label='Password'
+          value={pageState.password}
+          onInput={updateFormField('password')}
+        />
+      </Form>
     </div>
   )
 }
