@@ -33,6 +33,15 @@ export default function alert () {
           methods.removeAlert()
         }, 5000)
       },
+      showSuccess (state, methods, message) {
+        methods.setAlert({
+          description: message,
+          type: 'is-success',
+        })
+        setTimeout(() => {
+          methods.removeAlert()
+        }, 5000)
+      }
     },
   }
 }

@@ -48,12 +48,19 @@ export default function login ({state, prev, actions}) {
     }
   }
 
+  function submit () {
+    pageActions.submit()
+      .then(function () {
+        actions.alert.showSuccess('Successfully logged in')
+      }, function (err) {
+        actions.alert.showError(err)
+      })
+  }
+
   return (
     <div class='section'>
       <Form
-        onSubmit={() => {
-          pageActions.submit(actions.alert.showError)
-        }}
+        onSubmit={submit}
         onCancel={pageActions.reset}
       >
         <TextField

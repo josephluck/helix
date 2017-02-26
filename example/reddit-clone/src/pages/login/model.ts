@@ -25,10 +25,6 @@ export default function model () {
     effects: {
       submit (state, actions, onError) {
         return api.login(state.username, state.password)
-          .then(() => {
-            console.log('Successfully logged in')
-          })
-          .catch(onError)
       },
     },
   }
