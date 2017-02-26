@@ -6,28 +6,46 @@ function todoList ({state, prev, actions}) {
   return (
     <section class='section hero'>
       <div class='card'>
-        <form class='card-content' onSubmit={(e) => {
-          e.preventDefault()
-          actions.addTodo(state.newTodo)
-        }}>
-          Todo list
-          <ul>
+        <div class='card-content'>
+          <div class='title is-3'>
+            Stuff I need to get done
+          </div>
+
+          <hr />
+
+          <form
+            class='control has-addons'
+            onSubmit={(e) => {
+              e.preventDefault()
+              actions.addTodo(state.newTodo)
+            }}
+          >
+            <input
+              class='input is-expanded'
+              value={state.newTodo}
+              onInput={(e) => actions.setNewTodoText(e.target.value)}
+            />
+            <button
+              class='button'
+              type='submit'
+            >
+              Add todo
+            </button>
+          </form>
+
+          <hr />
+
+          <div class='block control is-grouped'>
             {state.todos.map((todo, index) => {
               return (
-                <li>
+                <span class='control tag is-large is-success'>
                   {todo}
-                  <a onclick={() => actions.removeTodo(index)}>
-                    Delete
-                  </a>
-                </li>
+                  <a class='delete' onclick={() => actions.removeTodo(index)}></a>
+                </span>
               )
             })}
-          </ul>
-          <input value={state.newTodo} onInput={(e) => actions.setNewTodoText(e.target.value)} />
-          <button type='submit'>
-            Add todo
-          </button>
-        </form>
+          </div>
+        </div>
       </div>
     </section>
   )
@@ -36,7 +54,10 @@ function todoList ({state, prev, actions}) {
 const app = helix({
   model: {
     state: {
-      todos: [],
+      todos: [
+        'Learn Helix',
+        'Profit',
+      ],
       newTodo: '',
     },
     reducers: {
