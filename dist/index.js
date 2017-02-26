@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var rlite = require("rlite-router");
 var href = require("sheet-router/href");
-var tansu = require("tansu");
+var twine_js_1 = require("twine-js");
 var html_1 = require("./html");
 var location_1 = require("./location");
 function renderer(mount) {
@@ -10,7 +10,7 @@ function renderer(mount) {
         html_1.default.render(vnode(props), mount);
     };
 }
-// Takes Tansu.Model and returns a Tansu.Model
+// Takes Twine.Model and returns a Twine.Model
 function makeModel(model) {
     return Object.assign({}, model, {
         models: Object.assign({}, model.models, {
@@ -22,10 +22,10 @@ function combineObjects(a, b) {
     return Object.assign({}, a, b);
 }
 function wrapRoutes(routes, wrap) {
-    return Object.keys(routes).map(function (key) {
-        var route = routes[key];
+    return Object.keys(routes).map(function (route) {
+        var handler = routes[route];
         return _a = {},
-            _a[key] = wrap(key, route),
+            _a[route] = wrap(route, handler),
             _a;
         var _a;
     }).reduce(combineObjects, {});
@@ -36,9 +36,9 @@ function default_1(configuration) {
         var model = makeModel(configuration.model);
         var routes = wrapRoutes(configuration.routes, wrapper);
         var router = rlite(function () { return null; }, routes);
-        var store = tansu(subscribe)(model);
+        var store = twine_js_1.default(subscribe)(model);
         var _state = store.state;
-        var _prev = store.prev;
+        var _prev = store.state;
         var _methods = store.methods;
         function wrapper(route, handler) {
             var currentPath = window.location.pathname;

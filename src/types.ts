@@ -1,32 +1,24 @@
-export namespace Sakura {
-//   // Sakura config used during first initialization
-//   export interface Configuration {
-//     model: any
-//     routes: any
-//   }
+import * as Inferno from 'inferno/dist-es/index'
+import { Twine } from 'twine-js/dist/types'
 
-//   // View (mounted on routes)
-//   export interface ViewProps {
-//     state: any
-//     prev: any
-//     methods: any
-//   }
-//   export type View = preact.ComponentConstructor<ViewProps, null>
+export namespace Helix {
+  export interface Props {
+    state: any
+    prev: any
+    methods: Twine.Methods
+  }
+  export interface Routes {
+    [key: string]: View
+  }
 
-//   export type Renderer = (props: any, child: View) => any
+  export type View = (props: Props) => Inferno.VNode
+  export type RLiteHandler = (params, state, newPath) => View
+  export type RouteWrapper = (route: string, handler: View) => RLiteHandler
+  export type Renderer = (props: Props, vnode) => void
 
-//   // Routing
-//   export type RouterRenderer = (url: string) => View
-//   export interface RouterPath {
-//     pathname: string
-//   }
-//   export type LocationModelConstructor = (window) => LocationModel
-//   export interface LocationModelReducers {
-//     set: (state: void, location: any) => any
-//   }
-//   export interface LocationModel {
-//     scoped: boolean
-//     state: any
-//     reducers: LocationModelReducers
-//   }
+  export interface Configuration {
+    model: Twine.Model
+    routes: Routes
+  }
+  export type Mount = HTMLElement
 }
