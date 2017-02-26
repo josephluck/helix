@@ -75,8 +75,6 @@ export default function login ({state, prev, actions}) {
           onInput={updateFormField('password')}
         />
       </Form>
-
-      {state.alert.alert.description}
     </div>
   )
 }

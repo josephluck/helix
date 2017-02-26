@@ -1,7 +1,8 @@
 import login from '../pages/login/page'
+import base from '../pages/base'
 
 export default function routes () {
   return {
-    'login': login,
+    'login': base(login),
   }
 }

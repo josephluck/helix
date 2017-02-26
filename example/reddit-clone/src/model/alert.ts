@@ -9,7 +9,11 @@ export default function alert () {
   return {
     scoped: true,
     state: {
-      alert: emptyAlert(),
+      alert: {
+        showing: false,
+        description: '',
+        type: '',
+      },
     },
     reducers: {
       setAlert (state, alert) {
@@ -19,7 +23,10 @@ export default function alert () {
       },
       removeAlert (state) {
         return {
-          alert: emptyAlert(),
+          alert: {
+            ...state.alert,
+            showing: false,
+          },
         }
       }
     },
@@ -28,6 +35,7 @@ export default function alert () {
         methods.setAlert({
           description: error.toString(),
           type: 'is-danger',
+          showing: true,
         })
         setTimeout(() => {
           methods.removeAlert()
@@ -37,6 +45,7 @@ export default function alert () {
         methods.setAlert({
           description: message,
           type: 'is-success',
+          showing: true,
         })
         setTimeout(() => {
           methods.removeAlert()
