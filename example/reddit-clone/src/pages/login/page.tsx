@@ -1,42 +1,6 @@
 import { h } from '../../../../../src/html'
 import TextField from '../../components/textfield'
-
-function Form ({
-  onSubmit,
-  onCancel,
-  children,
-  submitText = 'submit',
-  cancelText = 'cancel',
-}) {
-  return (
-    <form 
-      onSubmit={e => {
-        e.preventDefault()
-        onSubmit()
-      }}
-    >
-      {children}
-      <div class='control is-grouped'>
-        <p class='control'>
-          <button
-            class='button is-primary'
-            type='submit'
-          >
-            Submit
-          </button>
-        </p>
-        <p class='control'>
-          <a
-            class='button is-light'
-            onclick={onCancel}
-          >
-            Cancel
-          </a>
-        </p>
-      </div>
-    </form>
-  )
-}
+import Form from '../../components/form'
 
 export default function login ({state, prev, actions}) {
   let pageState = state.pages.login
