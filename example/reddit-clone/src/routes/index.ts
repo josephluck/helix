@@ -1,4 +1,4 @@
-import login from '../pages/login'
+import login from '../pages/login/page'
 
 export default function routes () {
   return {
