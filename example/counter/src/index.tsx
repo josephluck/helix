@@ -106,12 +106,10 @@ const app = helix({
         setTimeout(() => {
           actions.decrement(amount)
         }, secs * 1000)
-      }
-    }
+      },
+    },
   },
-  routes: {
-    '': counterView,
-  },
+  component: counterView,
 })
 
 const node = document.createElement('div')
