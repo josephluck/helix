@@ -1,5 +1,5 @@
 require('es6-shim')
-import sakura from '../../../src'
+import helix from '../../../src'
 import { h } from '../../../src/html'
 
 function Links () {
@@ -50,7 +50,7 @@ function viewThree ({state, prev, methods}) {
   )
 }
 
-const app = sakura({
+const app = helix({
   model: {
     state: {
       title: 'not set',

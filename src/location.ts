@@ -1,4 +1,4 @@
-import { Sakura } from './types'
+import { Helix } from './types'
 
 export default function location (window) {
   return {

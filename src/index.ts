@@ -1,18 +1,19 @@
 import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
-import tansu from 'tansu'
+import twine from 'twine-js'
+import { Twine } from 'twine-js/dist/types'
 import html from './html'
 import location from './location'
-import { Sakura } from './types'
+import { Helix } from './types'
 
-function renderer (mount) {
-  return function (props, vnode) {
+function renderer (mount: HTMLElement): Helix.Renderer {
+  return function (props: Helix.Props, vnode) {
     html.render(vnode(props), mount)
   }
 }
 
-// Takes Tansu.Model and returns a Tansu.Model
-function makeModel (model) {
+// Takes Twine.Model and returns a Twine.Model
+function makeModel (model: Twine.Model): Twine.Model {
   return Object.assign({}, model, {
     models: Object.assign({}, model.models, {
       location: location(window),
@@ -24,28 +25,28 @@ function combineObjects (a, b) {
   return Object.assign({}, a, b)
 }
 
-function wrapRoutes (routes, wrap) {
-  return Object.keys(routes).map(key => {
-    let route = routes[key]
+function wrapRoutes (routes: Helix.Routes, wrap: Helix.RouteWrapper): Helix.Routes {
+  return Object.keys(routes).map(route => {
+    let handler = routes[route]
     return {
-      [key]: wrap(key, route),
+      [route]: wrap(route, handler),
     }
   }).reduce(combineObjects, {})
 }
 
-export default function (configuration) {
-  return function mount (mount) {
+export default function (configuration: Helix.Configuration) {
+  return function mount (mount: Helix.Mount): void {
     let morph = renderer(mount)
     let model = makeModel(configuration.model)
     let routes = wrapRoutes(configuration.routes, wrapper)
     let router = rlite(() => null, routes)
-    let store = tansu(subscribe)(model)
+    let store = twine(subscribe)(model)
 
     let _state = store.state
     let _prev = store.state
     let _methods = store.methods
 
-    function wrapper (route, handler) {
+    function wrapper (route, handler): Helix.RLiteHandler {
       let currentPath = window.location.pathname
       return function (params, _, newPath) {
         if (currentPath !== newPath) {
