@@ -5,16 +5,33 @@ function Form ({
   onSubmit,
   onCancel,
   children,
+  submitText = 'submit',
+  cancelText = 'cancel',
 }) {
   return (
-    <form onSubmit={onSubmit}>
+    <form 
+      onSubmit={e => {
+        e.preventDefault()
+        onSubmit()
+      }}
+    >
       {children}
       <div class='control is-grouped'>
         <p class='control'>
-          <button class='button is-primary' type='submit'>Submit</button>
+          <button
+            class='button is-primary'
+            type='submit'
+          >
+            Submit
+          </button>
         </p>
         <p class='control'>
-          <a class='button is-light' onclick={onCancel}>Cancel</a>
+          <a
+            class='button is-light'
+            onclick={onCancel}
+          >
+            Cancel
+          </a>
         </p>
       </div>
     </form>
@@ -34,7 +51,9 @@ export default function login ({state, prev, actions}) {
   return (
     <div class='section'>
       <Form
-        onSubmit={pageActions.submit}
+        onSubmit={() => {
+          pageActions.submit(actions.alert.showError)
+        }}
         onCancel={pageActions.reset}
       >
         <TextField
@@ -44,10 +63,13 @@ export default function login ({state, prev, actions}) {
         />
         <TextField
           label='Password'
+          type='password'
           value={pageState.password}
           onInput={updateFormField('password')}
         />
       </Form>
+
+      {state.alert.alert.description}
     </div>
   )
 }

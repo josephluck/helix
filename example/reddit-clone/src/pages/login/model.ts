@@ -1,3 +1,5 @@
+import api from '../../api'
+
 function defaultState () {
   return {
     username: 'joseph@example.com',
@@ -18,6 +20,15 @@ export default function model () {
           ...state,
           [key]: value,
         }
+      },
+    },
+    effects: {
+      submit (state, actions, onError) {
+        return api.login(state.username, state.password)
+          .then(() => {
+            console.log('Successfully logged in')
+          })
+          .catch(onError)
       },
     },
   }
