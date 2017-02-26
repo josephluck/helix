@@ -12,8 +12,7 @@ function renderer (mount: HTMLElement): Helix.Renderer {
   }
 }
 
-// Takes Twine.Model and returns a Twine.Model
-function makeModel (model: Twine.Model): Twine.Model {
+function addLocationModel (model: Twine.Model): Twine.Model {
   return Object.assign({}, model, {
     models: Object.assign({}, model.models, {
       location: location(window),
@@ -37,9 +36,10 @@ function wrapRoutes (routes: Helix.Routes, wrap: Helix.RouteWrapper): Helix.Rout
 export default function (configuration: Helix.Configuration) {
   return function mount (mount: Helix.Mount): void {
     let morph = renderer(mount)
-    let model = makeModel(configuration.model)
-    let routes = wrapRoutes(configuration.routes, wrapper)
-    let router = rlite(() => null, routes)
+    let model = configuration.routes ? addLocationModel(configuration.model) : configuration.model
+    let routes = configuration.routes ? wrapRoutes(configuration.routes, wrapper) : null
+    let renderView = configuration.routes ? rlite(() => null, routes) : null
+    let renderComponent = configuration.component ? configuration.component : null
     let store = twine(subscribe)(model)
 
     let _state = store.state
@@ -66,14 +66,14 @@ export default function (configuration: Helix.Configuration) {
       _state = state
       _prev = prev
       _actions = actions
-      return render(state, prev, actions, router(window.location.pathname))
+      return render(state, prev, actions, renderView ? renderView(window.location.pathname) : renderComponent)
     }
 
     href(function (path) {
       store.actions.location.updateUrl({pathname: path.pathname})
-      render(_state, _state, _actions, router(path.pathname))
+      render(_state, _state, _actions, renderView ? renderView(path.pathname) : null)
     })
 
-    render(store.state, store.state, store.actions, router(store.state.location.pathname))
+    render(_state, _state, _actions, renderView ? renderView(window.location.pathname) : renderComponent)
   }
 }

@@ -18,7 +18,8 @@ export namespace Helix {
 
   export interface Configuration {
     model: Twine.Model
-    routes: Routes
+    routes?: Routes
+    component?: View
   }
   export type Mount = HTMLElement
 }

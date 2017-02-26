@@ -5,10 +5,10 @@ import { h } from '../../../src/html'
 function Links () {
   return (
     <div>
-      <a style='margin-right: 10px;' href='/foo'>view one</a>
-      <a style='margin-right: 10px;' href='/foo/bar'>view two</a>
-      <a style='margin-right: 10px;' href='/foo/bar/123'>view three (123)</a>
-      <a style='margin-right: 10px;' href='/foo/bar/abc'>view three (abc)</a>
+      <a style='margin-right: 10px;' href='/'>view one</a>
+      <a style='margin-right: 10px;' href='/bar'>view two</a>
+      <a style='margin-right: 10px;' href='/bar/123'>view three (123)</a>
+      <a style='margin-right: 10px;' href='/bar/abc'>view three (abc)</a>
     </div>
   )
 }
@@ -106,9 +106,9 @@ const app = helix({
     },
   },
   routes: {
-    'foo': viewOne,
-    'foo/bar': viewTwo,
-    'foo/bar/:baz': viewThree,
+    '': viewOne,
+    'bar': viewTwo,
+    'bar/:baz': viewThree,
   },
 })
 
