@@ -57,10 +57,6 @@ export default function (configuration: Helix.Configuration) {
       }
     }
 
-    function renderCurrentLocation () {
-      renderPage(_state, _state, _actions, renderView ? renderView(window.location.pathname) : null)
-    }
-
     function onStateChange (state, prev, actions) {
       _state = state
       _prev = prev
@@ -84,7 +80,11 @@ export default function (configuration: Helix.Configuration) {
       })
     }
 
-    let component = renderView ? renderView(window.location.pathname) : renderComponent
-    renderPage(_state, _state, _actions, component)
+    function renderCurrentLocation () {
+      let component = renderView ? renderView(window.location.pathname) : renderComponent
+      renderPage(_state, _state, _actions, component)
+    }
+
+    renderCurrentLocation()
   }
 }
