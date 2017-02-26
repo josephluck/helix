@@ -1,23 +1,22 @@
 import { h } from '../../../../../src/html'
+import TextField from '../../components/textfield'
 
 export default function login ({state, prev, actions}) {
-  console.log(state.pages.login)
+  let pageState = state.pages.login
+  let pageActions = actions.pages.login
+  console.log(pageState)
+
   function updateFormField (key) {
     return function (e) {
-      actions.pages.login.setFormField(key, e.target.value)
+      pageActions.setFormField(key, e.target.value)
     }
   }
+
   return (
-    <div>
+    <div class='section'>
       <form>
-        <div class='control'>
-          <label class='label'>Username</label>
-          <input class='input' type='text' value={state.pages.login.username} oninput={updateFormField('username')} />
-        </div>
-        <div class='control'>
-          <label class='label'>Password</label>
-          <input class='input' type='password' value={state.pages.login.password} oninput={updateFormField('password')} />
-        </div>
+        <TextField label='Username' value={pageState.username} onInput={updateFormField('username')} />
+        <TextField label='Password' value={pageState.password} onInput={updateFormField('password')} />
       </form>
     </div>
   )
