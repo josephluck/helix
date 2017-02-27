@@ -2,7 +2,6 @@ import { Helix } from './types'
 
 export default function location (rerender) {
   return {
-    scoped: true,
     state: {
       pathname: window.location.pathname,
       params: {},
@@ -13,7 +12,7 @@ export default function location (rerender) {
       },
     },
     effects: {
-      set (_state, _mathods, pathname) {
+      set (_state, _actions, pathname) {
         rerender(pathname)
         window.history.pushState('', '', pathname)
       },

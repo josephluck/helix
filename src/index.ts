@@ -1,3 +1,4 @@
+// Please note that the inelegance of this file is for the sake of performance
 import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
 import twine from 'twine-js'
@@ -28,65 +29,57 @@ function wrapRoutes (routes: Helix.Routes, wrap: Helix.RouteWrapper): Helix.Rout
 export default function (configuration: Helix.Configuration) {
   return function mount (mount: Helix.Mount): void {
     let morph = renderer(mount)
-    let model = configuration.routes ? addLocationModel(configuration.model) : configuration.model
+    let model = configuration.model
     let routes = configuration.routes ? wrapRoutes(configuration.routes, decorateRoutesInLocationHandler) : null
     let renderView = configuration.routes ? rlite(() => null, routes) : null
     let renderComponent = configuration.component ? configuration.component : null
-    let store = twine(onStateChange)(model)
 
+    if (configuration.routes) {
+      model.models.location = location(renderCurrentLocation)
+    }
+
+    let store = twine(onStateChange)(model)
     let _state = store.state
     let _prev = store.state
     let _actions = store.actions
-    let _pathname = window.location.pathname
+
+    href(setLocationAndRender)
+    window.onpopstate = renderCurrentLocation
+    renderCurrentLocation()
+
+    function renderCurrentLocation () {
+      let component = renderView ? renderView(window.location.pathname) : renderComponent
+      renderPage(component)
+    }
 
     function decorateRoutesInLocationHandler (route, handler): Helix.RLiteHandler {
       return function (params, _, pathname) {
-        if (_pathname !== pathname) {
-          _pathname = pathname
-          store.actions.location.receiveRoute({ pathname, params })
+        if (_state.location.pathname !== pathname) {
+          _actions.location.receiveRoute({ pathname, params })
           return false
         }
         return handler
       }
     }
 
-    function renderPage (state, prev, actions, vnode: false | Helix.View) {
-      const props = { state, prev, actions }
+    function renderPage (vnode: false | Helix.View): void {
+      const props = { state: _state, prev: _prev, actions: _actions }
       if (vnode) {
-        return morph(props, vnode)
+        morph(props, vnode)
       }
     }
 
-    function onStateChange (state, prev, actions) {
+    function onStateChange (state, prev, actions): void {
       _state = state
       _prev = prev
       _actions = actions
       let component = renderView ? renderView(window.location.pathname) : renderComponent
-      return renderPage(state, prev, actions, component)
+      renderPage(component)
     }
 
-    href(function (path) {
+    function setLocationAndRender (path): void {
       window.history.pushState('', '', path.pathname)
-      renderPage(_state, _state, _actions, renderView ? renderView(path.pathname) : null)
-    })
-
-    window.onpopstate = function () {
-      renderCurrentLocation()
+      renderPage(renderView ? renderView(path.pathname) : null)
     }
-
-    function addLocationModel (model: Twine.Model): Twine.Model {
-      return Object.assign({}, model, {
-        models: Object.assign({}, model.models, {
-          location: location(renderCurrentLocation),
-        }),
-      })
-    }
-
-    function renderCurrentLocation () {
-      let component = renderView ? renderView(window.location.pathname) : renderComponent
-      renderPage(_state, _state, _actions, component)
-    }
-
-    renderCurrentLocation()
   }
 }
