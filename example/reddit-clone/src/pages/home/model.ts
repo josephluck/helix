@@ -6,7 +6,6 @@ function defaultState () {
 
 export default function model () {
   return {
-    scoped: true,
     state: defaultState(),
     reducers: {},
     effects: {},
