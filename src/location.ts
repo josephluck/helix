@@ -1,6 +1,6 @@
 import { Helix } from './types'
 
-export default function location (notify) {
+export default function location (rerender) {
   return {
     scoped: true,
     state: {
@@ -13,10 +13,8 @@ export default function location (notify) {
       },
     },
     effects: {
-      set (_state, _mathods, pathname, shouldNotify) {
-        if (shouldNotify !== false) {
-          notify(pathname)
-        }
+      set (_state, _mathods, pathname) {
+        rerender(pathname)
         window.history.pushState('', '', pathname)
       },
     },

@@ -66,11 +66,13 @@ export default function (configuration: Helix.Configuration) {
     }
 
     href(function (path) {
-      store.actions.location.set(path.pathname, false)
+      window.history.pushState('', '', path.pathname)
       renderPage(_state, _state, _actions, renderView ? renderView(path.pathname) : null)
     })
 
-    window.onpopstate = renderCurrentLocation
+    window.onpopstate = function () {
+      renderCurrentLocation()
+    }
 
     function addLocationModel (model: Twine.Model): Twine.Model {
       return Object.assign({}, model, {
