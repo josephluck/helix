@@ -1,21 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function location(window) {
+function location(rerender) {
     return {
-        scoped: true,
         state: {
             pathname: window.location.pathname,
             params: {},
         },
         reducers: {
-            set: function (_state, _a) {
+            receiveRoute: function (_state, _a) {
                 var pathname = _a.pathname, params = _a.params;
                 return { pathname: pathname, params: params };
             },
         },
         effects: {
-            updateUrl: function (_state, _mathods, _a) {
-                var pathname = _a.pathname;
+            set: function (_state, _actions, pathname) {
+                rerender(pathname);
                 window.history.pushState('', '', pathname);
             },
         },

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// Please note that the inelegance of this file is for the sake of performance
 var rlite = require("rlite-router");
 var href = require("sheet-router/href");
 var twine_js_1 = require("twine-js");
@@ -9,14 +10,6 @@ function renderer(mount) {
     return function (props, vnode) {
         html_1.default.render(vnode(props), mount);
     };
-}
-// Takes Twine.Model and returns a Twine.Model
-function makeModel(model) {
-    return Object.assign({}, model, {
-        models: Object.assign({}, model.models, {
-            location: location_1.default(window),
-        }),
-    });
 }
 function combineObjects(a, b) {
     return Object.assign({}, a, b);
@@ -33,38 +26,50 @@ function wrapRoutes(routes, wrap) {
 function default_1(configuration) {
     return function mount(mount) {
         var morph = renderer(mount);
-        var model = makeModel(configuration.model);
-        var routes = wrapRoutes(configuration.routes, wrapper);
-        var router = rlite(function () { return null; }, routes);
-        var store = twine_js_1.default(subscribe)(model);
+        var model = configuration.model;
+        var routes = configuration.routes ? wrapRoutes(configuration.routes, decorateRoutesInLocationHandler) : null;
+        var renderView = configuration.routes ? rlite(function () { return null; }, routes) : null;
+        var renderComponent = configuration.component ? configuration.component : null;
+        if (configuration.routes) {
+            model.models.location = location_1.default(renderCurrentLocation);
+        }
+        var store = twine_js_1.default(onStateChange)(model);
         var _state = store.state;
         var _prev = store.state;
-        var _methods = store.methods;
-        function wrapper(route, handler) {
-            var currentPath = window.location.pathname;
-            return function (params, _, newPath) {
-                if (currentPath !== newPath) {
-                    currentPath = newPath;
-                    store.methods.location.set({ pathname: newPath, params: params });
+        var _actions = store.actions;
+        href(setLocationAndRender);
+        window.onpopstate = renderCurrentLocation;
+        renderCurrentLocation();
+        function renderCurrentLocation() {
+            var component = renderView ? renderView(window.location.pathname) : renderComponent;
+            renderPage(component);
+        }
+        function decorateRoutesInLocationHandler(route, handler) {
+            return function (params, _, pathname) {
+                if (_state.location.pathname !== pathname) {
+                    _actions.location.receiveRoute({ pathname: pathname, params: params });
+                    return false;
                 }
                 return handler;
             };
         }
-        function render(state, prev, methods, vnode) {
-            var props = { state: state, prev: prev, methods: methods };
-            return morph(props, vnode);
+        function renderPage(vnode) {
+            var props = { state: _state, prev: _prev, actions: _actions };
+            if (vnode) {
+                morph(props, vnode);
+            }
         }
-        function subscribe(state, prev, methods) {
+        function onStateChange(state, prev, actions) {
             _state = state;
             _prev = prev;
-            _methods = methods;
-            return render(state, prev, methods, router(window.location.pathname));
+            _actions = actions;
+            var component = renderView ? renderView(window.location.pathname) : renderComponent;
+            renderPage(component);
         }
-        href(function (path) {
-            store.methods.location.updateUrl({ pathname: path.pathname });
-            render(_state, _state, _methods, router(path.pathname));
-        });
-        render(store.state, store.state, store.methods, router(store.state.location.pathname));
+        function setLocationAndRender(path) {
+            window.history.pushState('', '', path.pathname);
+            renderPage(renderView ? renderView(path.pathname) : null);
+        }
     };
 }
 exports.default = default_1;

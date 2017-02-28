@@ -3,7 +3,7 @@ import { Helix } from './types'
 export default function location (rerender) {
   return {
     state: {
-      pathname: window.location.pathname,
+      pathname: '',
       params: {},
     },
     reducers: {
@@ -13,8 +13,8 @@ export default function location (rerender) {
     },
     effects: {
       set (_state, _actions, pathname) {
-        rerender(pathname)
         window.history.pushState('', '', pathname)
+        rerender(pathname)
       },
     },
   }

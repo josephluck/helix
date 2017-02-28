@@ -31,24 +31,24 @@ export default function alert () {
       }
     },
     effects: {
-      showError (state, methods, error) {
-        methods.setAlert({
+      showError (state, actions, error) {
+        actions.setAlert({
           description: error.toString(),
           type: 'is-danger',
           showing: true,
         })
         setTimeout(() => {
-          methods.removeAlert()
+          actions.removeAlert()
         }, 5000)
       },
-      showSuccess (state, methods, message) {
-        methods.setAlert({
+      showSuccess (state, actions, message) {
+        actions.setAlert({
           description: message,
           type: 'is-success',
           showing: true,
         })
         setTimeout(() => {
-          methods.removeAlert()
+          actions.removeAlert()
         }, 5000)
       }
     },

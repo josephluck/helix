@@ -4,6 +4,7 @@ import * as href from 'sheet-router/href'
 import twine from 'twine-js'
 import { Twine } from 'twine-js/dist/types'
 import html from './html'
+import * as createElement from 'inferno-create-element/dist/inferno-create-element'
 import location from './location'
 import { Helix } from './types'
 
@@ -26,7 +27,7 @@ function wrapRoutes (routes: Helix.Routes, wrap: Helix.RouteWrapper): Helix.Rout
   }).reduce(combineObjects, {})
 }
 
-export default function (configuration: Helix.Configuration) {
+export default function (configuration) {
   return function mount (mount: Helix.Mount): void {
     let morph = renderer(mount)
     let model = configuration.model
@@ -52,20 +53,47 @@ export default function (configuration: Helix.Configuration) {
       renderPage(component)
     }
 
-    function decorateRoutesInLocationHandler (route, handler): Helix.RLiteHandler {
+    function decorateRoutesInLocationHandler (route, handler) {
       return function (params, _, pathname) {
+        let _handler = handler
         if (_state.location.pathname !== pathname) {
           _actions.location.receiveRoute({ pathname, params })
           return false
         }
-        return handler
+        if (typeof _handler === 'object') {
+          _handler = function () {
+            const props = { state: _state, prev: _prev, actions: _actions }
+            function createArgs (args) {
+              return Array.prototype.slice.call(args).concat([_state, _prev, _actions])
+            }
+            function createBinding (binding) {
+              if (!binding) {
+                return null
+              }
+              return function () {
+                binding.apply(null, createArgs(arguments))
+              }
+            }
+            return createElement(handler.view, Object.assign({}, props, {
+              onComponentWillMount: createBinding(handler.onWillMount),
+              onComponentDidMount: createBinding(handler.onDidMount),
+              onComponentShouldUpdate: createBinding(handler.onShouldUpdate),
+              onComponentWillUpdate: createBinding(handler.onWillUpdate),
+              onComponentDidUpdate: createBinding(handler.onDidUpdate),
+              onComponentWillUnmount: createBinding(handler.onWillUnmount),
+            }))
+          }
+        }
+        return _handler
       }
     }
 
-    function renderPage (vnode: false | Helix.View): void {
+    function renderPage (vnode): void {
       const props = { state: _state, prev: _prev, actions: _actions }
       if (vnode) {
-        morph(props, vnode)
+        let _vnode
+        _vnode = vnode
+        morph(props, _vnode)
       }
     }
 
