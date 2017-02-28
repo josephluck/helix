@@ -4,7 +4,7 @@ function Alert ({
   showing,
   description,
   type,
-  onDelete
+  onDelete,
 }) {
   let className = `notification ${type}`
   let style = `
@@ -33,7 +33,7 @@ export default function (Child) {
   return function ({state, prev, actions}) {
     return (
       <div>
-        <Child state={state} prev={prev} actions={actions} />
+        <Child state={state} prev={prev} actions={actions} onComponentWillMount={() => null} />
         <Alert
           showing={state.alert.alert.showing}
           description={state.alert.alert.description}

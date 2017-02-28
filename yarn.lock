@@ -1312,12 +1312,6 @@ dot-prop@^3.0.0:
   dependencies:
     is-obj "^1.0.0"
 
-dot-prop@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/dot-prop/-/dot-prop-4.1.1.tgz#a8493f0b7b5eeec82525b5c7587fa7de7ca859c1"
-  dependencies:
-    is-obj "^1.0.0"
-
 duplexer2@^0.1.2, duplexer2@^0.1.4, duplexer2@~0.1.0, duplexer2@~0.1.2:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer2/-/duplexer2-0.1.4.tgz#8b12dab878c0d69e3e7891051662a32fc6bddcc1"
@@ -2840,15 +2834,14 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
 
-twine-js@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/twine-js/-/twine-js-1.0.2.tgz#d87aa33032cf3eafbd661cdfb5d939d05ed37b2c"
+twine-js@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/twine-js/-/twine-js-1.1.1.tgz#af1df302a275731fafb1097fc6f883726fb8e88f"
   dependencies:
     "@types/es6-shim" "^0.31.32"
     "@types/node" "^7.0.5"
     babelify "^7.3.0"
     browserify "^14.1.0"
-    dot-prop "^4.1.1"
     es6-shim "^0.35.3"
     ts-node "^2.1.0"
     tsify "^3.0.1"

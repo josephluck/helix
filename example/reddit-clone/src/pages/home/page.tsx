@@ -1,12 +1,21 @@
 import { h } from '../../../../../src/html'
 
-export default function home ({state, prev, actions}) {
-  let pageState = state.pages.home
-  let pageActions = actions.pages.home
-
+function Page ({state, actions}) {
   return (
-    <div class='section'>
-      Home page
+    <div>
+      {state.pages.home.posts.map(post => (
+        <div>
+          {post}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export default function home (props) {
+  return (
+    <div>
+      Hey
     </div>
   )
 }
