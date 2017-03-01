@@ -12,6 +12,7 @@ export default function model () {
     state: defaultState(),
     reducers: {
       receivePosts (state, posts) {
+        console.log(posts)
         return {
           posts,
         }
@@ -19,13 +20,7 @@ export default function model () {
     },
     effects: {
       requestPosts (state, actions) {
-        setTimeout(() => {
-          actions.receivePosts([
-            'Post 1',
-            'Post 2',
-            'Post 3',
-          ])
-        }, 1000)
+        api.fetchPosts().then(actions.receivePosts)
       },
     },
   }
