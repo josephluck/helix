@@ -45,6 +45,10 @@ export default function (configuration) {
     let _prev = store.state
     let _actions = store.actions
 
+    function getProps () {
+      return { state: _state, prev: _prev, actions: _actions }
+    }
+
     href(setLocationAndRender)
     window.onpopstate = renderCurrentLocation
     renderCurrentLocation()
@@ -54,36 +58,36 @@ export default function (configuration) {
       renderPage(component)
     }
 
+    function createLifecycleHook (binding) {
+      if (!binding) {
+        return null
+      }
+      return function () {
+        function createArgs (args) {
+          return Array.prototype.slice.call(args).concat([_state, _prev, _actions])
+        }
+        binding.apply(null, createArgs(arguments))
+      }
+    }
+
     function decorateRoutesInLocationHandler (route, handler) {
+      let _handler = handler
+      if (typeof _handler === 'object') {
+        _handler = function () {
+          return createElement(handler.view, Object.assign({}, getProps(), {
+            onComponentWillMount: createLifecycleHook(handler.onWillMount),
+            onComponentDidMount: createLifecycleHook(handler.onDidMount),
+            onComponentShouldUpdate: createLifecycleHook(handler.onShouldUpdate),
+            onComponentWillUpdate: createLifecycleHook(handler.onWillUpdate),
+            onComponentDidUpdate: createLifecycleHook(handler.onDidUpdate),
+            onComponentWillUnmount: createLifecycleHook(handler.onWillUnmount),
+          }))
+        }
+      }
       return function (params, _, pathname) {
-        let _handler = handler
         if (_state.location.pathname !== pathname) {
           _actions.location.receiveRoute({ pathname, params })
           return false
-        }
-        if (typeof _handler === 'object') {
-          _handler = function () {
-            const props = { state: _state, prev: _prev, actions: _actions }
-            function createArgs (args) {
-              return Array.prototype.slice.call(args).concat([_state, _prev, _actions])
-            }
-            function createBinding (binding) {
-              if (!binding) {
-                return null
-              }
-              return function () {
-                binding.apply(null, createArgs(arguments))
-              }
-            }
-            return createElement(handler.view, Object.assign({}, props, {
-              onComponentWillMount: createBinding(handler.onWillMount),
-              onComponentDidMount: createBinding(handler.onDidMount),
-              onComponentShouldUpdate: createBinding(handler.onShouldUpdate),
-              onComponentWillUpdate: createBinding(handler.onWillUpdate),
-              onComponentDidUpdate: createBinding(handler.onDidUpdate),
-              onComponentWillUnmount: createBinding(handler.onWillUnmount),
-            }))
-          }
         }
         return _handler
       }
