@@ -1,21 +1,27 @@
 import { h } from '../../../../../src/html'
+import base from '../base'
 
-function Page ({state, actions}) {
+function post (post) {
   return (
     <div>
-      {state.pages.home.posts.map(post => (
-        <div>
-          {post}
-        </div>
-      ))}
+      {post}
     </div>
   )
 }
 
-export default function home (props) {
+function page ({state, prev, actions}) {
   return (
     <div>
-      Hey
+      {state.pages.home.posts.map(post)}
     </div>
   )
+}
+
+export default function () {
+  return {
+    onWillMount (state, prev, actions) {
+      actions.pages.home.requestPosts()
+    },
+    view: base(page),
+  }
 }
