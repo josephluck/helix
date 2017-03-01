@@ -677,10 +677,6 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
-bulma@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/bulma/-/bulma-0.3.2.tgz#2c1fa6adaf2a31f47a142c11856f2db27bc638c9"
-
 bytes@2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-2.2.0.tgz#fd35464a403f6f9117c2de3609ecff9cae000588"
@@ -1948,6 +1944,10 @@ module-deps@^4.0.8:
     through2 "^2.0.0"
     xtend "^4.0.0"
 
+moment@^2.17.1:
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
+
 ms@0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
@@ -2769,6 +2769,10 @@ syntax-error@^1.1.1:
   resolved "https://registry.yarnpkg.com/syntax-error/-/syntax-error-1.1.6.tgz#b4549706d386cc1c1dc7c2423f18579b6cade710"
   dependencies:
     acorn "^2.7.0"
+
+tachyons@^4.6.2:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/tachyons/-/tachyons-4.6.2.tgz#cf006fd516763e735b33565fc21b8b3616a012c8"
 
 tar-pack@~3.3.0:
   version "3.3.0"

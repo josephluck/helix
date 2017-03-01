@@ -15,7 +15,7 @@ function Alert ({
   `
   return (
     <div style='text-align: center; position: fixed; bottom: 20px; left: 0px; right: 0px;'>
-      <div 
+      <div
         class={className}
         style={style}
       >
@@ -32,7 +32,7 @@ function Alert ({
 export default function (Child) {
   return function ({state, prev, actions}) {
     return (
-      <div>
+      <div class='sans-serif vh-100 vw-100 overflow-auto bg-near-white'>
         <Child state={state} prev={prev} actions={actions} onComponentWillMount={() => null} />
         <Alert
           showing={state.alert.alert.showing}
