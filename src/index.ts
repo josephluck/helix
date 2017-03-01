@@ -1,10 +1,11 @@
 // Please note that the inelegance of this file is for the sake of performance
 import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
+import * as createElement from 'inferno-create-element/dist/inferno-create-element'
 import twine from 'twine-js'
 import { Twine } from 'twine-js/dist/types'
+
 import html from './html'
-import * as createElement from 'inferno-create-element/dist/inferno-create-element'
 import location from './location'
 import { Helix } from './types'
 
