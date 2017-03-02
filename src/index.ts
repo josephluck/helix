@@ -67,7 +67,8 @@ export default function (configuration) {
           return Array.prototype.slice.call(args).concat([_state, _prev, _actions])
         }
         if (defer) {
-          window.requestAnimationFrame(binding.apply(null, createArgs(arguments)))
+          let args = arguments
+          window.requestAnimationFrame(() => binding.apply(null, createArgs(args)))
         } else {
           binding.apply(null, createArgs(arguments))
         }
