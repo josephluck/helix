@@ -63,14 +63,10 @@ export default function (configuration) {
         return null
       }
       return function () {
-        function createArgs (args) {
-          return Array.prototype.slice.call(args).concat([_state, _prev, _actions])
-        }
         if (defer) {
-          let args = arguments
-          window.requestAnimationFrame(() => binding.apply(null, createArgs(args)))
+          window.requestAnimationFrame(() => binding.apply(null, [_state, _prev, _actions]))
         } else {
-          binding.apply(null, createArgs(arguments))
+          binding.apply(null, [_state, _prev, _actions])
         }
       }
     }
@@ -79,14 +75,15 @@ export default function (configuration) {
       let _handler = handler
       if (typeof _handler === 'object') {
         _handler = function () {
-          return createElement(handler.view, Object.assign({}, getProps(), {
+          let props = Object.assign({}, getProps(), {
             onComponentWillMount: createLifecycleHook(handler.onWillMount),
             onComponentDidMount: createLifecycleHook(handler.onDidMount),
             onComponentShouldUpdate: createLifecycleHook(handler.onShouldUpdate),
             onComponentWillUpdate: createLifecycleHook(handler.onWillUpdate),
             onComponentDidUpdate: createLifecycleHook(handler.onDidUpdate),
             onComponentWillUnmount: createLifecycleHook(handler.onWillUnmount, true),
-          }))
+          })
+          return createElement(handler.view, props)
         }
       }
       return function (params, _, pathname) {

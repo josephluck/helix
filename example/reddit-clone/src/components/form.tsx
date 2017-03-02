@@ -15,23 +15,19 @@ export default function Form ({
       }}
     >
       {children}
-      <div class='control is-grouped'>
-        <p class='control'>
-          <button
-            class='button is-primary'
-            type='submit'
-          >
-            {submitText}
-          </button>
-        </p>
-        <p class='control'>
-          <a
-            class='button is-light'
-            onclick={onCancel}
-          >
-            {cancelText}
-          </a>
-        </p>
+      <div class='inline-flex items-center'>
+        <button
+          class='dib button-reset bg-white mid-gray ba b--black-20 br2 ph3 pv2 mr2'
+          type='submit'
+        >
+          {submitText}
+        </button>
+        <a
+          class='silver'
+          onclick={onCancel}
+        >
+          {cancelText}
+        </a>
       </div>
     </form>
   )

@@ -10,9 +10,9 @@ function post (post) {
         {post.votes}
       </div>
       <div>
-        <a class='f3 pb2 blue no-underline' href={`/posts/${post.uuid}`}>{post.title}</a>
+        <a class='f3 dib mb1 blue no-underline' href={`/posts/${post.uuid}`}>{post.title}</a>
         <div class='gray f6'>
-          <div class='mb1'>
+          <div class='mb'>
             submitted {moment(post.createdOn).fromNow()} by {post.createdBy}
           </div>
           <div>{post.comments.length} comments</div>
@@ -25,9 +25,13 @@ function post (post) {
 function page ({state, prev, actions}) {
   return (
     <div class='pa4'>
-      <div class='ba b--black-10 br2 overflow-hidden'>
-        {state.pages.home.posts.map(post)}
-      </div>
+      {state.pages.home.posts.length
+        ? (
+          <div class='ba b--black-10 br2 overflow-hidden'>
+            {state.pages.home.posts.map(post)}
+          </div>
+        ) : null
+      }
     </div>
   )
 }
@@ -37,7 +41,7 @@ export default function () {
     onWillMount (state, prev, actions) {
       actions.pages.home.requestPosts()
     },
-    onWillUnmount (elm, state, prev, actions) {
+    onWillUnmount (state, prev, actions) {
       actions.pages.home.resetState()
     },
     view: base(page),

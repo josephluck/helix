@@ -24,7 +24,7 @@ export default function login ({state, prev, actions}) {
   }
 
   return (
-    <div class='section'>
+    <div class='pa4'>
       <Form
         onSubmit={submit}
         onCancel={pageActions.reset}

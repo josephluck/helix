@@ -42,7 +42,7 @@ export default function () {
     onWillMount (state, prev, actions) {
       actions.pages.post.requestPost()
     },
-    onWillUnmount (elm, state, prev, actions) {
+    onWillUnmount (state, prev, actions) {
       actions.pages.post.resetState()
     },
     view: base(page),
