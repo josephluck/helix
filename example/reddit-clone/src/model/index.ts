@@ -5,6 +5,7 @@ import user from './user'
 // Pages
 import login from '../pages/login/model'
 import home from '../pages/home/model'
+import post from '../pages/post/model'
 
 export default function model () {
   return {
@@ -17,6 +18,7 @@ export default function model () {
         models: {
           login: login(),
           home: home(),
+          post: post(),
         },
       },
     },

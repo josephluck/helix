@@ -2,6 +2,7 @@ import * as faker from 'faker'
 
 export default function post () {
   return {
+    uuid: faker.random.uuid(),
     title: faker.company.catchPhrase(),
     createdOn: faker.date.past().toString(),
     createdBy: `${faker.name.firstName()} ${faker.name.lastName()}`,

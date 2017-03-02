@@ -58,7 +58,7 @@ export default function (configuration) {
       renderPage(component)
     }
 
-    function createLifecycleHook (binding) {
+    function createLifecycleHook (binding, defer = false) {
       if (!binding) {
         return null
       }
@@ -66,7 +66,11 @@ export default function (configuration) {
         function createArgs (args) {
           return Array.prototype.slice.call(args).concat([_state, _prev, _actions])
         }
-        binding.apply(null, createArgs(arguments))
+        if (defer) {
+          window.requestAnimationFrame(binding.apply(null, createArgs(arguments)))
+        } else {
+          binding.apply(null, createArgs(arguments))
+        }
       }
     }
 
@@ -80,7 +84,7 @@ export default function (configuration) {
             onComponentShouldUpdate: createLifecycleHook(handler.onShouldUpdate),
             onComponentWillUpdate: createLifecycleHook(handler.onWillUpdate),
             onComponentDidUpdate: createLifecycleHook(handler.onDidUpdate),
-            onComponentWillUnmount: createLifecycleHook(handler.onWillUnmount),
+            onComponentWillUnmount: createLifecycleHook(handler.onWillUnmount, true),
           }))
         }
       }
@@ -96,9 +100,7 @@ export default function (configuration) {
     function renderPage (vnode): void {
       const props = { state: _state, prev: _prev, actions: _actions }
       if (vnode) {
-        let _vnode
-        _vnode = vnode
-        morph(props, _vnode)
+        morph(props, vnode)
       }
     }
 

@@ -3,7 +3,7 @@ import * as moment from 'moment'
 
 import base from '../base'
 
-function post (post) {
+function renderPost (post) {
   return (
     <div class='bb b--black-10 bg-white pa3 flex items-center'>
       <div class='f4 w2 tc mr3 light-silver bold tracked'>
@@ -23,11 +23,16 @@ function post (post) {
 }
 
 function page ({state, prev, actions}) {
+  let post = state.pages.post.post
   return (
     <div class='pa4'>
-      <div class='ba b--black-10 br2 overflow-hidden'>
-        {state.pages.home.posts.map(post)}
-      </div>
+      {post
+        ? (
+          <div class='ba b--black-10 br2 overflow-hidden'>
+            {renderPost(post)}
+          </div>
+        ) : null
+      }
     </div>
   )
 }
@@ -35,10 +40,10 @@ function page ({state, prev, actions}) {
 export default function () {
   return {
     onWillMount (state, prev, actions) {
-      actions.pages.home.requestPosts()
+      actions.pages.post.requestPost()
     },
     onWillUnmount (elm, state, prev, actions) {
-      actions.pages.home.resetState()
+      actions.pages.post.resetState()
     },
     view: base(page),
   }

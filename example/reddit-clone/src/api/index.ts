@@ -12,5 +12,8 @@ export default walk({
   },
   fetchPosts () {
     return Array.from({ length: 10 }).map(() => post())
-  }
+  },
+  fetchPost () {
+    return post()
+  },
 }, promisify)
