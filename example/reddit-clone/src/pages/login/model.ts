@@ -14,7 +14,6 @@ export default function model () {
       },
       setFormField (state, key, value) {
         return {
-          ...state,
           [key]: value,
         }
       },

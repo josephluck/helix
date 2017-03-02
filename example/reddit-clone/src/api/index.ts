@@ -6,7 +6,6 @@ import post from './fixtures/post'
 
 export default walk({
   login (username, password) {
-    console.log(username, password, user)
     if (username === user.username && password === user.password) {
       return authResponse()
     }
