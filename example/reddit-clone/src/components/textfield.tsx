@@ -1,6 +1,6 @@
 import { h } from '../../../../src/html'
 
-export default function TextField ({
+export default function textField ({
   label,
   type = 'text',
   value,

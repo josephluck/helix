@@ -1,11 +1,13 @@
 import walk from '../utils/walk'
 import promisify from '../utils/promisify'
 import authResponse from './fixtures/authResponse'
+import { fixture as user } from './fixtures/user'
 import post from './fixtures/post'
 
 export default walk({
   login (username, password) {
-    if (username === 'joseph@example.com' && password === 'password') {
+    console.log(username, password, user)
+    if (username === user.username && password === user.password) {
       return authResponse()
     }
     return new Error('Whoops! Please try again...')

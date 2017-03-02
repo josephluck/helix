@@ -38,10 +38,10 @@ function page ({state, prev, actions}) {
 
 export default function () {
   return {
-    onWillMount (state, prev, actions) {
+    onMount (state, prev, actions) {
       actions.pages.home.requestPosts()
     },
-    onWillUnmount (state, prev, actions) {
+    onUnmount (state, prev, actions) {
       actions.pages.home.resetState()
     },
     view: base(page),

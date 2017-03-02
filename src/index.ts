@@ -76,12 +76,8 @@ export default function (configuration) {
       if (typeof _handler === 'object') {
         _handler = function () {
           let props = Object.assign({}, getProps(), {
-            onComponentWillMount: createLifecycleHook(handler.onWillMount),
-            onComponentDidMount: createLifecycleHook(handler.onDidMount),
-            onComponentShouldUpdate: createLifecycleHook(handler.onShouldUpdate),
-            onComponentWillUpdate: createLifecycleHook(handler.onWillUpdate),
-            onComponentDidUpdate: createLifecycleHook(handler.onDidUpdate),
-            onComponentWillUnmount: createLifecycleHook(handler.onWillUnmount, true),
+            onComponentDidMount: createLifecycleHook(handler.onMount),
+            onComponentWillUnmount: createLifecycleHook(handler.onUnmount, true),
           })
           return createElement(handler.view, props)
         }
