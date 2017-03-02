@@ -12,21 +12,10 @@ export default function login ({state, prev, actions}) {
     }
   }
 
-  function submit () {
-    pageActions.submit()
-      .then(function (authResponse) {
-        actions.location.set('/')
-        actions.alert.showSuccess('Successfully logged in')
-        actions.user.receiveUser(authResponse.user)
-      }, function (err) {
-        actions.alert.showError(err)
-      })
-  }
-
   return (
-    <div class='section'>
+    <div class='pa4'>
       <Form
-        onSubmit={submit}
+        onSubmit={() => pageActions.submit(pageState.username, pageState.password)}
         onCancel={pageActions.reset}
       >
         <TextField

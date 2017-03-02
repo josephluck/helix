@@ -1,10 +1,11 @@
 import { h } from '../../../../src/html'
+import button from './button'
 
 export default function Form ({
   onSubmit,
   onCancel,
   children,
-  submitText = 'submit',
+  submitText,
   cancelText = 'cancel',
 }) {
   return (
@@ -15,23 +16,16 @@ export default function Form ({
       }}
     >
       {children}
-      <div class='control is-grouped'>
-        <p class='control'>
-          <button
-            class='button is-primary'
-            type='submit'
-          >
-            {submitText}
-          </button>
-        </p>
-        <p class='control'>
-          <a
-            class='button is-light'
-            onclick={onCancel}
-          >
-            {cancelText}
-          </a>
-        </p>
+      <div class='inline-flex items-center'>
+        {button({
+          label: submitText,
+        })}
+        <a
+          class='silver'
+          onclick={onCancel}
+        >
+          {cancelText}
+        </a>
       </div>
     </form>
   )

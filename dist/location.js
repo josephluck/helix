@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function location(rerender) {
     return {
         state: {
-            pathname: window.location.pathname,
+            pathname: '',
             params: {},
         },
         reducers: {
@@ -14,8 +14,8 @@ function location(rerender) {
         },
         effects: {
             set: function (_state, _actions, pathname) {
-                rerender(pathname);
                 window.history.pushState('', '', pathname);
+                rerender(pathname);
             },
         },
     };

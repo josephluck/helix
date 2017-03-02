@@ -5,6 +5,7 @@ var rlite = require("rlite-router");
 var href = require("sheet-router/href");
 var twine_js_1 = require("twine-js");
 var html_1 = require("./html");
+var createElement = require("inferno-create-element/dist/inferno-create-element");
 var location_1 = require("./location");
 function renderer(mount) {
     return function (props, vnode) {
@@ -46,17 +47,44 @@ function default_1(configuration) {
         }
         function decorateRoutesInLocationHandler(route, handler) {
             return function (params, _, pathname) {
+                var _handler = handler;
                 if (_state.location.pathname !== pathname) {
                     _actions.location.receiveRoute({ pathname: pathname, params: params });
                     return false;
                 }
-                return handler;
+                if (typeof _handler === 'object') {
+                    _handler = function () {
+                        var props = { state: _state, prev: _prev, actions: _actions };
+                        function createArgs(args) {
+                            return Array.prototype.slice.call(args).concat([_state, _prev, _actions]);
+                        }
+                        function createBinding(binding) {
+                            if (!binding) {
+                                return null;
+                            }
+                            return function () {
+                                binding.apply(null, createArgs(arguments));
+                            };
+                        }
+                        return createElement(handler.view, Object.assign({}, props, {
+                            onComponentWillMount: createBinding(handler.onWillMount),
+                            onComponentDidMount: createBinding(handler.onDidMount),
+                            onComponentShouldUpdate: createBinding(handler.onShouldUpdate),
+                            onComponentWillUpdate: createBinding(handler.onWillUpdate),
+                            onComponentDidUpdate: createBinding(handler.onDidUpdate),
+                            onComponentWillUnmount: createBinding(handler.onWillUnmount),
+                        }));
+                    };
+                }
+                return _handler;
             };
         }
         function renderPage(vnode) {
             var props = { state: _state, prev: _prev, actions: _actions };
             if (vnode) {
-                morph(props, vnode);
+                var _vnode = void 0;
+                _vnode = vnode;
+                morph(props, _vnode);
             }
         }
         function onStateChange(state, prev, actions) {

@@ -1,10 +1,11 @@
 // Please note that the inelegance of this file is for the sake of performance
 import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
+import * as createElement from 'inferno-create-element/dist/inferno-create-element'
 import twine from 'twine-js'
 import { Twine } from 'twine-js/dist/types'
+
 import html from './html'
-import * as createElement from 'inferno-create-element/dist/inferno-create-element'
 import location from './location'
 import { Helix } from './types'
 
@@ -44,6 +45,10 @@ export default function (configuration) {
     let _prev = store.state
     let _actions = store.actions
 
+    function getProps () {
+      return { state: _state, prev: _prev, actions: _actions }
+    }
+
     href(setLocationAndRender)
     window.onpopstate = renderCurrentLocation
     renderCurrentLocation()
@@ -53,36 +58,34 @@ export default function (configuration) {
       renderPage(component)
     }
 
+    function createLifecycleHook (binding, defer = false) {
+      if (!binding) {
+        return null
+      }
+      return function () {
+        if (defer) {
+          window.requestAnimationFrame(() => binding.apply(null, [_state, _prev, _actions]))
+        } else {
+          binding.apply(null, [_state, _prev, _actions])
+        }
+      }
+    }
+
     function decorateRoutesInLocationHandler (route, handler) {
+      let _handler = handler
+      if (typeof _handler === 'object') {
+        _handler = function () {
+          let props = Object.assign({}, getProps(), {
+            onComponentDidMount: createLifecycleHook(handler.onMount),
+            onComponentWillUnmount: createLifecycleHook(handler.onUnmount, true),
+          })
+          return createElement(handler.view, props)
+        }
+      }
       return function (params, _, pathname) {
-        let _handler = handler
         if (_state.location.pathname !== pathname) {
           _actions.location.receiveRoute({ pathname, params })
           return false
-        }
-        if (typeof _handler === 'object') {
-          _handler = function () {
-            const props = { state: _state, prev: _prev, actions: _actions }
-            function createArgs (args) {
-              return Array.prototype.slice.call(args).concat([_state, _prev, _actions])
-            }
-            function createBinding (binding) {
-              if (!binding) {
-                return null
-              }
-              return function () {
-                binding.apply(null, createArgs(arguments))
-              }
-            }
-            return createElement(handler.view, Object.assign({}, props, {
-              onComponentWillMount: createBinding(handler.onWillMount),
-              onComponentDidMount: createBinding(handler.onDidMount),
-              onComponentShouldUpdate: createBinding(handler.onShouldUpdate),
-              onComponentWillUpdate: createBinding(handler.onWillUpdate),
-              onComponentDidUpdate: createBinding(handler.onDidUpdate),
-              onComponentWillUnmount: createBinding(handler.onWillUnmount),
-            }))
-          }
         }
         return _handler
       }
@@ -91,9 +94,7 @@ export default function (configuration) {
     function renderPage (vnode): void {
       const props = { state: _state, prev: _prev, actions: _actions }
       if (vnode) {
-        let _vnode
-        _vnode = vnode
-        morph(props, _vnode)
+        morph(props, vnode)
       }
     }
 

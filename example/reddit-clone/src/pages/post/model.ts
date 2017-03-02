@@ -2,7 +2,7 @@ import api from '../../api'
 
 function defaultState () {
   return {
-    posts: [],
+    post: null,
   }
 }
 
@@ -14,15 +14,15 @@ export default function model () {
       resetState (state) {
         return defaultState()
       },
-      receivePosts (state, posts) {
+      receivePost (state, post) {
         return {
-          posts,
+          post,
         }
       }
     },
     effects: {
-      requestPosts (state, actions) {
-        api.fetchPosts().then(actions.receivePosts)
+      requestPost (state, actions) {
+        api.fetchPost().then(actions.receivePost)
       },
     },
   }

@@ -1,9 +1,16 @@
+function defaultState () {
+  return {
+    user: null,
+  }
+}
+
 export default function user () {
   return {
-    state: {
-      user: null,
-    },
+    state: defaultState(),
     reducers: {
+      reset () {
+        return defaultState()
+      },
       receiveUser (state, user) {
         return {
           user,

@@ -1,45 +1,27 @@
 import { h } from '../../../../src/html'
 
-function Alert ({
-  showing,
-  description,
-  type,
-  onDelete,
-}) {
-  let className = `notification ${type}`
-  let style = `
-    display: inline-block;
-    max-width: 400px; transition: all 0.4s ease-in-out;
-    transform: translateY(${showing ? '0%' : '200%'});
-    opacity: ${showing ? '1' : '0'}
-  `
-  return (
-    <div style='text-align: center; position: fixed; bottom: 20px; left: 0px; right: 0px;'>
-      <div 
-        class={className}
-        style={style}
-      >
-        {description}
-        <button
-          class='delete'
-          onClick={onDelete}
-        ></button>
-      </div>
-    </div>
-  )
-}
+import alert from '../components/alert'
+import navigation from '../components/navigation'
 
-export default function (Child) {
+export default function (child) {
   return function ({state, prev, actions}) {
     return (
-      <div>
-        <Child state={state} prev={prev} actions={actions} onComponentWillMount={() => null} />
-        <Alert
-          showing={state.alert.alert.showing}
-          description={state.alert.alert.description}
-          type={state.alert.alert.type}
-          onDelete={actions.alert.removeAlert}
-        />
+      <div class='sans-serif vh-100 vw-100 overflow-auto bg-near-white'>
+        {navigation({
+          user: state.user.user,
+          onLogoutClick: actions.pages.login.logout,
+        })}
+        {child({
+          state,
+          prev,
+          actions,
+        })}
+        {alert({
+          showing: state.alert.alert.showing,
+          description: state.alert.alert.description,
+          type: state.alert.alert.type,
+          onDelete: actions.alert.removeAlert,
+        })}
       </div>
     )
   }

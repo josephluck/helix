@@ -1,31 +1,35 @@
 import api from '../../api'
+import { fixture as user } from '../../api/fixtures/user'
 
 function defaultState () {
-  return {
-    username: 'joseph@example.com',
-    password: 'password',
-  }
+  return user
 }
 
 export default function model () {
   return {
-    scoped: true,
     state: defaultState(),
     reducers: {
-      reset (_state) {
+      reset () {
         return defaultState()
       },
       setFormField (state, key, value) {
         return {
-          ...state,
           [key]: value,
         }
       },
     },
     effects: {
-      submit (state, actions, onError) {
-        return api.login(state.username, state.password)
+      submit (state, actions, username, password) {
+        return api.login(username, password)
+          .then(authResponse => {
+            actions.location.set('/')
+            actions.alert.showSuccess('Successfully logged in')
+            actions.user.receiveUser(authResponse.user)
+          }, err => actions.alert.showError(err))
       },
+      logout (state, actions) {
+        actions.user.reset()
+      }
     },
   }
 }
