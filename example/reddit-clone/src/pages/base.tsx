@@ -9,7 +9,7 @@ export default function (child) {
       <div class='sans-serif vh-100 vw-100 overflow-auto bg-near-white'>
         {navigation({
           user: state.user.user,
-          onLogoutClick: actions.pages.login.logout,
+          onAvatarClick: actions.pages.login.logout,
         })}
         {child({
           state,

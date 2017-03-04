@@ -2,15 +2,16 @@ import { h } from '../../../../src/html'
 
 export default function navigation ({
   user = null,
-  onLogoutClick,
+  onAvatarClick,
 }) {
   return (
-    <div class='ph4 pv3 bg-white bb b--black-10 flex items-center h3'>
+    <div class='ph4 pv3 bg-white bb b--black-10 flex items-center h3 ttu tracked b f6'>
       <div class='flex-auto'>
-        <a class='mr3'>
+        <span class='mr4'>Reddit Clone</span>
+        <a class='mr3 no-underline blue'>
           New post
         </a>
-        <a class='mr3' href='/'>
+        <a class='mr3 no-underline blue' href='/'>
           Posts
         </a>
       </div>
@@ -18,13 +19,15 @@ export default function navigation ({
         {user
           ? (
             <div class='inline-flex items-center'>
-              <img class='mr2 br-pill w2 h2 overflow-hidden' src={user.avatar} />
-              <span class='div mr2'>{user.name}</span>
-              <a onclick={onLogoutClick} href='/'>Logout</a>
+              <img
+                class='mr2 br-pill w2 h2 overflow-hidden'
+                src={user.avatar}
+                onclick={onAvatarClick}
+              />
             </div>
           )
           : (
-            <a class='ml3' href='/login'>
+            <a class='ml3 no-underline blue' href='/login'>
               Login
             </a>
           )
