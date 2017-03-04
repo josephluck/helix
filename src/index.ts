@@ -37,7 +37,13 @@ export default function (configuration) {
     let renderComponent = configuration.component ? configuration.component : null
 
     if (configuration.routes) {
-      model.models.location = location(renderCurrentLocation)
+      if (model.models) {
+        model.models.location = location(renderCurrentLocation)
+      } else {
+        model.models = {
+          location: location(renderCurrentLocation),
+        }
+      }
     }
 
     let store = twine(onStateChange)(model)

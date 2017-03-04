@@ -75,6 +75,23 @@ function view ({state, prev, actions}) {
 
   printDuration()
 
+  function Row ({id, label}) {
+    return (
+      <tr class={className(id)} noNormalize key={id}>
+        <td class='col-md-1'>{id}</td>
+        <td class='col-md-4'>
+          <a onclick={click(id)}>{label}</a>
+        </td>
+        <td class='col-md-1'>
+          <a onclick={del(id)}>
+            <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
+          </a>
+        </td>
+        <td class='col-md-6'></td>
+      </tr>
+    )
+  }
+
   return (
     <div class='container'>
       <div class='jumbotron'>
@@ -108,24 +125,7 @@ function view ({state, prev, actions}) {
     </div>
     <table class='table table-hover table-striped test-data'>
       <tbody>
-        {state.data.map((d, i) => {
-          const id = d.id
-          const label = d.label
-          return (
-            <tr class={className(id)}>
-              <td class='col-md-1'>{id}</td>
-              <td class='col-md-4'>
-                <a onclick={click(id)}>{label}</a>
-              </td>
-              <td class='col-md-1'>
-                <a onclick={del(id)}>
-                  <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
-                </a>
-              </td>
-              <td class='col-md-6'></td>
-            </tr>
-          )
-        })}
+        {state.data.map((d, i) => <Row key={d.id} id={d.id} label={d.label} />)}
       </tbody>
     </table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
@@ -220,7 +220,11 @@ function model () {
 
 const app = helix({
   model: model(),
-  component: view,
+  routes: {
+    '': {
+      view,
+    },
+  },
 })
 
 const node = document.createElement('div')
