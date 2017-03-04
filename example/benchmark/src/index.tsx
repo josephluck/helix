@@ -20,45 +20,6 @@ function stopMeasure () {
   }
 }
 
-function rowsView ({state, prev, actions}) {
-  const data = state.data
-  const selected = state.selected
-  function del (id) {
-    return function (e) {
-      actions.delete({ id: id })
-    }
-  }
-
-  function click (id) {
-    return function (e) {
-      actions.select({ id: id })
-    }
-  }
-
-  function className (id) {
-    return id === selected ? 'danger' : ''
-  }
-
-  return data.map((d, i) => {
-    const id = d.id
-    const label = d.label
-    return (
-      <tr class={className(id)}>
-        <td class='col-md-1'>{id}</td>
-        <td class='col-md-4'>
-          <a onclick={click(id)}>{label}</a>
-        </td>
-        <td class='col-md-1'>
-          <a onclick={del(id)}>
-            <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
-          </a>
-        </td>
-        <td class='col-md-6'></td>
-      </tr>
-    )
-  })
-}
-
 function view ({state, prev, actions}) {
   function run () {
     startMeasure('run')
@@ -88,6 +49,24 @@ function view ({state, prev, actions}) {
   function swapRows () {
     startMeasure('swapRows')
     actions.swapRows()
+  }
+
+  function del (id) {
+    return function (e) {
+      startMeasure('delete')
+      actions.delete({ id: id })
+    }
+  }
+
+  function click (id) {
+    return function (e) {
+      startMeasure('click')
+      actions.select({ id: id })
+    }
+  }
+
+  function className (id) {
+    return id === state.selected ? 'danger' : ''
   }
 
   function printDuration () {
@@ -129,7 +108,24 @@ function view ({state, prev, actions}) {
     </div>
     <table class='table table-hover table-striped test-data'>
       <tbody>
-        {rowsView({state, prev, actions})}
+        {state.data.map((d, i) => {
+          const id = d.id
+          const label = d.label
+          return (
+            <tr class={className(id)}>
+              <td class='col-md-1'>{id}</td>
+              <td class='col-md-4'>
+                <a onclick={click(id)}>{label}</a>
+              </td>
+              <td class='col-md-1'>
+                <a onclick={del(id)}>
+                  <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
+                </a>
+              </td>
+              <td class='col-md-6'></td>
+            </tr>
+          )
+        })}
       </tbody>
     </table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
