@@ -19,7 +19,7 @@ function combineObjects (a, b) {
   return Object.assign({}, a, b)
 }
 
-function wrapRoutes (routes: Helix.Routes, wrap: Helix.RouteWrapper): Helix.Routes {
+function wrap (routes: Helix.Routes, wrap: Helix.RouteWrapper): Helix.Routes {
   return Object.keys(routes).map(route => {
     let handler = routes[route]
     return {
@@ -28,56 +28,72 @@ function wrapRoutes (routes: Helix.Routes, wrap: Helix.RouteWrapper): Helix.Rout
   }).reduce(combineObjects, {})
 }
 
+function createModel (configuration, render) {
+  let model = configuration.model
+  if (configuration.routes) {
+    if (model.models) {
+      model.models.location = location(render)
+    } else {
+      model.models = {
+        location: location(render),
+      }
+    }
+  }
+  return model
+}
+
 export default function (configuration) {
   return function mount (mount: Helix.Mount): void {
-    let morph = renderer(mount)
-    let model = configuration.model
-    let routes = configuration.routes ? wrapRoutes(configuration.routes, decorateRoutesInLocationHandler) : null
-    let renderView = configuration.routes ? rlite(() => null, routes) : null
-    let renderComponent = configuration.component ? configuration.component : null
+    const morph = renderer(mount)
+    const routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null
+    const router = rlite(() => null, routes)
+    const model = createModel(configuration, renderCurrentLocation)
+    const store = twine(onStateChange)(model)
 
-    if (configuration.routes) {
-      model.models.location = location(renderCurrentLocation)
-    }
-
-    let store = twine(onStateChange)(model)
     let _state = store.state
     let _prev = store.state
     let _actions = store.actions
+
+    function onStateChange (state, prev, actions): void {
+      _state = state
+      _prev = prev
+      _actions = actions
+      rerender(getComponent(window.location.pathname))
+    }
+
+    function getComponent (path) {
+      if (configuration.routes) {
+        return router(path)
+      } else {
+        return configuration.component ? configuration.component : null
+      }
+    }
 
     function getProps () {
       return { state: _state, prev: _prev, actions: _actions }
     }
 
-    href(setLocationAndRender)
-    window.onpopstate = renderCurrentLocation
-    renderCurrentLocation()
-
-    function renderCurrentLocation () {
-      let component = renderView ? renderView(window.location.pathname) : renderComponent
-      renderPage(component)
-    }
-
-    function createLifecycleHook (binding, defer = false) {
-      if (!binding) {
+    function applyHook (hook, defer = false) {
+      if (!hook) {
         return null
       }
       return function () {
+        let args = [_state, _prev, _actions]
         if (defer) {
-          window.requestAnimationFrame(() => binding.apply(null, [_state, _prev, _actions]))
+          window.requestAnimationFrame(() => hook.apply(null, args))
         } else {
-          binding.apply(null, [_state, _prev, _actions])
+          hook.apply(null, args)
         }
       }
     }
 
-    function decorateRoutesInLocationHandler (route, handler) {
+    function wrapRoutes (route, handler) {
       let _handler = handler
       if (typeof _handler === 'object') {
         _handler = function () {
           let props = Object.assign({}, getProps(), {
-            onComponentDidMount: createLifecycleHook(handler.onMount),
-            onComponentWillUnmount: createLifecycleHook(handler.onUnmount, true),
+            onComponentDidMount: applyHook(handler.onMount),
+            onComponentWillUnmount: applyHook(handler.onUnmount, true),
           })
           return createElement(handler.view, props)
         }
@@ -91,24 +107,24 @@ export default function (configuration) {
       }
     }
 
-    function renderPage (vnode): void {
+    function rerender (vnode): void {
       const props = { state: _state, prev: _prev, actions: _actions }
       if (vnode) {
         morph(props, vnode)
       }
     }
 
-    function onStateChange (state, prev, actions): void {
-      _state = state
-      _prev = prev
-      _actions = actions
-      let component = renderView ? renderView(window.location.pathname) : renderComponent
-      renderPage(component)
+    function renderCurrentLocation () {
+      rerender(getComponent(window.location.pathname))
     }
 
     function setLocationAndRender (path): void {
       window.history.pushState('', '', path.pathname)
-      renderPage(renderView ? renderView(path.pathname) : null)
+      rerender(getComponent(path.pathname))
     }
+
+    href(setLocationAndRender)
+    window.onpopstate = renderCurrentLocation
+    renderCurrentLocation()
   }
 }
