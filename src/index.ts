@@ -108,9 +108,8 @@ export default function (configuration) {
     }
 
     function rerender (vnode): void {
-      const props = { state: _state, prev: _prev, actions: _actions }
       if (vnode) {
-        morph(props, vnode)
+        morph(getProps(), vnode)
       }
     }
 
