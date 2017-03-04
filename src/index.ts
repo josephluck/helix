@@ -93,6 +93,7 @@ export default function (configuration) {
         _handler = function () {
           let props = Object.assign({}, getProps(), {
             onComponentDidMount: applyHook(handler.onMount),
+            onComponentDidUpdate: applyHook(handler.onUpdate, true),
             onComponentWillUnmount: applyHook(handler.onUnmount, true),
           })
           return createElement(handler.view, props)
