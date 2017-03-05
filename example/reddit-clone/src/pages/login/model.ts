@@ -1,4 +1,5 @@
 import api from '../../api'
+import form from '../../model/form'
 import { fixture as user } from '../../api/fixtures/user'
 
 function defaultState () {
@@ -7,15 +8,10 @@ function defaultState () {
 
 export default function model () {
   return {
-    state: defaultState(),
+    state: {},
     reducers: {
       reset () {
-        return defaultState()
-      },
-      setFormField (state, key, value) {
-        return {
-          [key]: value,
-        }
+        return {}
       },
     },
     effects: {
@@ -31,7 +27,10 @@ export default function model () {
         actions.location.set('/')
         actions.alert.showSuccess('Successfully logged out')
         actions.user.reset()
-      }
+      },
+    },
+    models: {
+      form: form(defaultState()),
     },
   }
 }

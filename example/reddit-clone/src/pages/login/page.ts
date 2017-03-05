@@ -8,7 +8,7 @@ export default function login ({state, prev, actions}) {
 
   function updateFormField (key) {
     return function (e) {
-      pageActions.setFormField(key, e.target.value)
+      pageActions.form.setField(key, e.target.value)
     }
   }
 
@@ -16,7 +16,7 @@ export default function login ({state, prev, actions}) {
     <div class='pa4'>
       ${form({
         onsubmit () {
-          pageActions.submit(pageState.username, pageState.password)
+          pageActions.submit(pageState.form.username, pageState.form.password)
         },
         submitText: 'Login',
         oncancel: pageActions.reset,
@@ -24,12 +24,12 @@ export default function login ({state, prev, actions}) {
           <div>
             ${textfield({
               label: 'Username',
-              value: pageState.username,
+              value: pageState.form.username,
               oninput: updateFormField('username'),
             })}
             ${textfield({
               label: 'Password',
-              value: pageState.password,
+              value: pageState.form.password,
               type: 'password',
               oninput: updateFormField('password'),
             })}
