@@ -3,15 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Please note that the inelegance of this file is for the sake of performance
 var rlite = require("rlite-router");
 var href = require("sheet-router/href");
-var createElement = require("inferno-create-element/dist/inferno-create-element");
 var twine_js_1 = require("twine-js");
 var html_1 = require("./html");
 var location_1 = require("./location");
-function renderer(mount) {
-    return function (props, vnode) {
-        html_1.default.render(vnode(props), mount);
-    };
-}
 function combineObjects(a, b) {
     return Object.assign({}, a, b);
 }
@@ -40,11 +34,16 @@ function createModel(configuration, render) {
 }
 function default_1(configuration) {
     return function mount(mount) {
-        var morph = renderer(mount);
         var routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null;
         var router = rlite(function () { return null; }, routes);
         var model = createModel(configuration, renderCurrentLocation);
         var store = twine_js_1.default(onStateChange)(model);
+        var _dom = mount;
+        function rerender(node) {
+            if (node) {
+                _dom = html_1.default.update(_dom, node(getProps()));
+            }
+        }
         var _state = store.state;
         var _prev = store.state;
         var _actions = store.actions;
@@ -74,30 +73,39 @@ function default_1(configuration) {
                 window.requestAnimationFrame(function () { return hook.apply(null, args); });
             };
         }
+        var _onLeave;
+        var _handler;
+        function lifecycle(handler) {
+            if (_handler === handler) {
+                if (handler.onUpdate) {
+                    handler.onUpdate(_state, _prev, _actions);
+                }
+            }
+            else {
+                _handler = handler;
+                if (_onLeave) {
+                    _onLeave(_state, _prev, _actions);
+                    _onLeave = handler.onLeave;
+                }
+                if (handler.onEnter) {
+                    handler.onEnter(_state, _prev, _actions);
+                }
+            }
+        }
         function wrapRoutes(route, handler) {
-            var _handler = handler;
-            if (typeof _handler === 'object') {
-                _handler = function () {
-                    var props = Object.assign({}, getProps(), {
-                        onComponentDidMount: applyHook(handler.onMount),
-                        onComponentDidUpdate: applyHook(handler.onUpdate),
-                        onComponentWillUnmount: applyHook(handler.onUnmount),
-                    });
-                    return createElement(handler.view, props);
-                };
+            var view = handler;
+            if (typeof view === 'object') {
+                view = handler.view;
             }
             return function (params, _, pathname) {
                 if (_state.location.pathname !== pathname) {
                     _actions.location.receiveRoute({ pathname: pathname, params: params });
+                    lifecycle(handler);
+                    _onLeave = handler.onLeave;
                     return false;
                 }
-                return _handler;
+                return view;
             };
-        }
-        function rerender(vnode) {
-            if (vnode) {
-                morph(getProps(), vnode);
-            }
         }
         function renderCurrentLocation() {
             rerender(getComponent(window.location.pathname));
