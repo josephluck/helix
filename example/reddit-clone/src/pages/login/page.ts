@@ -13,7 +13,7 @@ export default function login ({state, prev, actions}) {
   }
 
   return html`
-    <div class='pa4'>
+    <div>
       ${form({
         onsubmit () {
           pageActions.submit(pageState.form.username, pageState.form.password)

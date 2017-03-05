@@ -4,9 +4,11 @@ import authResponse from './fixtures/authResponse'
 import post from './fixtures/post'
 
 export default walk({
-  login (username, password) {
+  login (user, username, password) {
+    if (user.password !== password || user.username !== username) {
+      return new Error('Whoops! Please try again...')
+    }
     return authResponse()
-    // return new Error('Whoops! Please try again...')
   },
   fetchPosts () {
     return Array.from({ length: 10 }).map(() => post())

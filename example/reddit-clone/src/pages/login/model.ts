@@ -2,9 +2,7 @@ import api from '../../api'
 import form from '../../model/form'
 import user from '../../api/fixtures/user'
 
-function defaultState () {
-  return user()
-}
+let currentUser = user()
 
 export default function model () {
   return {
@@ -16,7 +14,7 @@ export default function model () {
     },
     effects: {
       submit (state, actions, username, password) {
-        return api.login(username, password)
+        return api.login(currentUser, username, password)
           .then(authResponse => {
             actions.location.set('/')
             actions.alert.showSuccess('Successfully logged in')
@@ -30,7 +28,7 @@ export default function model () {
       },
     },
     models: {
-      form: form(defaultState()),
+      form: form(Object.assign({}, currentUser)),
     },
   }
 }
