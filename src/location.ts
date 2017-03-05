@@ -1,5 +1,3 @@
-import { Helix } from './types'
-
 export default function location (rerender) {
   return {
     state: {
