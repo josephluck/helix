@@ -1,6 +1,6 @@
 require('es6-shim')
 import helix from '../../../src'
-import { h } from '../../../src/html'
+import html from '../../../src/html'
 
 let startTime
 let lastMeasure
@@ -75,24 +75,24 @@ function view ({state, prev, actions}) {
 
   printDuration()
 
-  function Row ({id, label}) {
-    return (
-      <tr class={className(id)} noNormalize key={id}>
-        <td class='col-md-1'>{id}</td>
+  function row ({id, label}) {
+    return html`
+      <tr class=${className(id)}>
+        <td class='col-md-1'>${id}</td>
         <td class='col-md-4'>
-          <a onclick={click(id)}>{label}</a>
+          <a onclick=${click(id)}>${label}</a>
         </td>
         <td class='col-md-1'>
-          <a onclick={del(id)}>
+          <a onclick=${del(id)}>
             <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
           </a>
         </td>
         <td class='col-md-6'></td>
       </tr>
-    )
+    `
   }
 
-  return (
+  return html`
     <div class='container'>
       <div class='jumbotron'>
         <div class='row'>
@@ -102,22 +102,22 @@ function view ({state, prev, actions}) {
         <div class='col-md-6'>
           <div class='row'>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='run' onclick={run}>Create 1,000 rows</button>
+              <button type='button' class='btn btn-primary btn-block' id='run' onclick=${run}>Create 1,000 rows</button>
             </div>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='runlots' onclick={runLots}>Create 10,000 rows</button>
+              <button type='button' class='btn btn-primary btn-block' id='runlots' onclick=${runLots}>Create 10,000 rows</button>
             </div>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='add' onclick={add}>Append 1,000 rows</button>
+              <button type='button' class='btn btn-primary btn-block' id='add' onclick=${add}>Append 1,000 rows</button>
             </div>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='update' onclick={update}>Update every 10th row</button>
+              <button type='button' class='btn btn-primary btn-block' id='update' onclick=${update}>Update every 10th row</button>
             </div>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='clear' onclick={clear}>Clear</button>
+              <button type='button' class='btn btn-primary btn-block' id='clear' onclick=${clear}>Clear</button>
             </div>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='swaprows' onclick={swapRows}>Swap Rows</button>
+              <button type='button' class='btn btn-primary btn-block' id='swaprows' onclick=${swapRows}>Swap Rows</button>
             </div>
           </div>
         </div>
@@ -125,12 +125,17 @@ function view ({state, prev, actions}) {
     </div>
     <table class='table table-hover table-striped test-data'>
       <tbody>
-        {state.data.map((d, i) => <Row key={d.id} id={d.id} label={d.label} />)}
+        ${state.data.map((d, i) => {
+          return row({
+            id: d.id,
+            label: d.label,
+          })
+        })}
       </tbody>
     </table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
     </div>
-  )
+  `
 }
 
 

@@ -120,25 +120,31 @@ const app = helix({
     '': viewOne,
     'bar': {
       onEnter (state, prev, actions) {
-        console.log('bar onEnter', state)
+        // actions.set('You have entered bar')
+        console.log('bar onEnter', state.location.pathname)
       },
       onUpdate (state, prev, actions) {
-        console.log('bar onUpdate', state)
+        // actions.set('You have updated bar')
+        console.log('bar onUpdate', state.location.pathname)
       },
       onLeave (state, prev, actions) {
-        console.log('bar onLeave', state)
+        // actions.set('You have left bar')
+        console.log('bar onLeave', state.location.pathname)
       },
       view: viewTwo,
     },
     'bar/:baz': {
       onEnter (state, prev, actions) {
-        console.log('bar/:baz onEnter', state)
+        // actions.set(`You have entered bar:/baz ${state.location.params.baz}`)
+        console.log('bar/:baz onEnter', state.location.pathname)
       },
       onUpdate (state, prev, actions) {
-        console.log('bar/:baz onUpdate', state)
+        // actions.set(`You have updated bar:/baz ${state.location.params.baz}`)
+        console.log('bar/:baz onUpdate', state.location.pathname)
       },
       onLeave (state, prev, actions) {
-        console.log('bar/:baz onLeave', state)
+        // actions.set(`You have left bar:/baz ${state.location.params.baz}`)
+        console.log('bar/:baz onLeave', state.location.pathname)
       },
       view: viewThree,
     }

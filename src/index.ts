@@ -80,23 +80,24 @@ export default function (configuration) {
     }
 
     let _onLeave
-    function lifecycle (oldHandler, newHandler) {
-      if (oldHandler === newHandler) {
-        if (newHandler.onUpdate) {
-          newHandler.onUpdate(_state, _prev, _actions)
+    let _handler
+    function lifecycle (handler) {
+      if (_handler === handler) {
+        if (handler.onUpdate) {
+          handler.onUpdate(_state, _prev, _actions)
         }
       } else {
+        _handler = handler
         if (_onLeave) {
           _onLeave(_state, _prev, _actions)
+          _onLeave = handler.onLeave
         }
-        if (newHandler.onEnter) {
-          newHandler.onEnter(_state, _prev, _actions)
+        if (handler.onEnter) {
+          handler.onEnter(_state, _prev, _actions)
         }
       }
-      _onLeave = newHandler.onLeave
     }
 
-    let _handler
     function wrapRoutes (route, handler) {
       let view = handler
       if (typeof view === 'object') {
@@ -104,11 +105,11 @@ export default function (configuration) {
       }
       return function (params, _, pathname) {
         if (_state.location.pathname !== pathname) {
-          lifecycle(_handler, handler)
           _actions.location.receiveRoute({ pathname, params })
+          lifecycle(handler)
+          _onLeave = handler.onLeave
           return false
         }
-        _handler = handler
         return view
       }
     }
