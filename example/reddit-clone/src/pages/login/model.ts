@@ -1,9 +1,9 @@
 import api from '../../api'
 import form from '../../model/form'
-import { fixture as user } from '../../api/fixtures/user'
+import user from '../../api/fixtures/user'
 
 function defaultState () {
-  return user
+  return user()
 }
 
 export default function model () {

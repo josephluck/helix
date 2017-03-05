@@ -5,17 +5,17 @@ import base from '../base'
 
 function post (post) {
   return html`
-    <div class='bb b--black-10 bg-white pa3 flex items-center'>
+    <div class='mb4 flex items-center'>
       <div class='f4 w2 tc mr3 light-silver bold tracked'>
         ${post.votes}
       </div>
       <div>
-        <a class='f3 dib mb1 blue no-underline' href=${`/posts/${post.uuid}`}>${post.title}</a>
-        <div class='gray f6'>
+        <a class='fw7 dib mb1 blue no-underline' href=${`/posts/${post.uuid}`}>${post.title}</a>
+        <div class='black-60 f6'>
           <div class='mb'>
-            submitted ${moment(post.createdOn).fromNow()} by ${post.createdBy}
+            submitted ${moment(post.createdOn).fromNow()} by ${post.createdBy.name}. 
+            ${post.comments.length ? html`<span>${post.comments.length} comments</span>` : ''}
           </div>
-          <div>${post.comments.length} comments</div>
         </div>
       </div>
     </div>
@@ -24,10 +24,10 @@ function post (post) {
 
 function page ({state, prev, actions}) {
   return html`
-    <div class='pa4'>
+    <div>
       ${state.pages.home.posts.length
         ? html`
-          <div class='ba b--black-10 br2 overflow-hidden'>
+          <div class=''>
             ${state.pages.home.posts.map(post)}
           </div>
         ` : null
