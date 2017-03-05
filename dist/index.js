@@ -65,19 +65,13 @@ function default_1(configuration) {
         function getProps() {
             return { state: _state, prev: _prev, actions: _actions };
         }
-        function applyHook(hook, defer) {
-            if (defer === void 0) { defer = false; }
+        function applyHook(hook) {
             if (!hook) {
                 return null;
             }
             return function () {
                 var args = [_state, _prev, _actions];
-                if (defer) {
-                    window.requestAnimationFrame(function () { return hook.apply(null, args); });
-                }
-                else {
-                    hook.apply(null, args);
-                }
+                window.requestAnimationFrame(function () { return hook.apply(null, args); });
             };
         }
         function wrapRoutes(route, handler) {
@@ -86,8 +80,8 @@ function default_1(configuration) {
                 _handler = function () {
                     var props = Object.assign({}, getProps(), {
                         onComponentDidMount: applyHook(handler.onMount),
-                        onComponentDidUpdate: applyHook(handler.onUpdate, true),
-                        onComponentWillUnmount: applyHook(handler.onUnmount, true),
+                        onComponentDidUpdate: applyHook(handler.onUpdate),
+                        onComponentWillUnmount: applyHook(handler.onUnmount),
                     });
                     return createElement(handler.view, props);
                 };

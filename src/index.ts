@@ -73,17 +73,13 @@ export default function (configuration) {
       return { state: _state, prev: _prev, actions: _actions }
     }
 
-    function applyHook (hook, defer = false) {
+    function applyHook (hook) {
       if (!hook) {
         return null
       }
       return function () {
         let args = [_state, _prev, _actions]
-        if (defer) {
-          window.requestAnimationFrame(() => hook.apply(null, args))
-        } else {
-          hook.apply(null, args)
-        }
+        window.requestAnimationFrame(() => hook.apply(null, args))
       }
     }
 
@@ -93,8 +89,8 @@ export default function (configuration) {
         _handler = function () {
           let props = Object.assign({}, getProps(), {
             onComponentDidMount: applyHook(handler.onMount),
-            onComponentDidUpdate: applyHook(handler.onUpdate, true),
-            onComponentWillUnmount: applyHook(handler.onUnmount, true),
+            onComponentDidUpdate: applyHook(handler.onUpdate),
+            onComponentWillUnmount: applyHook(handler.onUnmount),
           })
           return createElement(handler.view, props)
         }
