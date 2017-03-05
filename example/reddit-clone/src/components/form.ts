@@ -21,7 +21,7 @@ export default function Form ({
           label: submitText,
         })}
         <a
-          class='ml3 gray fw1'
+          class='ml3 black-60 f6'
           onclick=${oncancel}
         >
           ${cancelText}

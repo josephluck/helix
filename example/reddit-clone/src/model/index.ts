@@ -6,6 +6,7 @@ import user from './user'
 import login from '../pages/login/model'
 import home from '../pages/home/model'
 import post from '../pages/post/model'
+import newPost from '../pages/new/model'
 
 export default function model () {
   return {
@@ -19,6 +20,7 @@ export default function model () {
           login: login(),
           home: home(),
           post: post(),
+          newPost: newPost(),
         },
       },
     },

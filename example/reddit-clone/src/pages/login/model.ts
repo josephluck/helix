@@ -1,4 +1,4 @@
-import api from '../../api'
+import api from '../../api' 
 import form from '../../model/form'
 import user from '../../api/fixtures/user'
 

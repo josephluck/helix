@@ -16,4 +16,7 @@ export default walk({
   fetchPost () {
     return post()
   },
+  newPost (title, body) {
+    return post()
+  }
 }, promisify)

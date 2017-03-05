@@ -8,7 +8,7 @@ export default function navigation ({
     <div class='pv3 h3 ttu tracked b f6 flex items-center'>
       <div class='flex-auto'>
         <span class='mr4'>Reddit Clone</span>
-        <a class='mr3 no-underline blue'>
+        <a class='mr3 no-underline blue' href='/posts/new'>
           New post
         </a>
         <a class='mr3 no-underline blue' href='/'>
