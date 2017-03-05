@@ -6,7 +6,7 @@ export default function alert ({
   type,
   onDelete,
 }) {
-  let className = `pa3 br2 bg-light-gray ba b--black-10`
+  let className = `pa3 bg-white br1 ba b--black-20`
   let style = `
     display: inline-block;
     max-width: 400px; transition: all 0.4s ease-in-out;

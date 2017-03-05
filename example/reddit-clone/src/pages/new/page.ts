@@ -34,8 +34,7 @@ export default function newPost ({state, prev, actions}) {
             ${textarea({
               label: 'Body',
               value: pageState.form.body,
-              type: 'body',
-              onchange: updateFormField('body'),
+              oninput: updateFormField('body'),
             })}
           </div>
         `,

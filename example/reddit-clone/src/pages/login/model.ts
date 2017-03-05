@@ -15,16 +15,16 @@ export default function model () {
     effects: {
       submit (state, actions, username, password) {
         return api.login(currentUser, username, password)
-          .then(authResponse => {
-            actions.alert.showSuccess('Successfully logged in')
-            actions.user.receiveUser(authResponse.user)
+          .then(resp => {
+            actions.alert.showSuccess(`Hey, ${resp.user.name}!`)
+            actions.user.receiveUser(resp.user)
             let redirect = state.location.params.redirect ? state.location.params.redirect : '/'
             actions.location.set(redirect)
           }, err => actions.alert.showError(err))
       },
       logout (state, actions) {
         actions.location.set('/')
-        actions.alert.showSuccess('Successfully logged out')
+        actions.alert.showSuccess(`See you soon, ${state.user.user.name}`)
         actions.user.reset()
       },
     },

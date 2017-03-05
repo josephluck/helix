@@ -19,7 +19,10 @@ export default function login ({state, prev, actions}) {
           pageActions.submit(pageState.form.username, pageState.form.password)
         },
         submitText: 'Login',
-        oncancel: pageActions.reset,
+        oncancel () {
+          pageActions.reset()
+          actions.location.set('/')
+        },
         child: html`
           <div>
             ${textfield({

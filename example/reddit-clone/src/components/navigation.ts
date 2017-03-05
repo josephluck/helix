@@ -5,7 +5,7 @@ export default function navigation ({
   onAvatarClick,
 }) {
   return html`
-    <div class='pv3 h3 ttu b f6 flex items-center bb b--black-05'>
+    <div class='pv4 h3 ttu b f6 flex items-center'>
       <div class='flex-auto'>
         <span class='mr2'>Reddit Clone</span>
         <a class='mr2 no-underline blue' href='/posts/new'>

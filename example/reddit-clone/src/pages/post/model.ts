@@ -1,5 +1,7 @@
 import api from '../../api'
 
+import form from '../../model/form'
+
 function defaultState () {
   return {
     post: null,
@@ -8,7 +10,6 @@ function defaultState () {
 
 export default function model () {
   return {
-    scoped: true,
     state: defaultState(),
     reducers: {
       resetState (state) {
@@ -18,12 +19,29 @@ export default function model () {
         return {
           post,
         }
-      }
+      },
+      receiveComment (state, comment) {
+        return {
+          post: {
+            ...state.post,
+            comments: [comment].concat(state.post.comments),
+          },
+        }
+      },
     },
     effects: {
       requestPost (state, actions) {
-        api.fetchPost().then(actions.receivePost)
+        api.fetchPost().then(actions.pages.post.receivePost)
       },
+      submitComment (state, actions, comment) {
+        api.newComment(comment, state.user.user).then(response => {
+          actions.pages.post.form.setField('comment', ' ')
+          actions.pages.post.receiveComment(response)
+        })
+      },
+    },
+    models: {
+      form: form({}),
     },
   }
 }

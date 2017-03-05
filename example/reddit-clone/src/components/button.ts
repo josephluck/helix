@@ -7,7 +7,7 @@ export default function button ({
 }) {
   return html`
     <button
-      class='dib button-reset bg-white ba b--black-20 ph3 pv2 black-60 f6'
+      class='dib button-reset bg-white ba b--black-20 br1 pa2 black-60 f6'
       type=${type}
       onclick=${onclick}
     >

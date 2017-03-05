@@ -10,7 +10,7 @@ export default function textField ({
     <div class='mb3'>
       <label class='db mb2 black-60 f6'>${label}</label>
       <input 
-        class='db w-100 ph3 pv2 ba b--black-20' 
+        class='db w-100 pa2 ba b--black-20 br1' 
         type=${type} 
         value=${value} 
         oninput=${oninput} 

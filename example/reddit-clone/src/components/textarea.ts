@@ -1,20 +1,27 @@
 import html from '../../../../src/html'
 
+interface Opts {
+  label?: string
+  type?: string
+  value: string
+  oninput: (event) => any
+}
+
 export default function textField ({
   label,
   type = 'text',
   value,
-  onchange,
-}) {
+  oninput,
+}: Opts) {
   return html`
     <div class='mb3'>
-      <label class='db mb2 black-60 f6'>${label}</label>
+      ${label ? html`<label class='db mb2 black-60 f6'>${label}</label>` : ''}
       <textarea 
-        class='db w-100 ph3 pv2 ba b--black-20' 
+        class='db w-100 pa2 ba b--black-20 br1' 
         rows='15'
         type=${type} 
         value=${value} 
-        onchange=${onchange} 
+        oninput=${oninput} 
       >${value}</textarea>
     </div>
   `
