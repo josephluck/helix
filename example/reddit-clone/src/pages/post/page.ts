@@ -25,7 +25,7 @@ function page ({state, prev, actions}) {
         ${state.user.user
           ? html`
             <div class='mt5'>
-              <span class='f4 b dib mb4'>Add your response</span>
+              <span class='f4 b dib mb3'>Add your response</span>
               ${form({
                 onsubmit () {
                   actions.pages.post.submitComment(state.pages.post.form.comment)
@@ -42,16 +42,30 @@ function page ({state, prev, actions}) {
               })}
             </div>
           `
-          : html`
-
-          `
+          : ''
         }
         ${post.comments.length
           ? html`
             <div class='mt5'>
-              <span class='f4 b dib mb4'>
-                ${post.comments.length} Response${post.comments.length > 1 ? 's' : ''}
-              </span>
+              <div class='mb4'>
+                <span class='f4 b dib'>
+                  ${post.comments.length} Response${post.comments.length > 1 ? 's' : ''}
+                </span>
+                ${!state.user.user
+                  ? html`
+                    <span class='ml2 i black-60 f6'>
+                      You must be 
+                      <a 
+                        onclick=${() => actions.location.set(`/login?redirect=/posts/${post.uuid}`)} 
+                        class='pointer blue no-underline'
+                      >
+                        logged in
+                      </a>
+                      to respond
+                    </span>
+                  ` : ''
+                }
+              </div>
               ${post.comments.map(comment => html`
                 <div class='mb4 pb4 bb b--near-white'>
                   <div class='flex items-center mb3'>
