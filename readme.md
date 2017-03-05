@@ -13,4 +13,4 @@ Take a look at [the examples](example)!
 ## Built upon:
 - twine
 - rlite
-- inferno
+- bel / yoyo / morphdom
