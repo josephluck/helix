@@ -118,8 +118,30 @@ const app = helix({
   },
   routes: {
     '': viewOne,
-    'bar': viewTwo,
-    'bar/:baz': viewThree,
+    'bar': {
+      onEnter (state, prev, actions) {
+        console.log('bar onEnter', state)
+      },
+      onUpdate (state, prev, actions) {
+        console.log('bar onUpdate', state)
+      },
+      onLeave (state, prev, actions) {
+        console.log('bar onLeave', state)
+      },
+      view: viewTwo,
+    },
+    'bar/:baz': {
+      onEnter (state, prev, actions) {
+        console.log('bar/:baz onEnter', state)
+      },
+      onUpdate (state, prev, actions) {
+        console.log('bar/:baz onUpdate', state)
+      },
+      onLeave (state, prev, actions) {
+        console.log('bar/:baz onLeave', state)
+      },
+      view: viewThree,
+    }
   },
 })
 

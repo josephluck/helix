@@ -79,17 +79,37 @@ export default function (configuration) {
       }
     }
 
+    let _onLeave
+    function lifecycle (oldHandler, newHandler) {
+      if (oldHandler === newHandler) {
+        if (newHandler.onUpdate) {
+          newHandler.onUpdate(_state, _prev, _actions)
+        }
+      } else {
+        if (_onLeave) {
+          _onLeave(_state, _prev, _actions)
+        }
+        if (newHandler.onEnter) {
+          newHandler.onEnter(_state, _prev, _actions)
+        }
+      }
+      _onLeave = newHandler.onLeave
+    }
+
+    let _handler
     function wrapRoutes (route, handler) {
-      let _handler = handler
-      if (typeof _handler === 'object') {
-        console.log('handle a object one')
+      let view = handler
+      if (typeof view === 'object') {
+        view = handler.view
       }
       return function (params, _, pathname) {
         if (_state.location.pathname !== pathname) {
+          lifecycle(_handler, handler)
           _actions.location.receiveRoute({ pathname, params })
           return false
         }
-        return _handler
+        _handler = handler
+        return view
       }
     }
 
