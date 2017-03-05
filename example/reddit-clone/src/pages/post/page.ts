@@ -1,4 +1,4 @@
-import { h } from '../../../../../src/html'
+import html from '../../../../../src/html'
 import * as moment from 'moment'
 
 import base from '../base'
@@ -6,25 +6,25 @@ import renderPost from '../../components/post'
 
 function page ({state, prev, actions}) {
   let post = state.pages.post.post
-  return (
+  return html`
     <div class='pa4'>
-      {post
-        ? (
+      ${post
+        ? html`
           <div class='ba b--black-10 br2 overflow-hidden'>
-            {renderPost(post)}
+            ${renderPost(post)}
           </div>
-        ) : null
+        ` : ''
       }
     </div>
-  )
+  `
 }
 
 export default function () {
   return {
-    onMount (state, prev, actions) {
+    onEnter (state, prev, actions) {
       actions.pages.post.requestPost()
     },
-    onUnmount (state, prev, actions) {
+    onLeave (state, prev, actions) {
       actions.pages.post.resetState()
     },
     view: base(page),

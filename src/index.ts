@@ -1,25 +1,15 @@
 // Please note that the inelegance of this file is for the sake of performance
 import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
-import * as createElement from 'inferno-create-element/dist/inferno-create-element'
 import twine from 'twine-js'
-import { Twine } from 'twine-js/dist/types'
-
 import html from './html'
 import location from './location'
-import { Helix } from './types'
-
-function renderer (mount: HTMLElement): Helix.Renderer {
-  return function (props: Helix.Props, vnode) {
-    html.render(vnode(props), mount)
-  }
-}
 
 function combineObjects (a, b) {
   return Object.assign({}, a, b)
 }
 
-function wrap (routes: Helix.Routes, wrap: Helix.RouteWrapper): Helix.Routes {
+function wrap (routes, wrap) {
   return Object.keys(routes).map(route => {
     let handler = routes[route]
     return {
@@ -43,18 +33,24 @@ function createModel (configuration, render) {
 }
 
 export default function (configuration) {
-  return function mount (mount: Helix.Mount): void {
-    const morph = renderer(mount)
+  return function mount (mount) {
     const routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null
     const router = rlite(() => null, routes)
     const model = createModel(configuration, renderCurrentLocation)
     const store = twine(onStateChange)(model)
 
+    let _dom = mount
+    function rerender (node) {
+      if (node) {
+        _dom = html.update(_dom, node(getProps()))
+      }
+    }
+
     let _state = store.state
     let _prev = store.state
     let _actions = store.actions
 
-    function onStateChange (state, prev, actions): void {
+    function onStateChange (state, prev, actions) {
       _state = state
       _prev = prev
       _actions = actions
@@ -73,44 +69,48 @@ export default function (configuration) {
       return { state: _state, prev: _prev, actions: _actions }
     }
 
-    function applyHook (hook, defer = false) {
+    function applyHook (hook) {
       if (!hook) {
         return null
       }
       return function () {
         let args = [_state, _prev, _actions]
-        if (defer) {
-          window.requestAnimationFrame(() => hook.apply(null, args))
-        } else {
-          hook.apply(null, args)
+        window.requestAnimationFrame(() => hook.apply(null, args))
+      }
+    }
+
+    let _onLeave
+    let _handler
+    function lifecycle (handler) {
+      if (_handler === handler) {
+        if (handler.onUpdate) {
+          handler.onUpdate(_state, _prev, _actions)
+        }
+      } else {
+        _handler = handler
+        if (_onLeave) {
+          _onLeave(_state, _prev, _actions)
+          _onLeave = handler.onLeave
+        }
+        if (handler.onEnter) {
+          handler.onEnter(_state, _prev, _actions)
         }
       }
     }
 
     function wrapRoutes (route, handler) {
-      let _handler = handler
-      if (typeof _handler === 'object') {
-        _handler = function () {
-          let props = Object.assign({}, getProps(), {
-            onComponentDidMount: applyHook(handler.onMount),
-            onComponentWillUnmount: applyHook(handler.onUnmount, true),
-          })
-          return createElement(handler.view, props)
-        }
+      let view = handler
+      if (typeof view === 'object') {
+        view = handler.view
       }
       return function (params, _, pathname) {
         if (_state.location.pathname !== pathname) {
           _actions.location.receiveRoute({ pathname, params })
+          lifecycle(handler)
+          _onLeave = handler.onLeave
           return false
         }
-        return _handler
-      }
-    }
-
-    function rerender (vnode): void {
-      const props = { state: _state, prev: _prev, actions: _actions }
-      if (vnode) {
-        morph(props, vnode)
+        return view
       }
     }
 

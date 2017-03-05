@@ -1,4 +1,4 @@
-import { h } from '../../../../src/html'
+import html from '../../../../src/html'
 
 export default function alert ({
   showing,
@@ -13,14 +13,14 @@ export default function alert ({
     transform: translateY(${showing ? '0%' : '200%'});
     opacity: ${showing ? '1' : '0'}
   `
-  return (
+  return html`
     <div style='text-align: center; position: fixed; bottom: 20px; left: 0px; right: 0px;'>
       <div
-        class={className}
-        style={style}
+        class=${className}
+        style=${style}
       >
-        {description}
+        ${description}
       </div>
     </div>
-  )
+  `
 }

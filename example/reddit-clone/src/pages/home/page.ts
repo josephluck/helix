@@ -1,47 +1,47 @@
-import { h } from '../../../../../src/html'
+import html from '../../../../../src/html'
 import * as moment from 'moment'
 
 import base from '../base'
 
 function post (post) {
-  return (
+  return html`
     <div class='bb b--black-10 bg-white pa3 flex items-center'>
       <div class='f4 w2 tc mr3 light-silver bold tracked'>
-        {post.votes}
+        ${post.votes}
       </div>
       <div>
-        <a class='f3 dib mb1 blue no-underline' href={`/posts/${post.uuid}`}>{post.title}</a>
+        <a class='f3 dib mb1 blue no-underline' href=${`/posts/${post.uuid}`}>${post.title}</a>
         <div class='gray f6'>
           <div class='mb'>
-            submitted {moment(post.createdOn).fromNow()} by {post.createdBy}
+            submitted ${moment(post.createdOn).fromNow()} by ${post.createdBy}
           </div>
-          <div>{post.comments.length} comments</div>
+          <div>${post.comments.length} comments</div>
         </div>
       </div>
     </div>
-  )
+  `
 }
 
 function page ({state, prev, actions}) {
-  return (
+  return html`
     <div class='pa4'>
-      {state.pages.home.posts.length
-        ? (
+      ${state.pages.home.posts.length
+        ? html`
           <div class='ba b--black-10 br2 overflow-hidden'>
-            {state.pages.home.posts.map(post)}
+            ${state.pages.home.posts.map(post)}
           </div>
-        ) : null
+        ` : null
       }
     </div>
-  )
+  `
 }
 
 export default function () {
   return {
-    onMount (state, prev, actions) {
+    onEnter (state, prev, actions) {
       actions.pages.home.requestPosts()
     },
-    onUnmount (state, prev, actions) {
+    onLeave (state, prev, actions) {
       actions.pages.home.resetState()
     },
     view: base(page),

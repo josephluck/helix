@@ -28,6 +28,8 @@ export default function model () {
           }, err => actions.alert.showError(err))
       },
       logout (state, actions) {
+        actions.location.set('/')
+        actions.alert.showSuccess('Successfully logged out')
         actions.user.reset()
       }
     },

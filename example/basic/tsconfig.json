@@ -2,9 +2,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "module": "commonjs",
-    "target": "es5",
-    "jsx": "react",
-    "jsxFactory": "h"
+    "target": "es5"
   },
   "include": [
     "./src/**/*"
