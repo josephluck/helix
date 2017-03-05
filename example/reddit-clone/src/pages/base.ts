@@ -12,7 +12,7 @@ export default function (child) {
             user: state.user.user,
             onAvatarClick: actions.pages.login.logout,
           })}
-          <div class='mt3'>
+          <div class='mt4'>
             ${child({
               state,
               prev,

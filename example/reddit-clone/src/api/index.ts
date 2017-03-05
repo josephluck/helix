@@ -2,6 +2,7 @@ import walk from '../utils/walk'
 import promisify from '../utils/promisify'
 import authResponse from './fixtures/authResponse'
 import post from './fixtures/post'
+import comment from './fixtures/comment'
 
 export default walk({
   login (user, username, password) {
@@ -16,4 +17,15 @@ export default walk({
   fetchPost () {
     return post()
   },
+  newPost (title, body) {
+    return post()
+  },
+  newComment (_comment, user) {
+    return {
+      ...comment(),
+      createdOn: new Date(),
+      createdBy: user,
+      body: _comment,
+    }
+  }
 }, promisify)

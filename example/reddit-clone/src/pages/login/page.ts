@@ -1,4 +1,4 @@
-import html from '../../../../../src/html'
+import html from '../../../../../src/html' 
 import textfield from '../../components/textfield'
 import form from '../../components/form'
 
@@ -19,7 +19,10 @@ export default function login ({state, prev, actions}) {
           pageActions.submit(pageState.form.username, pageState.form.password)
         },
         submitText: 'Login',
-        oncancel: pageActions.reset,
+        oncancel () {
+          pageActions.reset()
+          actions.location.set('/')
+        },
         child: html`
           <div>
             ${textfield({

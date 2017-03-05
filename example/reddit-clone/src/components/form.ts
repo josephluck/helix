@@ -1,13 +1,21 @@
 import html from '../../../../src/html'
 import button from './button'
 
+interface Opts {
+  onsubmit: () => any
+  oncancel?: () => any
+  child: HTMLElement
+  submitText: string
+  cancelText?: string
+}
+
 export default function Form ({
   onsubmit,
   oncancel,
   child,
   submitText,
   cancelText = 'cancel',
-}) {
+}: Opts) {
   return html`
     <form
       onsubmit=${e => {
@@ -20,12 +28,16 @@ export default function Form ({
         ${button({
           label: submitText,
         })}
-        <a
-          class='ml3 gray fw1'
-          onclick=${oncancel}
-        >
-          ${cancelText}
-        </a>
+        ${oncancel 
+          ? html`
+            <a
+              class='ml3 black-60 f6'
+              onclick=${oncancel}
+            >
+              ${cancelText}
+            </a>
+          ` : ''
+        }
       </div>
     </form>
   `
