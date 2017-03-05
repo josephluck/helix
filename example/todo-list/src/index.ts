@@ -1,9 +1,9 @@
 require('es6-shim')
 import helix from '../../../src'
-import { h } from '../../../src/html'
+import html from '../../../src/html'
 
 function todoList ({state, prev, actions}) {
-  return (
+  return html`
     <section class='section hero'>
       <div class='card'>
         <div class='card-content'>
@@ -15,15 +15,15 @@ function todoList ({state, prev, actions}) {
 
           <form
             class='control has-addons'
-            onSubmit={(e) => {
+            onsubmit=${(e) => {
               e.preventDefault()
               actions.addTodo(state.newTodo)
             }}
           >
             <input
               class='input is-expanded'
-              value={state.newTodo}
-              onInput={(e) => actions.setNewTodoText(e.target.value)}
+              value=${state.newTodo}
+              oninput=${(e) => actions.setNewTodoText(e.target.value)}
             />
             <button
               class='button'
@@ -36,19 +36,19 @@ function todoList ({state, prev, actions}) {
           <hr />
 
           <div class='block control is-grouped'>
-            {state.todos.map((todo, index) => {
-              return (
+            ${state.todos.map((todo, index) => {
+              return html`
                 <span class='control tag is-large is-success'>
-                  {todo}
-                  <a class='delete' onclick={() => actions.removeTodo(index)}></a>
+                  ${todo}
+                  <a class='delete' onclick=${() => actions.removeTodo(index)}></a>
                 </span>
-              )
+              `
             })}
           </div>
         </div>
       </div>
     </section>
-  )
+  `
 }
 
 const app = helix({
@@ -64,7 +64,6 @@ const app = helix({
       addTodo (state, todo) {
         return todo
           ? {
-            ...state,
             newTodo: '',
             todos: state.todos.concat(todo),
           }
@@ -72,13 +71,11 @@ const app = helix({
       },
       removeTodo (state, index) {
         return {
-          ...state,
           todos: state.todos.filter((todo, i) => i !== index),
         }
       },
       setNewTodoText (state, newTodo) {
         return {
-          ...state,
           newTodo,
         }
       },

@@ -1,32 +1,32 @@
-import { h } from '../../../../src/html'
+import html from '../../../../src/html'
 import button from './button'
 
 export default function Form ({
-  onSubmit,
-  onCancel,
-  children,
+  onsubmit,
+  oncancel,
+  child,
   submitText,
   cancelText = 'cancel',
 }) {
-  return (
+  return html`
     <form
-      onSubmit={e => {
+      onsubmit=${e => {
         e.preventDefault()
-        onSubmit()
+        onsubmit()
       }}
     >
-      {children}
+      ${child}
       <div class='inline-flex items-center'>
-        {button({
+        ${button({
           label: submitText,
         })}
         <a
           class='ml3 gray fw1'
-          onclick={onCancel}
+          onclick=${oncancel}
         >
-          {cancelText}
+          ${cancelText}
         </a>
       </div>
     </form>
-  )
+  `
 }

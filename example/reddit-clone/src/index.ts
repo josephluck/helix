@@ -1,6 +1,5 @@
 require('es6-shim')
 import helix from '../../../src'
-import { h } from '../../../src/html'
 import model from './model'
 import routes from './routes'
 
