@@ -22,6 +22,7 @@
     "@types/node": "^7.0.5",
     "babelify": "^7.3.0",
     "es6-shim": "^0.35.3",
+    "query-string-json": "0.0.7",
     "rlite-router": "^2.0.1",
     "sheet-router": "^4.2.3",
     "tsify": "^3.0.1",

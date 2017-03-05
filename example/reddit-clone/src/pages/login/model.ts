@@ -16,9 +16,10 @@ export default function model () {
       submit (state, actions, username, password) {
         return api.login(currentUser, username, password)
           .then(authResponse => {
-            actions.location.set('/')
             actions.alert.showSuccess('Successfully logged in')
             actions.user.receiveUser(authResponse.user)
+            let redirect = state.location.params.redirect ? state.location.params.redirect : '/'
+            actions.location.set(redirect)
           }, err => actions.alert.showError(err))
       },
       logout (state, actions) {

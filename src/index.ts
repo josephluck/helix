@@ -1,6 +1,7 @@
 // Please note that the inelegance of this file is for the sake of performance
 import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
+import * as qs from 'query-string-json'
 import twine from 'twine-js'
 import html from './html'
 import location from './location'
@@ -30,6 +31,16 @@ function createModel (configuration, render) {
     }
   }
   return model
+}
+
+function getQueryFromLocation (location) {
+  let query = qs.parse(location)
+  if (query) {
+    return Object.keys(query).map(key => {
+      return { [key]: query[key][0] }
+    }).reduce((curr, prev) => Object.assign({}, prev, curr))
+  }
+  return {}
 }
 
 export default function (configuration) {
@@ -92,7 +103,8 @@ export default function (configuration) {
       let view = typeof handler === 'object' ? handler.view : handler
       return function (params, _, pathname) {
         if (_state.location.pathname !== pathname) {
-          _actions.location.receiveRoute({ pathname, params })
+          let query = getQueryFromLocation(window.location.href)
+          _actions.location.receiveRoute({ pathname, params: Object.assign({}, params, query) })
           lifecycle(handler)
           _onLeave = handler.onLeave
           return false
