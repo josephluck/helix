@@ -1,26 +1,20 @@
 import api from '../../api'
-import { fixture as user } from '../../api/fixtures/user'
+import form from '../../model/form'
+import user from '../../api/fixtures/user'
 
-function defaultState () {
-  return user
-}
+let currentUser = user()
 
 export default function model () {
   return {
-    state: defaultState(),
+    state: {},
     reducers: {
       reset () {
-        return defaultState()
-      },
-      setFormField (state, key, value) {
-        return {
-          [key]: value,
-        }
+        return {}
       },
     },
     effects: {
       submit (state, actions, username, password) {
-        return api.login(username, password)
+        return api.login(currentUser, username, password)
           .then(authResponse => {
             actions.location.set('/')
             actions.alert.showSuccess('Successfully logged in')
@@ -31,7 +25,10 @@ export default function model () {
         actions.location.set('/')
         actions.alert.showSuccess('Successfully logged out')
         actions.user.reset()
-      }
+      },
+    },
+    models: {
+      form: form(Object.assign({}, currentUser)),
     },
   }
 }

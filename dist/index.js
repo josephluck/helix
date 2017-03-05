@@ -39,14 +39,16 @@ function default_1(configuration) {
         var model = createModel(configuration, renderCurrentLocation);
         var store = twine_js_1.default(onStateChange)(model);
         var _dom = mount;
+        var _state = store.state;
+        var _prev = store.state;
+        var _actions = store.actions;
+        var _onLeave;
+        var _handler;
         function rerender(node) {
             if (node) {
                 _dom = html_1.default.update(_dom, node(getProps()));
             }
         }
-        var _state = store.state;
-        var _prev = store.state;
-        var _actions = store.actions;
         function onStateChange(state, prev, actions) {
             _state = state;
             _prev = prev;
@@ -64,17 +66,6 @@ function default_1(configuration) {
         function getProps() {
             return { state: _state, prev: _prev, actions: _actions };
         }
-        function applyHook(hook) {
-            if (!hook) {
-                return null;
-            }
-            return function () {
-                var args = [_state, _prev, _actions];
-                window.requestAnimationFrame(function () { return hook.apply(null, args); });
-            };
-        }
-        var _onLeave;
-        var _handler;
         function lifecycle(handler) {
             if (_handler === handler) {
                 if (handler.onUpdate) {
@@ -93,10 +84,7 @@ function default_1(configuration) {
             }
         }
         function wrapRoutes(route, handler) {
-            var view = handler;
-            if (typeof view === 'object') {
-                view = handler.view;
-            }
+            var view = typeof handler === 'object' ? handler.view : handler;
             return function (params, _, pathname) {
                 if (_state.location.pathname !== pathname) {
                     _actions.location.receiveRoute({ pathname: pathname, params: params });

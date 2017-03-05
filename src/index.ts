@@ -40,15 +40,17 @@ export default function (configuration) {
     const store = twine(onStateChange)(model)
 
     let _dom = mount
+    let _state = store.state
+    let _prev = store.state
+    let _actions = store.actions
+    let _onLeave
+    let _handler
+
     function rerender (node) {
       if (node) {
         _dom = html.update(_dom, node(getProps()))
       }
     }
-
-    let _state = store.state
-    let _prev = store.state
-    let _actions = store.actions
 
     function onStateChange (state, prev, actions) {
       _state = state
@@ -69,18 +71,6 @@ export default function (configuration) {
       return { state: _state, prev: _prev, actions: _actions }
     }
 
-    function applyHook (hook) {
-      if (!hook) {
-        return null
-      }
-      return function () {
-        let args = [_state, _prev, _actions]
-        window.requestAnimationFrame(() => hook.apply(null, args))
-      }
-    }
-
-    let _onLeave
-    let _handler
     function lifecycle (handler) {
       if (_handler === handler) {
         if (handler.onUpdate) {
@@ -99,10 +89,7 @@ export default function (configuration) {
     }
 
     function wrapRoutes (route, handler) {
-      let view = handler
-      if (typeof view === 'object') {
-        view = handler.view
-      }
+      let view = typeof handler === 'object' ? handler.view : handler
       return function (params, _, pathname) {
         if (_state.location.pathname !== pathname) {
           _actions.location.receiveRoute({ pathname, params })
