@@ -22,7 +22,7 @@ function post (post) {
   `
 }
 
-function page ({state, prev, actions}) {
+function page (state, prev, actions) {
   return html`
     <div>
       ${state.pages.home.posts.length

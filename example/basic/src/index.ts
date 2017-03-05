@@ -18,7 +18,7 @@ function links ({
   `
 }
 
-function viewOne ({state, prev, actions}) {
+function viewOne (state, prev, actions) {
   return html`
     <div>
       ${links({
@@ -32,7 +32,7 @@ function viewOne ({state, prev, actions}) {
     </div>
   `
 }
-function viewTwo ({state, prev, actions}) {
+function viewTwo (state, prev, actions) {
   return html`
     <div>
       ${links({
@@ -46,7 +46,7 @@ function viewTwo ({state, prev, actions}) {
     </div>
   `
 }
-function viewThree ({state, prev, actions}) {
+function viewThree (state, prev, actions) {
   return html`
     <div>
       ${links({

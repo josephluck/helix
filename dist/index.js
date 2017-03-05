@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Please note that the inelegance of this file is for the sake of performance
 var rlite = require("rlite-router");
 var href = require("sheet-router/href");
+var qs = require("query-string-json");
 var twine_js_1 = require("twine-js");
 var html_1 = require("./html");
 var location_1 = require("./location");
@@ -32,6 +33,16 @@ function createModel(configuration, render) {
     }
     return model;
 }
+function getQueryFromLocation(location) {
+    var query = qs.parse(location);
+    if (query) {
+        return Object.keys(query).map(function (key) {
+            return _a = {}, _a[key] = query[key][0], _a;
+            var _a;
+        }).reduce(function (curr, prev) { return Object.assign({}, prev, curr); });
+    }
+    return {};
+}
 function default_1(configuration) {
     return function mount(mount) {
         var routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null;
@@ -46,7 +57,7 @@ function default_1(configuration) {
         var _handler;
         function rerender(node) {
             if (node) {
-                _dom = html_1.default.update(_dom, node(getProps()));
+                _dom = html_1.default.update(_dom, node(_state, _prev, _actions));
             }
         }
         function onStateChange(state, prev, actions) {
@@ -62,9 +73,6 @@ function default_1(configuration) {
             else {
                 return configuration.component ? configuration.component : null;
             }
-        }
-        function getProps() {
-            return { state: _state, prev: _prev, actions: _actions };
         }
         function lifecycle(handler) {
             if (_handler === handler) {
@@ -87,7 +95,8 @@ function default_1(configuration) {
             var view = typeof handler === 'object' ? handler.view : handler;
             return function (params, _, pathname) {
                 if (_state.location.pathname !== pathname) {
-                    _actions.location.receiveRoute({ pathname: pathname, params: params });
+                    var query = getQueryFromLocation(window.location.href);
+                    _actions.location.receiveRoute({ pathname: pathname, params: Object.assign({}, params, query) });
                     lifecycle(handler);
                     _onLeave = handler.onLeave;
                     return false;

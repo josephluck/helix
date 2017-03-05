@@ -4,7 +4,7 @@ import alert from '../components/alert'
 import navigation from '../components/navigation'
 
 export default function (child) {
-  return function ({state, prev, actions}) {
+  return function (state, prev, actions) {
     return html`
       <div class='sans-serif vh-100 vw-100 overflow-auto'>
         <div class='center mw7 ph4 ph5-m ph6-l'>
@@ -13,11 +13,7 @@ export default function (child) {
             onAvatarClick: actions.pages.login.logout,
           })}
           <div class='mt4'>
-            ${child({
-              state,
-              prev,
-              actions,
-            })}
+            ${child(state, prev, actions)}
           </div>
           ${alert({
             showing: state.alert.alert.showing,

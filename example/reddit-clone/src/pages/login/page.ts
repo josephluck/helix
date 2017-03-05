@@ -2,7 +2,7 @@ import html from '../../../../../src/html'
 import textfield from '../../components/textfield'
 import form from '../../components/form'
 
-export default function login ({state, prev, actions}) {
+export default function login (state, prev, actions) {
   let pageState = state.pages.login
   let pageActions = actions.pages.login
 

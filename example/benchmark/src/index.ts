@@ -20,7 +20,7 @@ function stopMeasure () {
   }
 }
 
-function view ({state, prev, actions}) {
+function view (state, prev, actions) {
   function run () {
     startMeasure('run')
     actions.run()

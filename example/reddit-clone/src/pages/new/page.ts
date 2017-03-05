@@ -3,7 +3,7 @@ import textfield from '../../components/textfield'
 import textarea from '../../components/textarea'
 import form from '../../components/form'
 
-export default function newPost ({state, prev, actions}) {
+export default function newPost (state, prev, actions) {
   let pageState = state.pages.newPost
   let pageActions = actions.pages.newPost
 

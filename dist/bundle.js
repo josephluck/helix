@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var yoyo = require("yo-yo");
 exports.default = yoyo;
 
-},{"yo-yo":21}],2:[function(require,module,exports){
+},{"yo-yo":23}],2:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Please note that the inelegance of this file is for the sake of performance
 var rlite = require("rlite-router");
 var href = require("sheet-router/href");
+var qs = require("query-string-json");
 var twine_js_1 = require("twine-js");
 var html_1 = require("./html");
 var location_1 = require("./location");
@@ -40,6 +41,18 @@ function createModel(configuration, render) {
     }
     return model;
 }
+function getQueryFromLocation(location) {
+    var query = qs.parse(location);
+    if (query) {
+        return Object.keys(query).map(function (key) {
+            return _a = {}, _a[key] = query[key][0], _a;
+            var _a;
+        }).reduce(function (curr, prev) {
+            return Object.assign({}, prev, curr);
+        });
+    }
+    return {};
+}
 function default_1(configuration) {
     return function mount(mount) {
         var routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null;
@@ -56,7 +69,7 @@ function default_1(configuration) {
         var _handler;
         function rerender(node) {
             if (node) {
-                _dom = html_1.default.update(_dom, node(getProps()));
+                _dom = html_1.default.update(_dom, node(_state, _prev, _actions));
             }
         }
         function onStateChange(state, prev, actions) {
@@ -71,9 +84,6 @@ function default_1(configuration) {
             } else {
                 return configuration.component ? configuration.component : null;
             }
-        }
-        function getProps() {
-            return { state: _state, prev: _prev, actions: _actions };
         }
         function lifecycle(handler) {
             if (_handler === handler) {
@@ -95,7 +105,8 @@ function default_1(configuration) {
             var view = (typeof handler === "undefined" ? "undefined" : _typeof(handler)) === 'object' ? handler.view : handler;
             return function (params, _, pathname) {
                 if (_state.location.pathname !== pathname) {
-                    _actions.location.receiveRoute({ pathname: pathname, params: params });
+                    var query = getQueryFromLocation(window.location.href);
+                    _actions.location.receiveRoute({ pathname: pathname, params: Object.assign({}, params, query) });
                     lifecycle(handler);
                     _onLeave = handler.onLeave;
                     return false;
@@ -117,7 +128,7 @@ function default_1(configuration) {
 }
 exports.default = default_1;
 
-},{"./html":1,"./location":3,"rlite-router":14,"sheet-router/href":15,"twine-js":17}],3:[function(require,module,exports){
+},{"./html":1,"./location":3,"query-string-json":15,"rlite-router":16,"sheet-router/href":17,"twine-js":19}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -619,7 +630,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"util/":20}],5:[function(require,module,exports){
+},{"util/":22}],5:[function(require,module,exports){
 'use strict';
 
 var document = require('global/document');
@@ -752,10 +763,13 @@ module.exports = hyperx(belCreateElement);
 module.exports.default = module.exports;
 module.exports.createElement = belCreateElement;
 
-},{"global/document":8,"hyperx":11,"on-load":13}],6:[function(require,module,exports){
+},{"global/document":9,"hyperx":12,"on-load":14}],6:[function(require,module,exports){
 "use strict";
 
 },{}],7:[function(require,module,exports){
+"use strict";
+
+},{}],8:[function(require,module,exports){
 'use strict';
 
 // shim for using process in browser
@@ -938,7 +952,7 @@ process.umask = function () {
     return 0;
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -958,7 +972,7 @@ if (typeof document !== 'undefined') {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":6}],9:[function(require,module,exports){
+},{"min-document":6}],10:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -973,7 +987,7 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 module.exports = attributeToProperty;
@@ -996,7 +1010,7 @@ function attributeToProperty(h) {
   };
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -1249,7 +1263,7 @@ function selfClosing(tag) {
   return closeRE.test(tag);
 }
 
-},{"hyperscript-attribute-to-property":10}],12:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":11}],13:[function(require,module,exports){
 'use strict';
 
 var range; // Create a range object for efficently rendering strings to elements.
@@ -1918,7 +1932,7 @@ var morphdom = morphdomFactory(morphAttrs);
 
 module.exports = morphdom;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 /* global MutationObserver */
@@ -2009,7 +2023,123 @@ function eachMutation(nodes, fn) {
   }
 }
 
-},{"global/document":8,"global/window":9}],14:[function(require,module,exports){
+},{"global/document":9,"global/window":10}],15:[function(require,module,exports){
+'use strict';
+
+(function () {
+
+  'use strict';
+
+  var fs = require('fs');
+
+  function convert(arr, file, callback) {
+    if (!Array.isArray(arr)) {
+      callback(new Error('First argument must be an array'));
+      return false;
+    }
+    var data = {};
+    var final = [];
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = arr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var url = _step.value;
+
+        if (typeof url !== 'string') {
+          callback(new Error('Array must contain strings'));
+          return false;
+        }
+        var obj = parse(url);
+        final.push(combine(obj, data));
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    write(file, JSON.stringify(final), function (error) {
+      if (error) callback(error);
+      callback(null, true);
+    });
+  }
+
+  // *** helpers *** //
+
+  function parse(url) {
+    if (typeof url !== 'string') return false;
+    if (url.indexOf('?') === -1) return false;
+    var params = url.slice(url.indexOf('?') + 1).split('&');
+    if (params.length < 1 || params[0] === '') return false;
+    return params.reduce(function (result, value, index) {
+      var hash = value.split(/=(.+)?/);
+      if (!Object.keys(result).length) {
+        return updateObject(hash, result);
+      } else {
+        for (var key in result) {
+          if (result.hasOwnProperty(hash[0])) {
+            result[hash[0]] = result[hash[0]].concat(hash[1]);
+          } else {
+            return updateObject(hash, result);
+          }
+        }
+        return result;
+      }
+    }, {});
+  }
+
+  function updateObject(hash, obj) {
+    if (hash.length === 1) obj[hash[0]] = null;else obj[hash[0]] = [hash[1]];
+    return obj;
+  }
+
+  function combine(obj, src, callback) {
+    if (!obj) return 'obj cannot be falsely';
+    if (obj !== Object(obj) || Array.isArray(obj)) return 'obj must be an object';
+    if (!Object.keys(obj).length) return 'obj cannot be empty';
+    for (var key in src) {
+      if (src.hasOwnProperty(key)) {
+        obj[key] = obj[key].concat(src[key][0]);
+      }
+    }
+    return obj;
+  }
+
+  function read(name, callback) {
+    fs.readFile(name, 'utf8', function (err, data) {
+      if (err) callback(err);
+      callback(null, data);
+    });
+  }
+
+  function write(name, data, callback) {
+    fs.writeFile(name, data, function (err) {
+      if (err) callback(err);
+      callback(null, true);
+    });
+  }
+
+  module.exports = {
+    convert: convert,
+    parse: parse,
+    combine: combine,
+    write: write,
+    read: read
+  };
+})();
+
+},{"fs":7}],16:[function(require,module,exports){
 'use strict';
 
 // This library started as an experiment to see how small I could make
@@ -2116,7 +2246,7 @@ function eachMutation(nodes, fn) {
   };
 });
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -2163,7 +2293,7 @@ function href(cb, root) {
   };
 }
 
-},{"./qs":16,"assert":4,"global/window":9}],16:[function(require,module,exports){
+},{"./qs":18,"assert":4,"global/window":10}],18:[function(require,module,exports){
 'use strict';
 
 var window = require('global/window');
@@ -2184,7 +2314,7 @@ function qs(uri) {
   }
 }
 
-},{"global/window":9}],17:[function(require,module,exports){
+},{"global/window":10}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -2304,7 +2434,7 @@ function twine(opts) {
 }
 exports.default = twine;
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 if (typeof Object.create === 'function') {
@@ -2331,7 +2461,7 @@ if (typeof Object.create === 'function') {
   };
 }
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -2340,7 +2470,7 @@ module.exports = function isBuffer(arg) {
   return arg && (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'object' && typeof arg.copy === 'function' && typeof arg.fill === 'function' && typeof arg.readUInt8 === 'function';
 };
 
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 (function (process,global){
 'use strict';
 
@@ -2892,7 +3022,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":19,"_process":7,"inherits":18}],21:[function(require,module,exports){
+},{"./support/isBuffer":21,"_process":8,"inherits":20}],23:[function(require,module,exports){
 'use strict';
 
 var bel = require('bel'); // turns template tag into DOM elements
@@ -2940,7 +3070,7 @@ module.exports.update = function (fromNode, toNode, opts) {
   }
 };
 
-},{"./update-events.js":22,"bel":5,"morphdom":12}],22:[function(require,module,exports){
+},{"./update-events.js":24,"bel":5,"morphdom":13}],24:[function(require,module,exports){
 'use strict';
 
 module.exports = [
