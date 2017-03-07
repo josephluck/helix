@@ -1,4 +1,161 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var yoyo = require("yo-yo");
+exports.default = yoyo;
+
+},{"yo-yo":19}],2:[function(require,module,exports){
+"use strict";
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", { value: true });
+// Please note that the inelegance of this file is for the sake of performance
+var rlite = require("rlite-router");
+var href = require("sheet-router/href");
+var qs = require("query-string-json");
+var twine_js_1 = require("twine-js");
+var html_1 = require("./html");
+var location_1 = require("./location");
+function combineObjects(a, b) {
+    return Object.assign({}, a, b);
+}
+function wrap(routes, wrap) {
+    return Object.keys(routes).map(function (route) {
+        var handler = routes[route];
+        return _a = {}, _a[route] = wrap(route, handler), _a;
+        var _a;
+    }).reduce(combineObjects, {});
+}
+function createModel(configuration, render) {
+    var model = configuration.model;
+    if (configuration.routes) {
+        if (model.models) {
+            model.models.location = location_1.default(render);
+        } else {
+            model.models = {
+                location: location_1.default(render)
+            };
+        }
+    }
+    return model;
+}
+function getQueryFromLocation(location) {
+    var query = qs.parse(location);
+    if (query) {
+        return Object.keys(query).map(function (key) {
+            return _a = {}, _a[key] = query[key][0], _a;
+            var _a;
+        }).reduce(function (curr, prev) {
+            return Object.assign({}, prev, curr);
+        });
+    }
+    return {};
+}
+function default_1(configuration) {
+    return function mount(mount) {
+        var routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null;
+        var router = rlite(function () {
+            return null;
+        }, routes);
+        var model = createModel(configuration, renderCurrentLocation);
+        var store = twine_js_1.default(onStateChange)(model);
+        var _dom = mount;
+        var _state = store.state;
+        var _prev = store.state;
+        var _actions = store.actions;
+        var _onLeave;
+        var _handler;
+        function rerender(node) {
+            if (node) {
+                _dom = html_1.default.update(_dom, node(_state, _prev, _actions));
+            }
+        }
+        function onStateChange(state, prev, actions) {
+            _state = state;
+            _prev = prev;
+            _actions = actions;
+            rerender(getComponent(window.location.pathname));
+        }
+        function getComponent(path) {
+            if (configuration.routes) {
+                return router(path);
+            } else {
+                return configuration.component ? configuration.component : null;
+            }
+        }
+        function lifecycle(handler) {
+            if (_handler === handler) {
+                if (handler.onUpdate) {
+                    handler.onUpdate(_state, _prev, _actions);
+                }
+            } else {
+                _handler = handler;
+                if (_onLeave) {
+                    _onLeave(_state, _prev, _actions);
+                    _onLeave = handler.onLeave;
+                }
+                if (handler.onEnter) {
+                    handler.onEnter(_state, _prev, _actions);
+                }
+            }
+        }
+        function wrapRoutes(route, handler) {
+            var view = (typeof handler === "undefined" ? "undefined" : _typeof(handler)) === 'object' ? handler.view : handler;
+            return function (params, _, pathname) {
+                if (_state.location.pathname !== pathname) {
+                    var query = getQueryFromLocation(window.location.href);
+                    _actions.location.receiveRoute({ pathname: pathname, params: Object.assign({}, params, query) });
+                    lifecycle(handler);
+                    _onLeave = handler.onLeave;
+                    return false;
+                }
+                return view;
+            };
+        }
+        function renderCurrentLocation() {
+            rerender(getComponent(window.location.pathname));
+        }
+        function setLocationAndRender(path) {
+            window.history.pushState('', '', path.pathname);
+            rerender(getComponent(path.pathname));
+        }
+        href(setLocationAndRender);
+        window.onpopstate = renderCurrentLocation;
+        renderCurrentLocation();
+    };
+}
+exports.default = default_1;
+
+},{"./html":1,"./location":3,"query-string-json":14,"rlite-router":15,"sheet-router/href":16,"twine-js":18}],3:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function location(rerender) {
+    return {
+        state: {
+            pathname: '',
+            params: {}
+        },
+        reducers: {
+            receiveRoute: function receiveRoute(_state, _a) {
+                var pathname = _a.pathname,
+                    params = _a.params;
+                return { pathname: pathname, params: params };
+            }
+        },
+        effects: {
+            set: function set(_state, _actions, pathname) {
+                window.history.pushState('', '', pathname);
+                rerender(pathname);
+            }
+        }
+    };
+}
+exports.default = location;
+
+},{}],4:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -492,9 +649,9 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"util/":6}],2:[function(require,module,exports){
+},{"util/":9}],5:[function(require,module,exports){
 
-},{}],3:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -676,7 +833,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],4:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -701,14 +858,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1298,226 +1455,205 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":5,"_process":3,"inherits":4}],7:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+},{"./support/isBuffer":8,"_process":6,"inherits":7}],10:[function(require,module,exports){
+'use strict';
+
+var _templateObject = _taggedTemplateLiteral(['\n      <tr class=', '>\n        <td class=\'col-md-1\'>', '</td>\n        <td class=\'col-md-4\'>\n          <a onclick=', '>', '</a>\n        </td>\n        <td class=\'col-md-1\'>\n          <a onclick=', '>\n            <span class=\'glyphicon glyphicon-remove\' aria-hidden=\'true\'></span>\n          </a>\n        </td>\n        <td class=\'col-md-6\'></td>\n      </tr>\n    '], ['\n      <tr class=', '>\n        <td class=\'col-md-1\'>', '</td>\n        <td class=\'col-md-4\'>\n          <a onclick=', '>', '</a>\n        </td>\n        <td class=\'col-md-1\'>\n          <a onclick=', '>\n            <span class=\'glyphicon glyphicon-remove\' aria-hidden=\'true\'></span>\n          </a>\n        </td>\n        <td class=\'col-md-6\'></td>\n      </tr>\n    ']),
+    _templateObject2 = _taggedTemplateLiteral(['\n    <div class=\'container\'>\n      <div class=\'jumbotron\'>\n        <div class=\'row\'>\n          <div class=\'col-md-6\'>\n            <h1>Helix</h1>\n          </div>\n        <div class=\'col-md-6\'>\n          <div class=\'row\'>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'run\' onclick=', '>Create 1,000 rows</button>\n            </div>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'runlots\' onclick=', '>Create 10,000 rows</button>\n            </div>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'add\' onclick=', '>Append 1,000 rows</button>\n            </div>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'update\' onclick=', '>Update every 10th row</button>\n            </div>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'clear\' onclick=', '>Clear</button>\n            </div>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'swaprows\' onclick=', '>Swap Rows</button>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n    <table class=\'table table-hover table-striped test-data\'>\n      <tbody>\n        ', '\n      </tbody>\n    </table>\n    <span class=\'preloadicon glyphicon glyphicon-remove\' aria-hidden=\'true\'></span>\n    </div>\n  '], ['\n    <div class=\'container\'>\n      <div class=\'jumbotron\'>\n        <div class=\'row\'>\n          <div class=\'col-md-6\'>\n            <h1>Helix</h1>\n          </div>\n        <div class=\'col-md-6\'>\n          <div class=\'row\'>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'run\' onclick=', '>Create 1,000 rows</button>\n            </div>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'runlots\' onclick=', '>Create 10,000 rows</button>\n            </div>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'add\' onclick=', '>Append 1,000 rows</button>\n            </div>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'update\' onclick=', '>Update every 10th row</button>\n            </div>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'clear\' onclick=', '>Clear</button>\n            </div>\n            <div class=\'col-sm-6 smallpad\'>\n              <button type=\'button\' class=\'btn btn-primary btn-block\' id=\'swaprows\' onclick=', '>Swap Rows</button>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n    <table class=\'table table-hover table-striped test-data\'>\n      <tbody>\n        ', '\n      </tbody>\n    </table>\n    <span class=\'preloadicon glyphicon glyphicon-remove\' aria-hidden=\'true\'></span>\n    </div>\n  ']);
+
+function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
 require('es6-shim');
-const src_1 = require("../../../src");
-const html_1 = require("../../../src/html");
-let startTime;
-let lastMeasure;
+var helix = require('../../../dist/index').default;
+var html = require('../../../dist/html').default;
+
+var startTime = void 0;
+var lastMeasure = void 0;
 function startMeasure(name) {
-    startTime = performance.now();
-    lastMeasure = name;
+  startTime = performance.now();
+  lastMeasure = name;
 }
 function stopMeasure() {
-    const last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function metaStopMeasure() {
-            lastMeasure = null;
-            const stop = performance.now();
-            const duration = 0;
-            console.log(last + ' took ' + (stop - startTime));
-        }, 0);
-    }
+  var last = lastMeasure;
+  if (lastMeasure) {
+    window.setTimeout(function metaStopMeasure() {
+      lastMeasure = null;
+      var stop = performance.now();
+      var duration = 0;
+      console.log(last + ' took ' + (stop - startTime));
+    }, 0);
+  }
 }
+
 function view(state, prev, actions) {
-    function run() {
-        startMeasure('run');
-        actions.run();
-    }
-    function runLots() {
-        startMeasure('runLots');
-        actions.runLots();
-    }
-    function add() {
-        startMeasure('add');
-        actions.add();
-    }
-    function update() {
-        startMeasure('update');
-        actions.update();
-    }
-    function clear() {
-        startMeasure('clear');
-        actions.clear();
-    }
-    function swapRows() {
-        startMeasure('swapRows');
-        actions.swapRows();
-    }
-    function del(id) {
-        return function (e) {
-            startMeasure('delete');
-            actions.delete({ id: id });
-        };
-    }
-    function click(id) {
-        return function (e) {
-            startMeasure('click');
-            actions.select({ id: id });
-        };
-    }
-    function className(id) {
-        return id === state.selected ? 'danger' : '';
-    }
-    function printDuration() {
-        stopMeasure();
-    }
-    printDuration();
-    function row({ id, label }) {
-        return html_1.default `
-      <tr class=${className(id)}>
-        <td class='col-md-1'>${id}</td>
-        <td class='col-md-4'>
-          <a onclick=${click(id)}>${label}</a>
-        </td>
-        <td class='col-md-1'>
-          <a onclick=${del(id)}>
-            <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
-          </a>
-        </td>
-        <td class='col-md-6'></td>
-      </tr>
-    `;
-    }
-    return html_1.default `
-    <div class='container'>
-      <div class='jumbotron'>
-        <div class='row'>
-          <div class='col-md-6'>
-            <h1>Helix</h1>
-          </div>
-        <div class='col-md-6'>
-          <div class='row'>
-            <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='run' onclick=${run}>Create 1,000 rows</button>
-            </div>
-            <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='runlots' onclick=${runLots}>Create 10,000 rows</button>
-            </div>
-            <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='add' onclick=${add}>Append 1,000 rows</button>
-            </div>
-            <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='update' onclick=${update}>Update every 10th row</button>
-            </div>
-            <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='clear' onclick=${clear}>Clear</button>
-            </div>
-            <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='swaprows' onclick=${swapRows}>Swap Rows</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <table class='table table-hover table-striped test-data'>
-      <tbody>
-        ${state.data.map((d, i) => {
-        return row({
-            id: d.id,
-            label: d.label,
-        });
-    })}
-      </tbody>
-    </table>
-    <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
-    </div>
-  `;
-}
-function model() {
-    let id = 1;
-    function _random(max) {
-        return Math.round(Math.random() * 1000) % max;
-    }
-    function buildData(count) {
-        count = count || 1000;
-        const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
-        const colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
-        const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
-        return new Array(count).fill('').map(() => {
-            return {
-                id: id++,
-                label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
-            };
-        });
-    }
-    return {
-        state: {
-            data: [],
-            selected: false,
-        },
-        reducers: {
-            run(state) {
-                return { data: buildData(1000), selected: undefined };
-            },
-            add(state) {
-                return {
-                    data: state.data.slice().concat(buildData(1000)),
-                    selected: undefined,
-                };
-            },
-            runLots(state) {
-                return { data: buildData(10000), selected: undefined };
-            },
-            clear(state) {
-                return { data: [], selected: undefined };
-            },
-            update(state) {
-                return {
-                    data: state.data.slice()
-                        .map((d, i) => {
-                        if (i % 10 === 0) {
-                            d.label = `${d.label} !!!`;
-                        }
-                        return d;
-                    }),
-                    selected: undefined,
-                };
-            },
-            swapRows(state) {
-                if (state.data.length > 10) {
-                    const newData = state.data.slice();
-                    const a = newData[4];
-                    newData[4] = newData[9];
-                    newData[9] = a;
-                    return {
-                        data: newData,
-                        selected: state.selected,
-                    };
-                }
-                else {
-                    return state;
-                }
-            },
-            select(state, data) {
-                return {
-                    data: state.data,
-                    selected: data.id,
-                };
-            },
-            delete(state, data) {
-                return {
-                    data: state.data.filter((d) => d.id !== data.id),
-                };
-            }
-        }
+  function run() {
+    startMeasure('run');
+    actions.run();
+  }
+
+  function runLots() {
+    startMeasure('runLots');
+    actions.runLots();
+  }
+
+  function add() {
+    startMeasure('add');
+    actions.add();
+  }
+
+  function update() {
+    startMeasure('update');
+    actions.update();
+  }
+
+  function clear() {
+    startMeasure('clear');
+    actions.clear();
+  }
+
+  function swapRows() {
+    startMeasure('swapRows');
+    actions.swapRows();
+  }
+
+  function del(id) {
+    return function (e) {
+      startMeasure('delete');
+      actions.delete({ id: id });
     };
+  }
+
+  function click(id) {
+    return function (e) {
+      startMeasure('click');
+      actions.select({ id: id });
+    };
+  }
+
+  function className(id) {
+    return id === state.selected ? 'danger' : '';
+  }
+
+  function printDuration() {
+    stopMeasure();
+  }
+
+  printDuration();
+
+  function row(_ref) {
+    var id = _ref.id,
+        label = _ref.label;
+
+    return html(_templateObject, className(id), id, click(id), label, del(id));
+  }
+
+  return html(_templateObject2, run, runLots, add, update, clear, swapRows, state.data.map(function (d, i) {
+    return row({
+      id: d.id,
+      label: d.label
+    });
+  }));
 }
-const app = src_1.default({
-    model: model(),
-    routes: {
-        '': {
-            view,
-        },
+
+function model() {
+  var id = 1;
+
+  function _random(max) {
+    return Math.round(Math.random() * 1000) % max;
+  }
+
+  function buildData(count) {
+    count = count || 1000;
+    var adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
+    var colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
+    var nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
+
+    return new Array(count).fill('').map(function () {
+      return {
+        id: id++,
+        label: adjectives[_random(adjectives.length)] + ' ' + colours[_random(colours.length)] + ' ' + nouns[_random(nouns.length)]
+      };
+    });
+  }
+
+  return {
+    state: {
+      data: [],
+      selected: false
     },
+    reducers: {
+      run: function run(state) {
+        return { data: buildData(1000), selected: undefined };
+      },
+      add: function add(state) {
+        return {
+          data: state.data.slice().concat(buildData(1000)),
+          selected: undefined
+        };
+      },
+      runLots: function runLots(state) {
+        return { data: buildData(10000), selected: undefined };
+      },
+      clear: function clear(state) {
+        return { data: [], selected: undefined };
+      },
+      update: function update(state) {
+        return {
+          data: state.data.slice().map(function (d, i) {
+            if (i % 10 === 0) {
+              d.label = d.label + ' !!!';
+            }
+            return d;
+          }),
+          selected: undefined
+        };
+      },
+      swapRows: function swapRows(state) {
+        if (state.data.length > 10) {
+          var newData = state.data.slice();
+          var a = newData[4];
+          newData[4] = newData[9];
+          newData[9] = a;
+
+          return {
+            data: newData,
+            selected: state.selected
+          };
+        } else {
+          return state;
+        }
+      },
+      select: function select(state, data) {
+        return {
+          data: state.data,
+          selected: data.id
+        };
+      },
+      delete: function _delete(state, data) {
+        return {
+          data: state.data.filter(function (d) {
+            return d.id !== data.id;
+          })
+        };
+      }
+    }
+  };
+}
+
+var app = helix({
+  model: model(),
+  routes: {
+    '': {
+      view: view
+    }
+  }
 });
-const node = document.createElement('div');
+
+var node = document.createElement('div');
 document.body.appendChild(node);
 app(node);
 
-},{"../../../src":19,"../../../src/html":18,"es6-shim":8}],8:[function(require,module,exports){
+},{"../../../dist/html":1,"../../../dist/index":2,"es6-shim":11}],11:[function(require,module,exports){
 (function (process,global){
  /*!
   * https://github.com/paulmillr/es6-shim
@@ -5363,7 +5499,7 @@ app(node);
 }));
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":3}],9:[function(require,module,exports){
+},{"_process":6}],12:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window;
@@ -5376,7 +5512,7 @@ if (typeof window !== "undefined") {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 var range; // Create a range object for efficently rendering strings to elements.
@@ -6051,7 +6187,7 @@ var morphdom = morphdomFactory(morphAttrs);
 
 module.exports = morphdom;
 
-},{}],11:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function() {
 
   'use strict';
@@ -6145,7 +6281,7 @@ module.exports = morphdom;
 
 }());
 
-},{"fs":2}],12:[function(require,module,exports){
+},{"fs":5}],15:[function(require,module,exports){
 // This library started as an experiment to see how small I could make
 // a functional router. It has since been optimized (and thus grown).
 // The redundancy and inelegance here is for the sake of either size
@@ -6248,7 +6384,7 @@ module.exports = morphdom;
   };
 }));
 
-},{}],13:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var window = require('global/window')
 var assert = require('assert')
 
@@ -6291,7 +6427,7 @@ function href (cb, root) {
   }
 }
 
-},{"./qs":14,"assert":1,"global/window":9}],14:[function(require,module,exports){
+},{"./qs":17,"assert":4,"global/window":12}],17:[function(require,module,exports){
 var window = require('global/window')
 
 var decodeURIComponent = window.decodeURIComponent
@@ -6310,7 +6446,7 @@ function qs (uri) {
   }
 }
 
-},{"global/window":9}],15:[function(require,module,exports){
+},{"global/window":12}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function noop() {
@@ -6437,7 +6573,7 @@ function twine(opts) {
 }
 exports.default = twine;
 
-},{}],16:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var bel = {} // turns template tag into DOM elements
 var morphdom = require('morphdom') // efficiently diffs + morphs two DOM elements
 var defaultEvents = require('./update-events.js') // default events to be copied when dom elements update
@@ -6481,7 +6617,7 @@ module.exports.update = function (fromNode, toNode, opts) {
   }
 }
 
-},{"./update-events.js":17,"morphdom":10}],17:[function(require,module,exports){
+},{"./update-events.js":20,"morphdom":13}],20:[function(require,module,exports){
 module.exports = [
   // attribute events (can be set with attributes)
   'onclick',
@@ -6519,153 +6655,4 @@ module.exports = [
   'onfocusout'
 ]
 
-},{}],18:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const yoyo = require("yo-yo");
-exports.default = yoyo;
-
-},{"yo-yo":16}],19:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-// Please note that the inelegance of this file is for the sake of performance
-const rlite = require("rlite-router");
-const href = require("sheet-router/href");
-const qs = require("query-string-json");
-const twine_js_1 = require("twine-js");
-const html_1 = require("./html");
-const location_1 = require("./location");
-function combineObjects(a, b) {
-    return Object.assign({}, a, b);
-}
-function wrap(routes, wrap) {
-    return Object.keys(routes).map(route => {
-        let handler = routes[route];
-        return {
-            [route]: wrap(route, handler),
-        };
-    }).reduce(combineObjects, {});
-}
-function createModel(configuration, render) {
-    let model = configuration.model;
-    if (configuration.routes) {
-        if (model.models) {
-            model.models.location = location_1.default(render);
-        }
-        else {
-            model.models = {
-                location: location_1.default(render),
-            };
-        }
-    }
-    return model;
-}
-function getQueryFromLocation(location) {
-    let query = qs.parse(location);
-    if (query) {
-        return Object.keys(query).map(key => {
-            return { [key]: query[key][0] };
-        }).reduce((curr, prev) => Object.assign({}, prev, curr));
-    }
-    return {};
-}
-function default_1(configuration) {
-    return function mount(mount) {
-        const routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null;
-        const router = rlite(() => null, routes);
-        const model = createModel(configuration, renderCurrentLocation);
-        const store = twine_js_1.default(onStateChange)(model);
-        let _dom = mount;
-        let _state = store.state;
-        let _prev = store.state;
-        let _actions = store.actions;
-        let _onLeave;
-        let _handler;
-        function rerender(node) {
-            if (node) {
-                _dom = html_1.default.update(_dom, node(_state, _prev, _actions));
-            }
-        }
-        function onStateChange(state, prev, actions) {
-            _state = state;
-            _prev = prev;
-            _actions = actions;
-            rerender(getComponent(window.location.pathname));
-        }
-        function getComponent(path) {
-            if (configuration.routes) {
-                return router(path);
-            }
-            else {
-                return configuration.component ? configuration.component : null;
-            }
-        }
-        function lifecycle(handler) {
-            if (_handler === handler) {
-                if (handler.onUpdate) {
-                    handler.onUpdate(_state, _prev, _actions);
-                }
-            }
-            else {
-                _handler = handler;
-                if (_onLeave) {
-                    _onLeave(_state, _prev, _actions);
-                    _onLeave = handler.onLeave;
-                }
-                if (handler.onEnter) {
-                    handler.onEnter(_state, _prev, _actions);
-                }
-            }
-        }
-        function wrapRoutes(route, handler) {
-            let view = typeof handler === 'object' ? handler.view : handler;
-            return function (params, _, pathname) {
-                if (_state.location.pathname !== pathname) {
-                    let query = getQueryFromLocation(window.location.href);
-                    _actions.location.receiveRoute({ pathname, params: Object.assign({}, params, query) });
-                    lifecycle(handler);
-                    _onLeave = handler.onLeave;
-                    return false;
-                }
-                return view;
-            };
-        }
-        function renderCurrentLocation() {
-            rerender(getComponent(window.location.pathname));
-        }
-        function setLocationAndRender(path) {
-            window.history.pushState('', '', path.pathname);
-            rerender(getComponent(path.pathname));
-        }
-        href(setLocationAndRender);
-        window.onpopstate = renderCurrentLocation;
-        renderCurrentLocation();
-    };
-}
-exports.default = default_1;
-
-},{"./html":18,"./location":20,"query-string-json":11,"rlite-router":12,"sheet-router/href":13,"twine-js":15}],20:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-function location(rerender) {
-    return {
-        state: {
-            pathname: '',
-            params: {},
-        },
-        reducers: {
-            receiveRoute(_state, { pathname, params }) {
-                return { pathname, params };
-            },
-        },
-        effects: {
-            set(_state, _actions, pathname) {
-                window.history.pushState('', '', pathname);
-                rerender(pathname);
-            },
-        },
-    };
-}
-exports.default = location;
-
-},{}]},{},[7]);
+},{}]},{},[10]);

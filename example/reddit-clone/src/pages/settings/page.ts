@@ -19,13 +19,13 @@ function page (state, prev, actions) {
   return html`
     <div>
       <span class='mb4 f4 b dib'>
-        Settings
+        Your details
       </span>
       ${form({
         onsubmit () {
           pageActions.submit(pageState.form.title, pageState.form.body)
         },
-        submitText: 'Save settings',
+        submitText: 'Save',
         oncancel () {
           actions.location.set('/')
           pageActions.reset()
