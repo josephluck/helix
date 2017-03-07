@@ -10,7 +10,9 @@ export default function (child) {
         <div class='center mw7 ph4 ph5-m ph6-l'>
           ${navigation({
             user: state.user.user,
-            onAvatarClick: actions.pages.login.logout,
+            onAvatarClick () {
+              actions.location.set('/settings')
+            },
           })}
           <div class='mt4'>
             ${child(state, prev, actions)}
