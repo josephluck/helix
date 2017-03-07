@@ -33,6 +33,11 @@ function page (state, prev, actions) {
         child: html`
           <div>
             ${textfield({
+              label: 'Name',
+              value: pageState.form.name,
+              oninput: updateFormField('name'),
+            })}
+            ${textfield({
               label: 'Email address',
               value: pageState.form.username,
               oninput: updateFormField('username'),
