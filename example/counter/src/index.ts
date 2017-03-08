@@ -2,6 +2,15 @@ require('es6-shim')
 import helix from '../../../src'
 import html from '../../../src/html'
 
+function yoyoRenderer (dom) {
+  let _dom = dom
+  return function (node, state, prev, actions) {
+    if (node) {
+      _dom = html.update(_dom, node(state, prev, actions))
+    }
+  }
+}
+
 function counterView (state, prev, actions) {
   return html`
     <section class='section hero'>
@@ -63,10 +72,10 @@ function counterView (state, prev, actions) {
   `
 }
 
-let dom = document.createElement('div')
-document.body.appendChild(dom)
+let mount = document.createElement('div')
+document.body.appendChild(mount)
 
-const app = helix({
+helix({
   model: {
     state: {
       count: 10,
@@ -112,12 +121,6 @@ const app = helix({
       },
     },
   },
-  render (node, state, prev, actions) {
-    if (node) {
-      dom = html.update(dom, node(state, prev, actions))
-    }
-  },
   component: counterView,
+  render: yoyoRenderer(mount),
 })
-
-app()
