@@ -1,6 +1,6 @@
 require('es6-shim')
-const helix = require('../../../dist/index').default
-const html = require('../../../dist/html').default
+import helix from '../../../../src'
+import h, {renderer} from '../../../../src/renderers/inferno'
 
 let startTime
 let lastMeasure
@@ -76,23 +76,23 @@ function view (state, prev, actions) {
   printDuration()
 
   function row ({id, label}) {
-    return html`
-      <tr class=${className(id)}>
-        <td class='col-md-1'>${id}</td>
+    return (
+      <tr class={className(id)}>
+        <td class='col-md-1'>{id}</td>
         <td class='col-md-4'>
-          <a onclick=${click(id)}>${label}</a>
+          <a onclick={click(id)}>{label}</a>
         </td>
         <td class='col-md-1'>
-          <a onclick=${del(id)}>
+          <a onclick={del(id)}>
             <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
           </a>
         </td>
         <td class='col-md-6'></td>
       </tr>
-    `
+    )
   }
 
-  return html`
+  return (
     <div class='container'>
       <div class='jumbotron'>
         <div class='row'>
@@ -102,22 +102,22 @@ function view (state, prev, actions) {
         <div class='col-md-6'>
           <div class='row'>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='run' onclick=${run}>Create 1,000 rows</button>
+              <button type='button' class='btn btn-primary btn-block' id='run' onclick={run}>Create 1,000 rows</button>
             </div>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='runlots' onclick=${runLots}>Create 10,000 rows</button>
+              <button type='button' class='btn btn-primary btn-block' id='runlots' onclick={runLots}>Create 10,000 rows</button>
             </div>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='add' onclick=${add}>Append 1,000 rows</button>
+              <button type='button' class='btn btn-primary btn-block' id='add' onclick={add}>Append 1,000 rows</button>
             </div>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='update' onclick=${update}>Update every 10th row</button>
+              <button type='button' class='btn btn-primary btn-block' id='update' onclick={update}>Update every 10th row</button>
             </div>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='clear' onclick=${clear}>Clear</button>
+              <button type='button' class='btn btn-primary btn-block' id='clear' onclick={clear}>Clear</button>
             </div>
             <div class='col-sm-6 smallpad'>
-              <button type='button' class='btn btn-primary btn-block' id='swaprows' onclick=${swapRows}>Swap Rows</button>
+              <button type='button' class='btn btn-primary btn-block' id='swaprows' onclick={swapRows}>Swap Rows</button>
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ function view (state, prev, actions) {
     </div>
     <table class='table table-hover table-striped test-data'>
       <tbody>
-        ${state.data.map((d, i) => {
+        {state.data.map((d, i) => {
           return row({
             id: d.id,
             label: d.label,
@@ -135,7 +135,7 @@ function view (state, prev, actions) {
     </table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
     </div>
-  `
+  )
 }
 
 
@@ -155,7 +155,7 @@ function model () {
     return new Array(count).fill('').map(() => {
       return {
         id: id++,
-        label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
+        label: `{adjectives[_random(adjectives.length)]} {colours[_random(colours.length)]} {nouns[_random(nouns.length)]}`,
       }
     })
   }
@@ -186,7 +186,7 @@ function model () {
           data: state.data.slice()
             .map((d, i) => {
               if (i % 10 === 0) {
-                d.label = `${d.label} !!!`
+                d.label = `{d.label} !!!`
               }
               return d
             }),
@@ -223,15 +223,15 @@ function model () {
   }
 }
 
-const app = helix({
+let mount = document.createElement('div')
+document.body.appendChild(mount)
+
+helix({
   model: model(),
   routes: {
     '': {
       view,
     },
   },
+  render: renderer(mount),
 })
-
-const node = document.createElement('div')
-document.body.appendChild(node)
-app(node)
