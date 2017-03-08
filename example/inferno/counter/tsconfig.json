@@ -4,7 +4,7 @@
     "module": "commonjs",
     "target": "es5",
     "jsx": "react",
-    "jsxPragma": "createElement",
+    "jsxFactory": "h"
   },
   "include": [
     "./src/**/*"
