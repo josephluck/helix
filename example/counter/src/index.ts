@@ -63,6 +63,9 @@ function counterView (state, prev, actions) {
   `
 }
 
+let dom = document.createElement('div')
+document.body.appendChild(dom)
+
 const app = helix({
   model: {
     state: {
@@ -109,9 +112,12 @@ const app = helix({
       },
     },
   },
+  render (node, state, prev, actions) {
+    if (node) {
+      dom = html.update(dom, node(state, prev, actions))
+    }
+  },
   component: counterView,
 })
 
-const node = document.createElement('div')
-document.body.appendChild(node)
-app(node)
+app()

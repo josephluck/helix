@@ -44,13 +44,13 @@ function getQueryFromLocation (location) {
 }
 
 export default function (configuration) {
-  return function mount (mount) {
+  return function start () {
     const routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null
     const router = rlite(() => null, routes)
     const model = createModel(configuration, renderCurrentLocation)
     const store = twine(onStateChange)(model)
+    const render = configuration.render
 
-    let _dom = mount
     let _state = store.state
     let _prev = store.state
     let _actions = store.actions
@@ -58,9 +58,7 @@ export default function (configuration) {
     let _handler
 
     function rerender (node) {
-      if (node) {
-        _dom = html.update(_dom, node(_state, _prev, _actions))
-      }
+      render(node, _state, _prev, _actions)
     }
 
     function onStateChange (state, prev, actions) {
