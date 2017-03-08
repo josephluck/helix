@@ -2,7 +2,7 @@ require('es6-shim')
 import helix from '../../../src'
 import html from '../../../src/html'
 
-function counterView ({state, prev, actions}) {
+function counterView (state, prev, actions) {
   return html`
     <section class='section hero'>
       <div class='card'>

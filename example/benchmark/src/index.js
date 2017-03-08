@@ -1,6 +1,6 @@
 require('es6-shim')
-import helix from '../../../src'
-import html from '../../../src/html'
+const helix = require('../../../dist/index').default
+const html = require('../../../dist/html').default
 
 let startTime
 let lastMeasure
@@ -20,7 +20,7 @@ function stopMeasure () {
   }
 }
 
-function view ({state, prev, actions}) {
+function view (state, prev, actions) {
   function run () {
     startMeasure('run')
     actions.run()

@@ -2,7 +2,7 @@ require('es6-shim')
 import helix from '../../../src'
 import html from '../../../src/html'
 
-function todoList ({state, prev, actions}) {
+function todoList (state, prev, actions) {
   return html`
     <section class='section hero'>
       <div class='card'>

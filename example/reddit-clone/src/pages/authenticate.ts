@@ -1,6 +1,6 @@
 import html from '../../../../src/html'
 
-export default function (child) {
+export default function (view) {
   return {
     onEnter (state, prev, actions) {
       if (!state.user.user) {
@@ -8,8 +8,6 @@ export default function (child) {
         actions.alert.showError('You must be logged in')
       }
     },
-    view (props) {
-      return child(props)
-    }
+    view,
   }
 }

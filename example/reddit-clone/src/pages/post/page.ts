@@ -5,7 +5,7 @@ import base from '../base'
 import form from '../../components/form'
 import textarea from '../../components/textarea'
 
-function page ({state, prev, actions}) {
+function page (state, prev, actions) {
   const updateFormField = (key) => (e) => actions.pages.post.form.setField(key, e.target.value)
   let post = state.pages.post.post
   if (post) {

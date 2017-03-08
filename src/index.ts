@@ -59,7 +59,7 @@ export default function (configuration) {
 
     function rerender (node) {
       if (node) {
-        _dom = html.update(_dom, node(getProps()))
+        _dom = html.update(_dom, node(_state, _prev, _actions))
       }
     }
 
@@ -76,10 +76,6 @@ export default function (configuration) {
       } else {
         return configuration.component ? configuration.component : null
       }
-    }
-
-    function getProps () {
-      return { state: _state, prev: _prev, actions: _actions }
     }
 
     function lifecycle (handler) {
