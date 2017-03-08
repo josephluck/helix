@@ -1,15 +1,6 @@
 require('es6-shim')
 import helix from '../../../src'
-import html from '../../../src/html'
-
-function yoyoRenderer (dom) {
-  let _dom = dom
-  return function (node, state, prev, actions) {
-    if (node) {
-      _dom = html.update(_dom, node(state, prev, actions))
-    }
-  }
-}
+import html, {renderer} from '../../../src/renderers/yoyo'
 
 function counterView (state, prev, actions) {
   return html`
@@ -122,5 +113,5 @@ helix({
     },
   },
   component: counterView,
-  render: yoyoRenderer(mount),
+  render: renderer(mount),
 })

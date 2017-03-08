@@ -3,7 +3,6 @@ import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
 import * as qs from 'query-string-json'
 import twine from 'twine-js'
-import html from './html'
 import location from './location'
 
 function combineObjects (a, b) {
