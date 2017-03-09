@@ -3,7 +3,6 @@ import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
 import * as qs from 'query-string-json'
 import twine from 'twine-js'
-import location from './location'
 
 function combineObjects (a, b) {
   return Object.assign({}, a, b)
@@ -40,6 +39,26 @@ function getQueryFromLocation (location) {
     }).reduce((curr, prev) => Object.assign({}, prev, curr))
   }
   return {}
+}
+
+function location (rerender) {
+  return {
+    state: {
+      pathname: '',
+      params: {},
+    },
+    reducers: {
+      receiveRoute (_state, { pathname, params }) {
+        return { pathname, params }
+      },
+    },
+    effects: {
+      set (_state, _actions, pathname) {
+        window.history.pushState('', '', pathname)
+        rerender(pathname)
+      },
+    },
+  }
 }
 
 export default function (configuration) {
