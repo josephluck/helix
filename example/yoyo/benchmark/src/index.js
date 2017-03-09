@@ -1,4 +1,3 @@
-require('es6-shim')
 const helix = require('../../../dist/index').default
 const html = require('../../../dist/html').default
 

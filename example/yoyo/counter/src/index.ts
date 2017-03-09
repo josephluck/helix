@@ -1,4 +1,3 @@
-require('es6-shim')
 import helix from '../../../src'
 import html, {renderer} from '../../../src/renderers/yoyo'
 
@@ -32,7 +31,7 @@ function counterView (state, prev, actions) {
           </div>
 
           <hr />
-          
+
           <div class='block'>
             <div class='control'>
               <label class='label'>Adjust increment / decrement amount (${state.amount})</label>

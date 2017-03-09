@@ -1,4 +1,3 @@
-require('es6-shim')
 import helix from '../../../src'
 import model from './model'
 import pages from './pages'
