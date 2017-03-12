@@ -10,29 +10,28 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "ts-node node_modules/.bin/tape ./test/index.spec.ts | tap-spec",
-    "dist": "tsc && npm run browserify",
-    "browserify": "browserify -g babelify dist/index.js -o dist/bundle.min.js"
+    "dist": "tsc && npm run browserify && npm run minify",
+    "browserify": "browserify -g babelify dist/index.js -o dist/bundle.js",
+    "minify": "uglifyjs dist/bundle.js -c -m -o dist/bundle.min.js"
   },
   "author": "Joseph Luck",
   "license": "ISC",
   "devDependencies": {
-    "@types/core-js": "^0.9.36",
     "babel-cli": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-stage-0": "^6.22.0",
-    "browserify": "^14.1.0"
-  },
-  "dependencies": {
-    "@types/node": "^7.0.5",
     "babelify": "^7.3.0",
-    "query-string-json": "0.0.7",
-    "rlite-router": "^2.0.1",
-    "sheet-router": "^4.2.3",
+    "browserify": "^14.1.0",
     "tsify": "^3.0.1",
     "tslint": "^4.4.2",
     "tslint-config-standard": "^4.0.0",
-    "twine-js": "^1.1.3",
     "typescript": "^2.2.1",
     "uglify-js": "^2.7.5"
+  },
+  "dependencies": {
+    "query-string-json": "0.0.7",
+    "rlite-router": "^2.0.1",
+    "sheet-router": "^4.2.3",
+    "twine-js": "^1.1.3"
   }
 }

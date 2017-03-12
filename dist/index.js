@@ -1,24 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 // Please note that the inelegance of this file is for the sake of performance
-var rlite = require("rlite-router");
-var href = require("sheet-router/href");
-var qs = require("query-string-json");
-var twine_js_1 = require("twine-js");
+const rlite = require("rlite-router");
+const href = require("sheet-router/href");
+const qs = require("query-string-json");
+const twine_js_1 = require("twine-js");
 function combineObjects(a, b) {
     return Object.assign({}, a, b);
 }
 function wrap(routes, wrap) {
-    return Object.keys(routes).map(function (route) {
-        var handler = routes[route];
-        return _a = {},
-            _a[route] = wrap(route, handler),
-            _a;
-        var _a;
+    return Object.keys(routes).map(route => {
+        let handler = routes[route];
+        return {
+            [route]: wrap(route, handler),
+        };
     }).reduce(combineObjects, {});
 }
 function createModel(configuration, render) {
-    var model = configuration.model;
+    let model = configuration.model;
     if (configuration.routes) {
         if (model.models) {
             model.models.location = location(render);
@@ -32,12 +31,11 @@ function createModel(configuration, render) {
     return model;
 }
 function getQueryFromLocation(location) {
-    var query = qs.parse(location);
+    let query = qs.parse(location);
     if (query) {
-        return Object.keys(query).map(function (key) {
-            return _a = {}, _a[key] = query[key][0], _a;
-            var _a;
-        }).reduce(function (curr, prev) { return Object.assign({}, prev, curr); });
+        return Object.keys(query).map(key => {
+            return { [key]: query[key][0] };
+        }).reduce((curr, prev) => Object.assign({}, prev, curr));
     }
     return {};
 }
@@ -48,13 +46,12 @@ function location(rerender) {
             params: {},
         },
         reducers: {
-            receiveRoute: function (_state, _a) {
-                var pathname = _a.pathname, params = _a.params;
-                return { pathname: pathname, params: params };
+            receiveRoute(_state, { pathname, params }) {
+                return { pathname, params };
             },
         },
         effects: {
-            set: function (_state, _actions, pathname) {
+            set(_state, _actions, pathname) {
                 window.history.pushState('', '', pathname);
                 rerender(pathname);
             },
@@ -62,16 +59,16 @@ function location(rerender) {
     };
 }
 function default_1(configuration) {
-    var routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null;
-    var router = rlite(function () { return null; }, routes);
-    var model = createModel(configuration, renderCurrentLocation);
-    var store = twine_js_1.default(onStateChange)(model);
-    var render = configuration.render;
-    var _state = store.state;
-    var _prev = store.state;
-    var _actions = store.actions;
-    var _onLeave;
-    var _handler;
+    const routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null;
+    const router = rlite(() => null, routes);
+    const model = createModel(configuration, renderCurrentLocation);
+    const store = twine_js_1.default(onStateChange)(model);
+    const render = configuration.render;
+    let _state = store.state;
+    let _prev = store.state;
+    let _actions = store.actions;
+    let _onLeave;
+    let _handler;
     function rerender(node) {
         render(node, _state, _prev, _actions);
     }
@@ -107,11 +104,11 @@ function default_1(configuration) {
         }
     }
     function wrapRoutes(route, handler) {
-        var view = typeof handler === 'object' ? handler.view : handler;
+        let view = typeof handler === 'object' ? handler.view : handler;
         return function (params, _, pathname) {
             if (_state.location.pathname !== pathname) {
-                var query = getQueryFromLocation(window.location.href);
-                _actions.location.receiveRoute({ pathname: pathname, params: Object.assign({}, params, query) });
+                let query = getQueryFromLocation(window.location.href);
+                _actions.location.receiveRoute({ pathname, params: Object.assign({}, params, query) });
                 lifecycle(handler);
                 _onLeave = handler.onLeave;
                 return false;
