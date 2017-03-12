@@ -14,15 +14,14 @@ var twine_js_1 = require("twine-js");
 function combineObjects(a, b) {
     return Object.assign({}, a, b);
 }
-function wrap(routes, wrap) {
-    return Object.keys(routes).map(function (route) {
-        var handler = routes[route];
-        return _defineProperty({}, route, wrap(route, handler));
+function wrap(routes, fn) {
+    return Object.keys(routes).map(function (key) {
+        var route = routes[key];
+        return _defineProperty({}, key, fn(key, route));
     }).reduce(combineObjects, {});
 }
-function createModel(configuration, render) {
-    var model = configuration.model;
-    if (configuration.routes) {
+function createModel(model, routes, render) {
+    if (routes) {
         if (model.models) {
             model.models.location = location(render);
         } else {
@@ -71,7 +70,7 @@ function default_1(configuration) {
     var router = rlite(function () {
         return null;
     }, routes);
-    var model = createModel(configuration, renderCurrentLocation);
+    var model = createModel(configuration.model, configuration.routes, renderCurrentLocation);
     var store = twine_js_1.default(onStateChange)(model);
     var render = configuration.render;
     var _state = store.state;
