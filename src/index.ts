@@ -1,4 +1,3 @@
-// Please note that the inelegance of this file is for the sake of performance
 import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
 import * as qs from 'query-string-json'

@@ -1,18 +1,23 @@
 {
   "name": "helix-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Functional front-end UI framework",
   "main": "dist/index.js",
   "files": [
     "src/",
     "dist/"
   ],
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/josephluck/helix"
+  },
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "ts-node node_modules/.bin/tape ./test/index.spec.ts | tap-spec",
     "dist": "tsc && npm run browserify && npm run minify",
     "browserify": "browserify -g babelify dist/index.js -o dist/bundle.js",
-    "minify": "uglifyjs dist/bundle.js -c -m -o dist/bundle.min.js"
+    "minify": "uglifyjs dist/bundle.js -c -m -o dist/bundle.min.js",
+    "deploy": "npm run dist && npm publish"
   },
   "author": "Joseph Luck",
   "license": "ISC",

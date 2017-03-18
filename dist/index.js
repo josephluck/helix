@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// Please note that the inelegance of this file is for the sake of performance
 const rlite = require("rlite-router");
 const href = require("sheet-router/href");
 const qs = require("query-string-json");

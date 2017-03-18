@@ -6,7 +6,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 Object.defineProperty(exports, "__esModule", { value: true });
-// Please note that the inelegance of this file is for the sake of performance
 var rlite = require("rlite-router");
 var href = require("sheet-router/href");
 var qs = require("query-string-json");
