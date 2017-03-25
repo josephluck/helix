@@ -1,6 +1,6 @@
 import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
-import * as qs from 'query-string-json'
+import * as qs from 'qs'
 import twine from 'twine-js'
 
 function combineObjects (a, b) {
@@ -29,14 +29,8 @@ function createModel (model, routes, render) {
   return model
 }
 
-function getQueryFromLocation (location) {
-  let query = qs.parse(location)
-  if (query) {
-    return Object.keys(query).map(key => {
-      return { [key]: query[key][0] }
-    }).reduce((curr, prev) => Object.assign({}, prev, curr))
-  }
-  return {}
+function getQueryFromLocation (search) {
+  return search.length ? qs.parse(search.slice(1)) : {}
 }
 
 function location (rerender) {
@@ -112,7 +106,7 @@ export default function (configuration) {
     let view = typeof handler === 'object' ? handler.view : handler
     return function (params, _, pathname) {
       if (_state.location.pathname !== pathname) {
-        let query = getQueryFromLocation(window.location.href)
+        let query = getQueryFromLocation(window.location.search)
         _actions.location.receiveRoute({ pathname, params: Object.assign({}, params, query) })
         lifecycle(handler)
         _onLeave = handler.onLeave
@@ -126,9 +120,11 @@ export default function (configuration) {
     rerender(getComponent(window.location.pathname))
   }
 
-  function setLocationAndRender (path): void {
-    window.history.pushState('', '', path.pathname)
-    rerender(getComponent(path.pathname))
+  function setLocationAndRender (location): void {
+    const search = Object.keys(location.search).length ? `?${qs.stringify(location.search, {encode: false})}` : ''
+    const path = `${location.pathname}${search}`
+    window.history.pushState('', '', path)
+    rerender(getComponent(location.pathname))
   }
 
   href(setLocationAndRender)

@@ -1,6 +1,6 @@
 {
   "name": "helix-js",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Functional front-end UI framework",
   "main": "dist/index.js",
   "files": [
@@ -8,8 +8,8 @@
     "dist/"
   ],
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/josephluck/helix"
+    "type": "git",
+    "url": "https://github.com/josephluck/helix"
   },
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -34,7 +34,7 @@
     "uglify-js": "^2.7.5"
   },
   "dependencies": {
-    "query-string-json": "0.0.7",
+    "qs": "^6.4.0",
     "rlite-router": "^2.0.1",
     "sheet-router": "^4.2.3",
     "twine-js": "^1.1.3"

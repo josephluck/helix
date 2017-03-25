@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const rlite = require("rlite-router");
 const href = require("sheet-router/href");
-const qs = require("query-string-json");
+const qs = require("qs");
 const twine_js_1 = require("twine-js");
 function combineObjects(a, b) {
     return Object.assign({}, a, b);
@@ -28,14 +28,8 @@ function createModel(model, routes, render) {
     }
     return model;
 }
-function getQueryFromLocation(location) {
-    let query = qs.parse(location);
-    if (query) {
-        return Object.keys(query).map(key => {
-            return { [key]: query[key][0] };
-        }).reduce((curr, prev) => Object.assign({}, prev, curr));
-    }
-    return {};
+function getQueryFromLocation(search) {
+    return search.length ? qs.parse(search.slice(1)) : {};
 }
 function location(rerender) {
     return {
@@ -105,7 +99,7 @@ function default_1(configuration) {
         let view = typeof handler === 'object' ? handler.view : handler;
         return function (params, _, pathname) {
             if (_state.location.pathname !== pathname) {
-                let query = getQueryFromLocation(window.location.href);
+                let query = getQueryFromLocation(window.location.search);
                 _actions.location.receiveRoute({ pathname, params: Object.assign({}, params, query) });
                 lifecycle(handler);
                 _onLeave = handler.onLeave;
@@ -117,9 +111,11 @@ function default_1(configuration) {
     function renderCurrentLocation() {
         rerender(getComponent(window.location.pathname));
     }
-    function setLocationAndRender(path) {
-        window.history.pushState('', '', path.pathname);
-        rerender(getComponent(path.pathname));
+    function setLocationAndRender(location) {
+        const search = Object.keys(location.search).length ? `?${qs.stringify(location.search, { encode: false })}` : '';
+        const path = `${location.pathname}${search}`;
+        window.history.pushState('', '', path);
+        rerender(getComponent(location.pathname));
     }
     href(setLocationAndRender);
     window.onpopstate = renderCurrentLocation;
