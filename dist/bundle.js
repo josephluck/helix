@@ -58,9 +58,10 @@ function location(rerender) {
 }
 function default_1(configuration) {
     var routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null;
-    var router = rlite(function () {
+    var notFound = configuration.routes && configuration.routes.notFound ? configuration.routes.notFound : function () {
         return null;
-    }, routes);
+    };
+    var router = rlite(notFound, routes);
     var model = createModel(configuration.model, configuration.routes, renderCurrentLocation);
     var store = twine_js_1.default(onStateChange)(model);
     var render = configuration.render;

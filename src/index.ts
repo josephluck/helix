@@ -55,7 +55,8 @@ function location (rerender) {
 
 export default function (configuration) {
   const routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null
-  const router = rlite(() => null, routes)
+  const notFound = configuration.routes && configuration.routes.notFound ? configuration.routes.notFound : () => null
+  const router = rlite(notFound, routes)
   const model = createModel(configuration.model, configuration.routes, renderCurrentLocation)
   const store = twine(onStateChange)(model)
   const render = configuration.render
