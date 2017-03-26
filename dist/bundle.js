@@ -1526,6 +1526,8 @@ function qs(uri) {
 },{"global/window":3}],13:[function(require,module,exports){
 "use strict";
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 Object.defineProperty(exports, "__esModule", { value: true });
 function noop() {
     return null;
@@ -1536,8 +1538,7 @@ function arrayToObj(curr, prev) {
 function merge(model, prop) {
     if (model.models) {
         var child = Object.keys(model.models).map(function (key) {
-            return _a = {}, _a[key] = merge(model.models[key], prop), _a;
-            var _a;
+            return _defineProperty({}, key, merge(model.models[key], prop));
         }).reduce(arrayToObj, {});
         return Object.assign({}, model[prop], child);
     }
@@ -1548,10 +1549,9 @@ function createState(model) {
     return merge(model, 'state');
 }
 exports.createState = createState;
-function retrieveNestedModel(model, path, index) {
-    if (index === void 0) {
-        index = 0;
-    }
+function retrieveNestedModel(model, path) {
+    var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
     if (model.models) {
         var currModel = model.models[path[index]];
         if (currModel && currModel.models && currModel.models[path[index + 1]]) {
@@ -1569,20 +1569,16 @@ function getNestedObjFromPath(state, path) {
     return state;
 }
 exports.getNestedObjFromPath = getNestedObjFromPath;
-function updateStateAtPath(obj, path, value) {
-    var arr;
-    var key;
-    if (Array.isArray(path) && path.length > 0) {
-        arr = path.slice();
-        key = arr[0];
-        if (arr.length > 1) {
-            arr.shift();
-            obj[key] = updateStateAtPath(obj[key], arr, value);
+function updateStateAtPath(state, path, value) {
+    if (path.length > 0) {
+        var key = path[0];
+        if (path.length > 1) {
+            state[key] = updateStateAtPath(state[key], path.slice(1), value);
         } else {
-            obj[key] = value;
+            state[key] = value;
         }
     }
-    return obj;
+    return state;
 }
 exports.updateStateAtPath = updateStateAtPath;
 function twine(opts) {
@@ -1596,7 +1592,7 @@ function twine(opts) {
         var actions = createActions(model, []);
         function decorateActions(reducers, effects, path) {
             var decoratedReducers = Object.keys(reducers || {}).map(function (key) {
-                return _a = {}, _a[key] = function () {
+                return _defineProperty({}, key, function () {
                     var oldState = Object.assign({}, state);
                     var localState = path.length ? getNestedObjFromPath(state, path) : state;
                     var reducerArgs = [localState].concat(Array.prototype.slice.call(arguments));
@@ -1606,12 +1602,11 @@ function twine(opts) {
                     var onMethodCallArgs = [state, oldState].concat(Array.prototype.slice.call(arguments));
                     onMethodCall.apply(null, onMethodCallArgs);
                     onStateChange(state, oldState, actions);
-                    return newLocalState;
-                }, _a;
-                var _a;
+                    return state;
+                });
             });
             var decoratedEffects = Object.keys(effects || {}).map(function (key) {
-                return _a = {}, _a[key] = function () {
+                return _defineProperty({}, key, function () {
                     if (path.length) {
                         var nestedModel = retrieveNestedModel(model, path);
                         var effectState = nestedModel.scoped ? getNestedObjFromPath(state, path) : state;
@@ -1619,16 +1614,14 @@ function twine(opts) {
                         return effects[key].apply(null, [effectState, effectActions].concat(Array.prototype.slice.call(arguments)));
                     }
                     return effects[key].apply(null, [state, actions].concat(Array.prototype.slice.call(arguments)));
-                }, _a;
-                var _a;
+                });
             });
             return decoratedReducers.concat(decoratedEffects).reduce(arrayToObj, {});
         }
         function createActions(model, path) {
             if (model.models) {
                 var child = Object.keys(model.models).map(function (key) {
-                    return _a = {}, _a[key] = createActions(model.models[key], path.concat(key)), _a;
-                    var _a;
+                    return _defineProperty({}, key, createActions(model.models[key], path.concat(key)));
                 }).reduce(arrayToObj, {});
                 return Object.assign({}, decorateActions(model.reducers, model.effects, path), child);
             }
