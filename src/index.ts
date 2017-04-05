@@ -2,6 +2,9 @@ import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
 import * as qs from 'qs'
 import twine from 'twine-js'
+import * as twineLog from 'twine-js/lib/log'
+
+export const log = twineLog.default
 
 function combineObjects (a, b) {
   return Object.assign({}, a, b)
@@ -58,7 +61,8 @@ export default function (configuration) {
   const notFound = configuration.routes && configuration.routes.notFound ? configuration.routes.notFound : () => null
   const router = rlite(notFound, routes)
   const model = createModel(configuration.model, configuration.routes, renderCurrentLocation)
-  const store = twine(onStateChange)(model)
+  const plugins = [onStateChange].concat(configuration.plugins || [])
+  const store = twine(plugins)(model)
   const render = configuration.render
 
   let _state = store.state
