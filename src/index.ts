@@ -135,4 +135,5 @@ export default function (configuration) {
   href(setLocationAndRender)
   window.onpopstate = renderCurrentLocation
   renderCurrentLocation()
+  return _actions
 }
