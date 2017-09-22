@@ -1,16 +1,16 @@
-import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
 import * as qs from 'qs'
-import twine from 'twine-js'
+import * as rlite from 'rlite-router'
 import * as twineLog from 'twine-js/lib/log'
+import twine from 'twine-js'
 
 export const log = twineLog.default
 
-function combineObjects (a, b) {
+function combineObjects(a, b) {
   return Object.assign({}, a, b)
 }
 
-function wrap (routes, fn) {
+function wrap(routes, fn) {
   return Object.keys(routes).map(key => {
     let route = routes[key]
     return {
@@ -19,7 +19,7 @@ function wrap (routes, fn) {
   }).reduce(combineObjects, {})
 }
 
-function createModel (model, routes, render) {
+function createModel(model, routes, render) {
   if (routes) {
     if (model.models) {
       model.models.location = location(render)
@@ -32,23 +32,28 @@ function createModel (model, routes, render) {
   return model
 }
 
-function getQueryFromLocation (search) {
-  return search.length ? qs.parse(search.slice(1)) : {}
+function getQueryFromLocation(query) {
+  // Note, need to remove the ? from the string before qs can parse it
+  return query.length ? qs.parse(query.slice(1)) : {}
 }
 
-function location (rerender) {
+function removeQuery(url) {
+  return url.split('?')[0]
+}
+
+function location(rerender) {
   return {
     state: {
       pathname: '',
       params: {},
     },
     reducers: {
-      receiveRoute (_state, { pathname, params }) {
+      receiveRoute(currentState, { pathname, params }) {
         return { pathname, params }
       },
     },
     effects: {
-      set (_state, _actions, pathname) {
+      set(currentState, currentActions, pathname) {
         window.history.pushState('', '', pathname)
         rerender(pathname)
       },
@@ -65,75 +70,84 @@ export default function (configuration) {
   const store = twine(plugins)(model)
   const render = configuration.render
 
-  let _state = store.state
-  let _prev = store.state
-  let _actions = store.actions
-  let _onLeave
-  let _handler
+  let currentState = store.state
+  let previousState = store.state
+  let currentActions = store.actions
+  let onLeaveHook
+  let currentLocation
 
-  function rerender (node) {
-    render(node, _state, _prev, _actions)
+  function rerender(node) {
+    if (node) {
+      render(node, currentState, previousState, currentActions)
+    }
   }
 
-  function onStateChange (state, prev, actions) {
-    _state = state
-    _prev = prev
-    _actions = actions
-    rerender(getComponent(window.location.pathname))
+  function onStateChange(newState, newPrev, newActions) {
+    currentState = newState
+    previousState = newPrev
+    currentActions = newActions
+    renderCurrentLocation()
   }
 
-  function getComponent (path) {
+  function getComponent(path) {
+    // Let's strip out the path so rlite doesn't do strange things with it
     if (configuration.routes) {
-      return router(path)
+      return router(removeQuery(path))
     } else {
       return configuration.component ? configuration.component : null
     }
   }
 
-  function lifecycle (handler) {
-    if (_handler === handler) {
-      if (handler.onUpdate) {
-        handler.onUpdate(_state, _prev, _actions)
+  function lifecycle(newLocation) {
+    if (currentLocation === newLocation) {
+      if (newLocation.onUpdate) {
+        newLocation.onUpdate(currentState, previousState, currentActions)
       }
     } else {
-      _handler = handler
-      if (_onLeave) {
-        _onLeave(_state, _prev, _actions)
-        _onLeave = handler.onLeave
+      currentLocation = newLocation
+      if (onLeaveHook) {
+        onLeaveHook(currentState, previousState, currentActions)
+        onLeaveHook = newLocation.onLeave
       }
-      if (handler.onEnter) {
-        handler.onEnter(_state, _prev, _actions)
+      if (newLocation.onEnter) {
+        newLocation.onEnter(currentState, previousState, currentActions)
       }
     }
   }
 
-  function wrapRoutes (route, handler) {
-    let view = typeof handler === 'object' ? handler.view : handler
+  function wrapRoutes(route, newLocation) {
     return function (params, _, pathname) {
-      if (_state.location.pathname !== pathname) {
-        let query = getQueryFromLocation(window.location.search)
-        _actions.location.receiveRoute({ pathname, params: Object.assign({}, params, query) })
-        lifecycle(handler)
-        _onLeave = handler.onLeave
+      if (currentState.location.pathname !== pathname) {
+        currentActions.location.receiveRoute({
+          pathname,
+          params: Object.assign({}, params, getQueryFromLocation(window.location.search)),
+        })
+        lifecycle(newLocation)
+        onLeaveHook = newLocation.onLeave
         return false
       }
-      return view
+      return typeof newLocation === 'object'
+        ? newLocation.view
+        : newLocation
     }
   }
 
-  function renderCurrentLocation () {
+  function renderCurrentLocation() {
     rerender(getComponent(window.location.pathname))
   }
 
-  function setLocationAndRender (location): void {
-    const search = Object.keys(location.search).length ? `?${qs.stringify(location.search, {encode: false})}` : ''
+  function setLocationAndRender(location): void {
+    const search = Object.keys(location.search).length ? `?${qs.stringify(location.search, { encode: false })}` : ''
     const path = `${location.pathname}${search}`
     window.history.pushState('', '', path)
     rerender(getComponent(location.pathname))
   }
 
-  href(setLocationAndRender)
-  window.onpopstate = renderCurrentLocation
+  if (routes) {
+    href(setLocationAndRender)
+    window.onpopstate = renderCurrentLocation
+  }
+
   renderCurrentLocation()
-  return _actions
+  return currentActions
 }

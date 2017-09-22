@@ -1,7 +1,19 @@
 {
   "extends": "tslint-config-standard",
   "rules": {
-    "align": [true, "parameters", "statements"],
-    "trailing-comma": [true, {"multiline": "always", "singleline": "never"}]
+    "align": [
+      true,
+      "parameters"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
+    "space-before-function-paren": [
+      false
+    ]
   }
 }
