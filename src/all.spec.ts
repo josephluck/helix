@@ -58,6 +58,15 @@ test('it can navigate between pages', async () => {
   expect(content).toContain('PageOneContent')
 })
 
+test('it can navigate between pages programatically', async () => {
+  const page = browser().goto(base)
+  await page.click('#go-to-page-one-programatically').wait('#page-one')
+  const content = await page.evaluate(() => document.body.innerHTML.trim())
+  page.end()
+
+  expect(content).toContain('PageOneContent')
+})
+
 test('it displays router url params', async () => {
   const page = browser().goto(base)
   await page.click('#go-to-page-two-bar')

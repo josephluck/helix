@@ -12,7 +12,7 @@ const render = (route, state, prev, actions) => {
 
 let numberOfTimesRendered = 0
 
-const Navigation = () => html`
+const Navigation = (state, prev, actions) => html`
   <div>
     <a href='/' id='go-to-home'>
       HomeLink
@@ -21,6 +21,10 @@ const Navigation = () => html`
     <a href='/page-one' id='go-to-page-one'>
       PageOneLink
     </a>
+    <br />
+    <span id='go-to-page-one-programatically' onclick=${() => actions.location.set('/page-one')}>
+      PageOneProgramaticLink
+    </span>
     <br />
     <a href='/page-one?query=wiggle' id='go-to-page-one-query'>
       PageOneLinkQuery
@@ -66,7 +70,7 @@ const Layout = child => (state, prev, actions) => {
   return html`
     <div>
       <p id='number-of-times-rendered'>${numberOfTimesRendered}</p>
-      ${Navigation()}
+      ${Navigation(state, prev, actions)}
       <p id='router-params'>${JSON.stringify(state.location.params)}</p>
       <p id='router-query'>${JSON.stringify(state.location.query)}</p>
       <button
