@@ -1,6 +1,6 @@
 {
   "name": "helix-js",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Functional front-end UI framework",
   "main": "lib/index.js",
   "files": [
