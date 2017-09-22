@@ -1,5 +1,5 @@
 import * as yoyo from 'yo-yo'
-import helix from './'
+import helix from '../'
 const html = yoyo
 
 let _dom = document.createElement('div')

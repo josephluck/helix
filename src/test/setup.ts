@@ -7,7 +7,7 @@ const base = `http://localhost:${port}`
 let server
 
 beforeAll(done => {
-  server = budo(__dirname + '/test-app.ts', {
+  server = budo(__dirname + '/app.ts', {
     port,
     browserify: {
       plugin: [tsify],
@@ -15,13 +15,13 @@ beforeAll(done => {
     pushstate: true,
   })
     .on('connect', () => {
-      console.log('server started on port 1234')
+      console.info(`ui server started: ${base}`)
       done()
     })
 })
 
 afterAll(() => {
-  console.log('Server closed')
+  console.info(`ui server stopped: ${base}`)
   server.close()
 })
 
