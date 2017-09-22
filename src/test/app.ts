@@ -2,11 +2,12 @@ import * as yoyo from 'yo-yo'
 import helix from '../'
 const html = yoyo
 
-let _dom = document.createElement('div')
-document.body.appendChild(_dom)
-const render = (route, state, prev, actions) => {
-  if (route) {
-    _dom = yoyo.update(_dom, route(state, prev, actions))
+const render = (mount) => {
+  let _dom = mount
+  return function (route, state, prev, actions) {
+    if (route) {
+      _dom = yoyo.update(_dom, route(state, prev, actions))
+    }
   }
 }
 
@@ -88,6 +89,9 @@ const Layout = child => (state, prev, actions) => {
   `
 }
 
+const app1 = document.createElement('div')
+document.body.appendChild(app1)
+
 helix({
   model: {
     state: {
@@ -150,5 +154,26 @@ helix({
     },
     notFound: () => () => html`<p>Not found</p>`,
   },
-  render,
+  render: render(app1),
+})
+
+const app2 = document.createElement('div')
+document.body.appendChild(app2)
+
+helix({
+  model: {
+    state: {
+      count: 0,
+    },
+    reducers: {
+      increment: (state) => ({ count: state.count + 1 }),
+    },
+  },
+  component: (state, prev, actions) => html`
+    <div>
+      <a href='#' id='app-2-anchor'>AppTwoAnchor</a>
+      <button type='button' id='increment-app-2-count' onclick=${actions.increment}>${state.count}</button>
+    </div>
+  `,
+  render: render(app2),
 })

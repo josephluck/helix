@@ -198,3 +198,31 @@ describe('route lifecycle hooks', () => {
     expect(content).toEqual('1')
   })
 })
+
+describe('component usage', () => {
+  test('it renders model state', async () => {
+    const page = browser().goto(base)
+    const count = await page.evaluate(() => document.querySelector('#increment-app-2-count').innerHTML.trim())
+    page.end()
+
+    expect(count).toEqual('0')
+  })
+
+  test('it rerenders on model state change', async () => {
+    const page = browser().goto(base)
+    await page.click('#increment-app-2-count')
+    const count = await page.evaluate(() => document.querySelector('#increment-app-2-count').innerHTML.trim())
+    page.end()
+
+    expect(count).toEqual('1')
+  })
+
+  test.skip('it doesn\'t capture click events on anchor tags', async () => {
+    // const page = browser().goto(base)
+    // await page.click('#increment-app-2-count')
+    // const count = await page.evaluate(() => document.querySelector('#increment-app-2-count').innerHTML.trim())
+    // page.end()
+
+    // expect(count).toEqual('1')
+  })
+})
