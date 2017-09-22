@@ -32,13 +32,13 @@ function createModel(model, routes, render) {
   return model
 }
 
-function getQueryFromLocation(query) {
+function parseQueryFromLocation(query) {
   // Note, need to remove the ? from the string before qs can parse it
   return query.length ? qs.parse(query.slice(1)) : {}
 }
 
-function removeQuery(url) {
-  return url.split('?')[0]
+function stringifyQueryFromLocation(query) {
+  return `?${qs.stringify(query)}`
 }
 
 function location(rerender) {
@@ -48,8 +48,8 @@ function location(rerender) {
       params: {},
     },
     reducers: {
-      receiveRoute(currentState, { pathname, params }) {
-        return { pathname, params }
+      receiveRoute(currentState, { pathname, params, query }) {
+        return { pathname, params, query }
       },
     },
     effects: {
@@ -92,7 +92,7 @@ export default function (configuration) {
   function getComponent(path) {
     // Let's strip out the path so rlite doesn't do strange things with it
     if (configuration.routes) {
-      return router(removeQuery(path))
+      return router(path)
     } else {
       return configuration.component ? configuration.component : null
     }
@@ -117,10 +117,13 @@ export default function (configuration) {
 
   function wrapRoutes(route, newLocation) {
     return function (params, _, pathname) {
-      if (currentState.location.pathname !== pathname) {
+      const differentRoute = currentState.location.pathname !== pathname
+      const differentQuery = window.location.search && stringifyQueryFromLocation(currentState.location.query) !== window.location.search
+      if (differentRoute || differentQuery) {
         currentActions.location.receiveRoute({
           pathname,
-          params: Object.assign({}, params, getQueryFromLocation(window.location.search)),
+          query: parseQueryFromLocation(window.location.search),
+          params,
         })
         lifecycle(newLocation)
         onLeaveHook = newLocation.onLeave
@@ -137,6 +140,7 @@ export default function (configuration) {
   }
 
   function setLocationAndRender(location): void {
+    console.log('setLocationAndRender', location.pathname)
     const search = Object.keys(location.search).length ? `?${qs.stringify(location.search, { encode: false })}` : ''
     const path = `${location.pathname}${search}`
     window.history.pushState('', '', path)

@@ -14,7 +14,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "test": "jest",
-    "test-server": "budo ./src/test-app.ts -p 1234 --pushstate -- -p [tsify]",
+    "test-server": "budo ./src/test-app.ts --pushstate --base='/' -p 1234 -- -p [tsify]",
     "dist": "rm -rf ./lib && mkdir lib && tsc && npm run browserify && npm run minify",
     "browserify": "browserify -g babelify lib/index.js -o lib/bundle.js",
     "minify": "uglifyjs lib/bundle.js -c -m -o lib/bundle.min.js",
