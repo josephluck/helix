@@ -122,6 +122,16 @@ describe('navigation & params', () => {
 
     expect(renderCount).toEqual('3')
   })
+
+  test('it rerenders when query params change on the same route', async () => {
+    const page = browser().goto(base)
+    await page.click('#go-to-page-five-bar-query')
+    await page.click('#go-to-page-five-bar-query-2')
+    const renderCount = await page.evaluate(() => document.querySelector('#number-of-times-rendered').innerHTML.trim())
+    page.end()
+
+    expect(renderCount).toEqual('4') // Page 5 has an onUpdate hook
+  })
 })
 
 describe('route lifecycle hooks', () => {

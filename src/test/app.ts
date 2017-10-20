@@ -59,6 +59,10 @@ const Navigation = (state, prev, actions) => html`
       PageFiveLinkBarQuery
     </a>
     <br />
+    <a href='/page-five/bar?query=wiggle&something=else' id='go-to-page-five-bar-query-2'>
+      PageFiveLinkBarQuery2
+    </a>
+    <br />
     <a href='/page-six/bar/baz' id='go-to-page-six-bar-baz'>
       PageSixLinkBarBaz
     </a>

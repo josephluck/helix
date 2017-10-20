@@ -3,6 +3,8 @@ import * as qs from 'qs'
 import * as rlite from 'rlite-router'
 import * as twineLog from 'twine-js/lib/log'
 import twine from 'twine-js'
+import { Helix } from './types'
+export { Twine } from 'twine-js'
 
 export const log = twineLog.default
 
@@ -32,20 +34,21 @@ function createModel(model, routes, render) {
   return model
 }
 
-function parseQueryFromLocation(query) {
+function parseQueryFromLocation(query: string) {
   // Note, need to remove the ? from the string before qs can parse it
   return query.length ? qs.parse(query.slice(1)) : {}
 }
 
-function stringifyQueryFromLocation(query) {
+function stringifyQueryFromLocation(query: Object) {
   return `?${qs.stringify(query)}`
 }
 
-function location(rerender) {
+function location(rerender): Helix.ModelImpl<Helix.LocationState, Helix.LocationReducers, Helix.LocationEffects> {
   return {
     state: {
       pathname: '',
       params: {},
+      query: {},
     },
     reducers: {
       receiveRoute(currentState, { pathname, params, query }) {
@@ -67,12 +70,13 @@ export default function (configuration) {
   const router = rlite(notFound, routes)
   const model = createModel(configuration.model, configuration.routes, renderCurrentLocation)
   const plugins = [onStateChange].concat(configuration.plugins || [])
-  const store = twine(plugins)(model)
+  const store = twine<State, Actions>(model, plugins)
   const render = configuration.render
 
   let currentState = store.state
   let previousState = store.state
   let currentActions = store.actions
+  let subscribe = store.subscribe
   let onLeaveHook
   let currentLocation
 
@@ -118,7 +122,7 @@ export default function (configuration) {
   function wrapRoutes(route, newLocation) {
     return function (params, _, pathname) {
       const differentRoute = currentState.location.pathname !== pathname
-      const differentQuery = window.location.search && stringifyQueryFromLocation(currentState.location.query) !== window.location.search
+      const differentQuery = stringifyQueryFromLocation(currentState.location.query) !== (window.location.search || '?')
       if (differentRoute || differentQuery) {
         currentActions.location.receiveRoute({
           pathname,
@@ -140,7 +144,6 @@ export default function (configuration) {
   }
 
   function setLocationAndRender(location): void {
-    console.log('setLocationAndRender', location.pathname)
     const search = Object.keys(location.search).length ? `?${qs.stringify(location.search, { encode: false })}` : ''
     const path = `${location.pathname}${search}`
     window.history.pushState('', '', path)
@@ -153,5 +156,9 @@ export default function (configuration) {
   }
 
   renderCurrentLocation()
-  return currentActions
+  return {
+    state: currentState,
+    actions: currentActions,
+    subscribe,
+  }
 }
