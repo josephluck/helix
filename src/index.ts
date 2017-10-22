@@ -3,7 +3,7 @@ import * as qs from 'qs'
 import * as rlite from 'rlite-router'
 import * as twineLog from 'twine-js/lib/log'
 import twine from 'twine-js'
-import { Helix } from './types'
+import * as Types from './types'
 export { Twine } from 'twine-js'
 
 export const log = twineLog.default
@@ -43,7 +43,7 @@ function stringifyQueryFromLocation(query: Object) {
   return `?${qs.stringify(query)}`
 }
 
-function location(rerender): Helix.ModelImpl<Helix.LocationState, Helix.LocationReducers, Helix.LocationEffects> {
+function location(rerender: Types.Render): Types.Helix.Model<Types.LocationState, Types.LocationReducers, Types.LocationEffects> {
   return {
     state: {
       pathname: '',
@@ -64,13 +64,13 @@ function location(rerender): Helix.ModelImpl<Helix.LocationState, Helix.Location
   }
 }
 
-export default function (configuration) {
+export default function helix<S, A>(configuration: Types.Helix.Config<S, A>): Types.Twine.Return<S, A> {
   const routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null
   const notFound = configuration.routes && configuration.routes.notFound ? configuration.routes.notFound : () => null
   const router = rlite(notFound, routes)
   const model = createModel(configuration.model, configuration.routes, renderCurrentLocation)
   const plugins = [onStateChange].concat(configuration.plugins || [])
-  const store = twine<State, Actions>(model, plugins)
+  const store = twine<S, A>(model, plugins)
   const render = configuration.render
 
   let currentState = store.state
@@ -86,15 +86,14 @@ export default function (configuration) {
     }
   }
 
-  function onStateChange(newState, newPrev, newActions) {
+  function onStateChange(newState: S, newPrev: S, newActions: A) {
     currentState = newState
     previousState = newPrev
     currentActions = newActions
     renderCurrentLocation()
   }
 
-  function getComponent(path) {
-    // Let's strip out the path so rlite doesn't do strange things with it
+  function getComponent(path: string) {
     if (configuration.routes) {
       return router(path)
     } else {
@@ -156,6 +155,7 @@ export default function (configuration) {
   }
 
   renderCurrentLocation()
+
   return {
     state: currentState,
     actions: currentActions,
