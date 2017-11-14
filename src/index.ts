@@ -2,7 +2,7 @@ import * as href from 'sheet-router/href'
 import * as qs from 'qs'
 import * as rlite from 'rlite-router'
 import * as twineLog from 'twine-js/lib/log'
-import twine from 'twine-js'
+import twine, { Twine } from 'twine-js'
 import * as Types from './types'
 export { Twine } from 'twine-js'
 
@@ -75,16 +75,16 @@ export default function helix<S, A>(
   const notFound =
     configuration.routes && configuration.routes.notFound
       ? configuration.routes.notFound
-      : () => null
+      : () => null as () => null
   const router = rlite(notFound, routes)
   const model = createModel(configuration.model, configuration.routes, renderCurrentLocation)
-  const plugins = [onStateChange].concat(configuration.plugins || [])
+  const plugins = [onStateChange as Twine.Plugin<S, A>].concat(configuration.plugins || [])
   const store = twine<S, A>(model, plugins)
   const render = configuration.render
 
-  let currentState = store.state
-  let previousState = store.state
-  let currentActions = store.actions
+  let currentState = store.state as Types.State<S>
+  let previousState = store.state as Types.State<S>
+  let currentActions = store.actions as Types.Actions<A>
   let subscribe = store.subscribe
   let onLeaveHook
   let currentLocation
@@ -128,7 +128,7 @@ export default function helix<S, A>(
   }
 
   function wrapRoutes(route, newLocation) {
-    return function(params, _, pathname) {
+    return function (params, _, pathname) {
       const differentRoute = currentState.location.pathname !== pathname
       const differentQuery =
         stringifyQueryFromLocation(currentState.location.query) !== (window.location.search || '?')

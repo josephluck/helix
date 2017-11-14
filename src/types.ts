@@ -12,16 +12,14 @@ export interface LocationReducers {
 }
 
 export interface LocationEffects {
-  set: Twine.Effect<State, Actions, string>
+  set: Twine.Effect<LocationState, LocationActions, string>
 }
 
-export interface State {
-  location: LocationState
-}
+export type LocationActions = Twine.Actions<LocationReducers, LocationEffects>
 
-export interface Actions {
-  location: Twine.Actions<LocationReducers, LocationEffects>
-}
+export type State<S> = S & { location: LocationState }
+
+export type Actions<A> = A & { location: LocationActions }
 
 export type Render = (pathname: string) => any
 
