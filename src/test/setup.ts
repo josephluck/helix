@@ -13,11 +13,10 @@ beforeAll(done => {
       plugin: [tsify],
     },
     pushstate: true,
+  }).on('connect', () => {
+    console.info(`ui server started: ${base}`)
+    done()
   })
-    .on('connect', () => {
-      console.info(`ui server started: ${base}`)
-      done()
-    })
 })
 
 afterAll(() => {

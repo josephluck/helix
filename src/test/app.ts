@@ -2,9 +2,9 @@ import * as yoyo from 'yo-yo'
 import helix from '../'
 const html = yoyo
 
-const render = (mount) => {
+const render = mount => {
   let _dom = mount
-  return function (route, state, prev, actions) {
+  return function(route, state, prev, actions) {
     if (route) {
       _dom = yoyo.update(_dom, route(state, prev, actions))
     }
@@ -109,52 +109,70 @@ helix({
     },
   },
   routes: {
-    '/': Layout((state, prev, actions) => html`
+    '/': Layout(
+      (state, prev, actions) => html`
       <div id='home'>
         HomeContent
       </div>
-    `),
-    '/page-one': Layout((state, prev, actions) => html`
+    `,
+    ),
+    '/page-one': Layout(
+      (state, prev, actions) => html`
       <div id='page-one'>
         PageOneContent
       </div>
-    `),
-    '/page-two/:foo': Layout((state, prev, actions) => html`
+    `,
+    ),
+    '/page-two/:foo': Layout(
+      (state, prev, actions) => html`
       <div id='page-two'>
         PageTwoContent
       </div>
-    `),
+    `,
+    ),
     '/page-three': {
-      onEnter: (state, prev, actions) => actions.setState({ onEnterCallCount: state.onEnterCallCount + 1 }),
-      view: Layout((state, prev, actions) => html`
+      onEnter: (state, prev, actions) =>
+        actions.setState({ onEnterCallCount: state.onEnterCallCount + 1 }),
+      view: Layout(
+        (state, prev, actions) => html`
         <div id='page-three'>
           PageThreeContent
         </div>
-      `),
+      `,
+      ),
     },
     '/page-four': {
-      onLeave: (state, prev, actions) => actions.setState({ onLeaveCallCount: state.onLeaveCallCount + 1 }),
-      view: Layout((state, prev, actions) => html`
+      onLeave: (state, prev, actions) =>
+        actions.setState({ onLeaveCallCount: state.onLeaveCallCount + 1 }),
+      view: Layout(
+        (state, prev, actions) => html`
         <div id='page-four'>
           PageFourContent
         </div>
-      `),
+      `,
+      ),
     },
     '/page-five/:foo': {
-      onUpdate: (state, prev, actions) => actions.setState({ onUpdateCallCount: state.onUpdateCallCount + 1 }),
-      view: Layout((state, prev, actions) => html`
+      onUpdate: (state, prev, actions) =>
+        actions.setState({ onUpdateCallCount: state.onUpdateCallCount + 1 }),
+      view: Layout(
+        (state, prev, actions) => html`
         <div id='page-five'>
           PageFiveContent
         </div>
-      `),
+      `,
+      ),
     },
     '/page-six/:foo/:bar': {
-      onUpdate: (state, prev, actions) => actions.setState({ onUpdateCallCount: state.onUpdateCallCount + 1 }),
-      view: Layout((state, prev, actions) => html`
+      onUpdate: (state, prev, actions) =>
+        actions.setState({ onUpdateCallCount: state.onUpdateCallCount + 1 }),
+      view: Layout(
+        (state, prev, actions) => html`
         <div id='page-six'>
           PageSixContent
         </div>
-      `),
+      `,
+      ),
     },
     notFound: () => () => html`<p>Not found</p>`,
   },
@@ -170,13 +188,15 @@ helix({
       count: 0,
     },
     reducers: {
-      increment: (state) => ({ count: state.count + 1 }),
+      increment: state => ({ count: state.count + 1 }),
     },
   },
   component: (state, prev, actions) => html`
     <div>
       <a href='#' id='app-2-anchor'>AppTwoAnchor</a>
-      <button type='button' id='increment-app-2-count' onclick=${actions.increment}>${state.count}</button>
+      <button type='button' id='increment-app-2-count' onclick=${actions.increment}>${
+    state.count
+  }</button>
     </div>
   `,
   render: render(app2),

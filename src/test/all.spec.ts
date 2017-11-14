@@ -15,7 +15,9 @@ describe('test setup', () => {
 describe('rendering', () => {
   test('it only renders once on page load', async () => {
     const page = browser().goto(base)
-    const renderCount = await page.evaluate(() => document.querySelector('#number-of-times-rendered').innerHTML.trim())
+    const renderCount = await page.evaluate(() =>
+      document.querySelector('#number-of-times-rendered').innerHTML.trim(),
+    )
     page.end()
 
     expect(renderCount).toEqual('1')
@@ -23,7 +25,9 @@ describe('rendering', () => {
 
   test('it renders model state', async () => {
     const page = browser().goto(base)
-    const count = await page.evaluate(() => document.querySelector('#increment-counter-button').innerHTML.trim())
+    const count = await page.evaluate(() =>
+      document.querySelector('#increment-counter-button').innerHTML.trim(),
+    )
     page.end()
 
     expect(count).toEqual('0')
@@ -32,8 +36,12 @@ describe('rendering', () => {
   test('it rerenders model state changes', async () => {
     const page = browser().goto(base)
     await page.click('#increment-counter-button')
-    const count = await page.evaluate(() => document.querySelector('#increment-counter-button').innerHTML.trim())
-    const renderCount = await page.evaluate(() => document.querySelector('#number-of-times-rendered').innerHTML.trim())
+    const count = await page.evaluate(() =>
+      document.querySelector('#increment-counter-button').innerHTML.trim(),
+    )
+    const renderCount = await page.evaluate(() =>
+      document.querySelector('#number-of-times-rendered').innerHTML.trim(),
+    )
     page.end()
 
     expect(count).toEqual('1')
@@ -44,8 +52,12 @@ describe('rendering', () => {
     const page = browser().goto(base)
     await page.click('#increment-counter-button')
     await page.click('#go-to-page-one').wait('#page-one')
-    const count = await page.evaluate(() => document.querySelector('#increment-counter-button').innerHTML.trim())
-    const renderCount = await page.evaluate(() => document.querySelector('#number-of-times-rendered').innerHTML.trim())
+    const count = await page.evaluate(() =>
+      document.querySelector('#increment-counter-button').innerHTML.trim(),
+    )
+    const renderCount = await page.evaluate(() =>
+      document.querySelector('#number-of-times-rendered').innerHTML.trim(),
+    )
     page.end()
 
     expect(count).toEqual('1')
@@ -75,7 +87,9 @@ describe('navigation & params', () => {
   test('it displays router url params', async () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-two-bar')
-    const content = await page.evaluate(() => document.querySelector('#router-params').innerHTML.trim())
+    const content = await page.evaluate(() =>
+      document.querySelector('#router-params').innerHTML.trim(),
+    )
     page.end()
 
     expect(JSON.parse(content).foo).toEqual('bar')
@@ -85,7 +99,9 @@ describe('navigation & params', () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-six-bar-baz')
     const content = await page.evaluate(() => document.querySelector('#page-six').innerHTML.trim())
-    const params = await page.evaluate(() => document.querySelector('#router-params').innerHTML.trim())
+    const params = await page.evaluate(() =>
+      document.querySelector('#router-params').innerHTML.trim(),
+    )
     page.end()
 
     expect(content).toContain('PageSixContent')
@@ -96,7 +112,9 @@ describe('navigation & params', () => {
   test('it displays query params', async () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-one-query')
-    const query = await page.evaluate(() => document.querySelector('#router-query').innerHTML.trim())
+    const query = await page.evaluate(() =>
+      document.querySelector('#router-query').innerHTML.trim(),
+    )
     page.end()
 
     expect(JSON.parse(query).query).toEqual('wiggle')
@@ -105,8 +123,12 @@ describe('navigation & params', () => {
   test('it doesnt get confused when a query param is after a url param', async () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-two-bar-query')
-    const params = await page.evaluate(() => document.querySelector('#router-params').innerHTML.trim())
-    const query = await page.evaluate(() => document.querySelector('#router-query').innerHTML.trim())
+    const params = await page.evaluate(() =>
+      document.querySelector('#router-params').innerHTML.trim(),
+    )
+    const query = await page.evaluate(() =>
+      document.querySelector('#router-query').innerHTML.trim(),
+    )
     page.end()
 
     expect(JSON.parse(params).foo).toEqual('bar')
@@ -117,7 +139,9 @@ describe('navigation & params', () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-one')
     await page.click('#go-to-page-one-query')
-    const renderCount = await page.evaluate(() => document.querySelector('#number-of-times-rendered').innerHTML.trim())
+    const renderCount = await page.evaluate(() =>
+      document.querySelector('#number-of-times-rendered').innerHTML.trim(),
+    )
     page.end()
 
     expect(renderCount).toEqual('3')
@@ -127,7 +151,9 @@ describe('navigation & params', () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-five-bar-query')
     await page.click('#go-to-page-five-bar-query-2')
-    const renderCount = await page.evaluate(() => document.querySelector('#number-of-times-rendered').innerHTML.trim())
+    const renderCount = await page.evaluate(() =>
+      document.querySelector('#number-of-times-rendered').innerHTML.trim(),
+    )
     page.end()
 
     expect(renderCount).toEqual('4') // Page 5 has an onUpdate hook
@@ -138,7 +164,9 @@ describe('route lifecycle hooks', () => {
   test('it calls the onEnter hook when a page is visited', async () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-three')
-    const content = await page.evaluate(() => document.querySelector('#on-enter-call-count').innerHTML.trim())
+    const content = await page.evaluate(() =>
+      document.querySelector('#on-enter-call-count').innerHTML.trim(),
+    )
     page.end()
 
     expect(content).toEqual('1')
@@ -149,7 +177,9 @@ describe('route lifecycle hooks', () => {
     await page.click('#go-to-page-three')
     await page.click('#go-to-page-one')
     await page.click('#go-to-page-three')
-    const content = await page.evaluate(() => document.querySelector('#on-enter-call-count').innerHTML.trim())
+    const content = await page.evaluate(() =>
+      document.querySelector('#on-enter-call-count').innerHTML.trim(),
+    )
     page.end()
 
     expect(content).toEqual('2')
@@ -159,7 +189,9 @@ describe('route lifecycle hooks', () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-four')
     await page.click('#go-to-page-one')
-    const content = await page.evaluate(() => document.querySelector('#on-leave-call-count').innerHTML.trim())
+    const content = await page.evaluate(() =>
+      document.querySelector('#on-leave-call-count').innerHTML.trim(),
+    )
     page.end()
 
     expect(content).toEqual('1')
@@ -171,7 +203,9 @@ describe('route lifecycle hooks', () => {
     await page.click('#go-to-page-one')
     await page.click('#go-to-page-four')
     await page.click('#go-to-page-one')
-    const content = await page.evaluate(() => document.querySelector('#on-leave-call-count').innerHTML.trim())
+    const content = await page.evaluate(() =>
+      document.querySelector('#on-leave-call-count').innerHTML.trim(),
+    )
     page.end()
 
     expect(content).toEqual('2')
@@ -181,7 +215,9 @@ describe('route lifecycle hooks', () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-five-bar')
     await page.click('#go-to-page-five-baz')
-    const content = await page.evaluate(() => document.querySelector('#on-update-call-count').innerHTML.trim())
+    const content = await page.evaluate(() =>
+      document.querySelector('#on-update-call-count').innerHTML.trim(),
+    )
     page.end()
 
     expect(content).toEqual('1')
@@ -192,7 +228,9 @@ describe('route lifecycle hooks', () => {
     await page.click('#go-to-page-five-bar')
     await page.click('#go-to-page-five-baz')
     await page.click('#go-to-page-five-bar')
-    const content = await page.evaluate(() => document.querySelector('#on-update-call-count').innerHTML.trim())
+    const content = await page.evaluate(() =>
+      document.querySelector('#on-update-call-count').innerHTML.trim(),
+    )
     page.end()
 
     expect(content).toEqual('2')
@@ -202,7 +240,9 @@ describe('route lifecycle hooks', () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-five-bar')
     await page.click('#go-to-page-five-bar-query')
-    const content = await page.evaluate(() => document.querySelector('#on-update-call-count').innerHTML.trim())
+    const content = await page.evaluate(() =>
+      document.querySelector('#on-update-call-count').innerHTML.trim(),
+    )
     page.end()
 
     expect(content).toEqual('1')
@@ -212,7 +252,9 @@ describe('route lifecycle hooks', () => {
 describe('component usage', () => {
   test('it renders model state', async () => {
     const page = browser().goto(base)
-    const count = await page.evaluate(() => document.querySelector('#increment-app-2-count').innerHTML.trim())
+    const count = await page.evaluate(() =>
+      document.querySelector('#increment-app-2-count').innerHTML.trim(),
+    )
     page.end()
 
     expect(count).toEqual('0')
@@ -221,18 +263,19 @@ describe('component usage', () => {
   test('it rerenders on model state change', async () => {
     const page = browser().goto(base)
     await page.click('#increment-app-2-count')
-    const count = await page.evaluate(() => document.querySelector('#increment-app-2-count').innerHTML.trim())
+    const count = await page.evaluate(() =>
+      document.querySelector('#increment-app-2-count').innerHTML.trim(),
+    )
     page.end()
 
     expect(count).toEqual('1')
   })
 
-  test.skip('it doesn\'t capture click events on anchor tags', async () => {
+  test.skip("it doesn't capture click events on anchor tags", async () => {
     // const page = browser().goto(base)
     // await page.click('#increment-app-2-count')
     // const count = await page.evaluate(() => document.querySelector('#increment-app-2-count').innerHTML.trim())
     // page.end()
-
     // expect(count).toEqual('1')
   })
 })

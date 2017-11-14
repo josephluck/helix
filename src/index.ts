@@ -13,12 +13,14 @@ function combineObjects(a, b) {
 }
 
 function wrap(routes, fn) {
-  return Object.keys(routes).map(key => {
-    let route = routes[key]
-    return {
-      [key]: fn(key, route),
-    }
-  }).reduce(combineObjects, {})
+  return Object.keys(routes)
+    .map(key => {
+      let route = routes[key]
+      return {
+        [key]: fn(key, route),
+      }
+    })
+    .reduce(combineObjects, {})
 }
 
 function createModel(model, routes, render) {
@@ -43,7 +45,9 @@ function stringifyQueryFromLocation(query: Object) {
   return `?${qs.stringify(query)}`
 }
 
-function location(rerender: Types.Render): Types.Helix.Model<Types.LocationState, Types.LocationReducers, Types.LocationEffects> {
+function location(
+  rerender: Types.Render,
+): Types.Helix.Model<Types.LocationState, Types.LocationReducers, Types.LocationEffects> {
   return {
     state: {
       pathname: '',
@@ -64,9 +68,14 @@ function location(rerender: Types.Render): Types.Helix.Model<Types.LocationState
   }
 }
 
-export default function helix<S, A>(configuration: Types.Helix.Config<S, A>): Types.Twine.Return<S, A> {
+export default function helix<S, A>(
+  configuration: Types.Helix.Config<S, A>,
+): Types.Twine.Return<S, A> {
   const routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null
-  const notFound = configuration.routes && configuration.routes.notFound ? configuration.routes.notFound : () => null
+  const notFound =
+    configuration.routes && configuration.routes.notFound
+      ? configuration.routes.notFound
+      : () => null
   const router = rlite(notFound, routes)
   const model = createModel(configuration.model, configuration.routes, renderCurrentLocation)
   const plugins = [onStateChange].concat(configuration.plugins || [])
@@ -119,9 +128,10 @@ export default function helix<S, A>(configuration: Types.Helix.Config<S, A>): Ty
   }
 
   function wrapRoutes(route, newLocation) {
-    return function (params, _, pathname) {
+    return function(params, _, pathname) {
       const differentRoute = currentState.location.pathname !== pathname
-      const differentQuery = stringifyQueryFromLocation(currentState.location.query) !== (window.location.search || '?')
+      const differentQuery =
+        stringifyQueryFromLocation(currentState.location.query) !== (window.location.search || '?')
       if (differentRoute || differentQuery) {
         currentActions.location.receiveRoute({
           pathname,
@@ -132,9 +142,7 @@ export default function helix<S, A>(configuration: Types.Helix.Config<S, A>): Ty
         onLeaveHook = newLocation.onLeave
         return false
       }
-      return typeof newLocation === 'object'
-        ? newLocation.view
-        : newLocation
+      return typeof newLocation === 'object' ? newLocation.view : newLocation
     }
   }
 
@@ -143,7 +151,9 @@ export default function helix<S, A>(configuration: Types.Helix.Config<S, A>): Ty
   }
 
   function setLocationAndRender(location): void {
-    const search = Object.keys(location.search).length ? `?${qs.stringify(location.search, { encode: false })}` : ''
+    const search = Object.keys(location.search).length
+      ? `?${qs.stringify(location.search, { encode: false })}`
+      : ''
     const path = `${location.pathname}${search}`
     window.history.pushState('', '', path)
     rerender(getComponent(location.pathname))

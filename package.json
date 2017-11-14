@@ -18,7 +18,8 @@
     "dist": "rm -rf ./lib && mkdir lib && tsc && npm run browserify && npm run minify",
     "browserify": "browserify -g babelify lib/index.js -o lib/bundle.js",
     "minify": "uglifyjs lib/bundle.js -c -m -o lib/bundle.min.js",
-    "deploy": "npm run dist && npm publish"
+    "deploy": "npm run dist && npm publish",
+    "format": "prettier --write \"./src/**/*.{ts,tsx}\""
   },
   "author": "Joseph Luck",
   "license": "ISC",
@@ -30,7 +31,6 @@
     "browserify": "^14.1.0",
     "tsify": "^3.0.3",
     "tslint": "^4.4.2",
-    "tslint-config-standard": "^4.0.0",
     "typescript": "^2.2.1",
     "uglify-js": "^2.7.5"
   },
@@ -42,11 +42,13 @@
     "electron": "1.7.6",
     "jest": "^21.1.0",
     "nightmare": "^2.10.0",
+    "prettier": "^1.8.2",
     "qs": "^6.4.0",
     "rlite-router": "^2.0.1",
     "sheet-router": "^4.2.3",
     "ts-jest": "^21.0.1",
-    "twine-js": "^1.9.3",
+    "tslint-config-prettier": "^1.6.0",
+    "twine-js": "^2.0.0",
     "yo-yo": "^1.4.1"
   },
   "jest": {
