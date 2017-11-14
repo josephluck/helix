@@ -1,10 +1,13 @@
 import { Twine } from 'twine-js'
+import { Completer } from 'readline';
 export { Twine } from 'twine-js'
+
+export type Params = Record<string, string>
 
 export interface LocationState {
   pathname: string
-  params: Record<string, string>
-  query: Record<string, string>
+  params: Params
+  query: Params
 }
 
 export interface LocationReducers {
@@ -17,14 +20,12 @@ export interface LocationEffects {
 
 export type LocationActions = Twine.Actions<LocationReducers, LocationEffects>
 
-export type State<S> = S & { location: LocationState }
-
-export type Actions<A> = A & { location: LocationActions }
-
 export type Render = (pathname: string) => any
 
 export namespace Helix {
   // State types
+  export type HelixState<S> = S & { location: LocationState }
+  export type HelixActions<A> = A & { location: LocationActions }
   export type Model<S, R, E> = Twine.Model<S, R, E>
   export type ModelApi<S, A> = Twine.ModelApi<S, A>
   export type Plugin<S, A> = Twine.Plugin<S, A>
@@ -38,6 +39,15 @@ export namespace Helix {
   // View types
 
   // Router types
+  export type Component<S, A> = (state: S, previous: S, actions: A) => any
+  export interface Page<S, A> {
+    onEnter?: Component<S, A>
+    onUpdate?: Component<S, A>
+    onLeave?: Component<S, A>
+    view: Component<S, A>
+  }
+  export type Route<S, A> = Component<S, A> | Page<S, A>
+  export type Routes<S, A> = Record<string, Route<S, A>>
 
   // Config
   export interface Config<S, A> {
