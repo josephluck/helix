@@ -5,6 +5,7 @@ import * as twineLog from 'twine-js/lib/log'
 import twine, { Twine } from 'twine-js'
 import * as Types from './types'
 export { Twine } from 'twine-js'
+export { Helix } from './types'
 
 export const log = twineLog.default
 
@@ -12,7 +13,7 @@ function combineObjects(a: any, b: any) {
   return Object.assign({}, a, b)
 }
 
-function wrap<A>(routes: Record<string, any>, fn: (key: string, route: any) => any): A {
+function wrap<S, A>(routes: Types.Helix.Routes<S, A>, fn: (key: string, route: any) => any): Types.Helix.Routes<S, A> {
   return Object.keys(routes)
     .map(key => {
       let route = routes[key]
@@ -78,7 +79,7 @@ Types.LocationEffects
 export default function helix<S, A>(
   configuration: Types.Helix.Config<S, A>,
 ): Types.Twine.Return<S, A> {
-  const routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null
+  const routes = configuration.routes ? wrap<S, A>(configuration.routes, wrapRoutes) : null
   const notFound =
     configuration.routes && configuration.routes.notFound
       ? configuration.routes.notFound

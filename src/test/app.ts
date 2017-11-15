@@ -1,19 +1,19 @@
 import * as yoyo from 'yo-yo'
-import helix from '../'
+import helix, { Helix } from '../'
 const html = yoyo
 
-const render = mount => {
+function render(mount: HTMLElement): Helix.Renderer<State, Actions> {
   let _dom = mount
-  return function(route, state, prev, actions) {
+  return function (route, state, prev, actions) {
     if (route) {
       _dom = yoyo.update(_dom, route(state, prev, actions))
     }
   }
 }
 
-let numberOfTimesRendered = 0
+let numberOfTimesRendered: number = 0
 
-const Navigation = (state, prev, actions) => html`
+const Navigation: Helix.Component<State, Actions> = (state, prev, actions) => html`
   <div>
     <a href='/' id='go-to-home'>
       HomeLink
@@ -70,7 +70,7 @@ const Navigation = (state, prev, actions) => html`
   </div>
 `
 
-const Layout = child => (state, prev, actions) => {
+const Layout = (child: Helix.Component<State, Actions>): Helix.Component<State, Actions> => (state, prev, actions) => {
   numberOfTimesRendered++
   return html`
     <div>
@@ -93,11 +93,27 @@ const Layout = child => (state, prev, actions) => {
   `
 }
 
-const app1 = document.createElement('div')
-document.body.appendChild(app1)
+interface ModelState {
+  count: number
+  onEnterCallCount: number
+  onLeaveCallCount: number
+  onUpdateCallCount: number
+}
 
-helix({
-  model: {
+type State = Helix.HelixState<ModelState>
+
+interface Reducers {
+  setState: Helix.Reducer<ModelState, Partial<ModelState>>
+  increment: Helix.Reducer0<ModelState>
+}
+
+interface Effects { }
+
+type ModelActions = Helix.Actions<Reducers, Effects>
+type Actions = Helix.HelixActions<ModelActions>
+
+function model(): Helix.Model<ModelState, Reducers, Effects> {
+  return {
     state: {
       count: 0,
       onEnterCallCount: 0,
@@ -106,9 +122,13 @@ helix({
     },
     reducers: {
       setState: (state, newState) => newState,
+      increment: (state) => ({ count: state.count + 1 }),
     },
-  },
-  routes: {
+  }
+}
+
+function routes(): Helix.Routes<State, Actions> {
+  return {
     '/': Layout(
       (state, prev, actions) => html`
       <div id='home'>
@@ -175,29 +195,39 @@ helix({
       ),
     },
     notFound: () => () => html`<p>Not found</p>`,
-  },
+  }
+}
+
+const app1 = document.createElement('div')
+document.body.appendChild(app1)
+
+helix({
+  model: model(),
+  routes: routes(),
   render: render(app1),
 })
 
 const app2 = document.createElement('div')
 document.body.appendChild(app2)
 
+function component(): Helix.Component<State, Actions> {
+  return function (state, prev, actions) {
+    return html`
+      <div>
+        <a href='#' id='app-2-anchor'>AppTwoAnchor</a>
+        <button type='button'
+          id='increment-app-2-count'
+          onclick=${actions.increment}
+        >
+          ${state.count}
+        </button>
+      </div>
+    `
+  }
+}
+
 helix({
-  model: {
-    state: {
-      count: 0,
-    },
-    reducers: {
-      increment: state => ({ count: state.count + 1 }),
-    },
-  },
-  component: (state, prev, actions) => html`
-    <div>
-      <a href='#' id='app-2-anchor'>AppTwoAnchor</a>
-      <button type='button' id='increment-app-2-count' onclick=${actions.increment}>${
-    state.count
-  }</button>
-    </div>
-  `,
+  model: model(),
+  component: component(),
   render: render(app2),
 })

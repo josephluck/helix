@@ -4,7 +4,7 @@ import tsify from 'tsify'
 const port = 1234
 const base = `http://localhost:${port}`
 
-let server
+let server: any
 
 beforeAll(done => {
   server = budo(__dirname + '/app.ts', {

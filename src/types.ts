@@ -1,5 +1,4 @@
 import { Twine } from 'twine-js'
-import { Completer } from 'readline';
 export { Twine } from 'twine-js'
 
 export type Params = Record<string, string>
@@ -37,8 +36,6 @@ export namespace Helix {
   export type Actions<S, R> = Twine.Actions<S, R>
 
   // View types
-
-  // Router types
   export type Component<S, A> = (state: S, previous: S, actions: A) => any
   export interface Page<S, A> {
     onEnter?: Component<S, A>
@@ -46,15 +43,19 @@ export namespace Helix {
     onLeave?: Component<S, A>
     view: Component<S, A>
   }
+
+  // Router types
   export type Route<S, A> = Component<S, A> | Page<S, A>
   export type Routes<S, A> = Record<string, Route<S, A>>
 
   // Config
+  export type Renderer<S, A> = (node: any, state: S, previous: S, actions: A) => any
+
   export interface Config<S, A> {
     model: Twine.Model<any, any, any>
     routes?: any
     component?: any
-    render: (node: any, state: S, previous: S, actions: A) => any
+    render: Renderer<S, A>
     plugins?: Twine.Plugin<S, A>[]
   }
 }
