@@ -175,6 +175,8 @@ function routes(): Helix.Routes<State, Actions> {
     '/page-five/:foo': {
       onUpdate: (state, prev, actions) =>
         actions.setState({ onUpdateCallCount: state.onUpdateCallCount + 1 }),
+      onLeave: (state, prev, actions) =>
+        actions.setState({ onLeaveCallCount: state.onLeaveCallCount + 1 }),
       view: Layout(
         (state, prev, actions) => html`
         <div id='page-five'>

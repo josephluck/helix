@@ -156,7 +156,8 @@ describe('navigation & params', () => {
     )
     page.end()
 
-    expect(renderCount).toEqual('4') // Page 5 has an onUpdate hook
+    // Page 5 has an onUpdate & onLeave hook so +2 counts
+    expect(renderCount).toEqual('5')
   })
 })
 
@@ -197,7 +198,7 @@ describe('route lifecycle hooks', () => {
     expect(content).toEqual('1')
   })
 
-  test('it calls the onLeave hook multiple times when a page is left multiple times', async () => {
+  test('it calls the onLeave hook multiple times when the same page is left multiple times', async () => {
     const page = browser().goto(base)
     await page.click('#go-to-page-four')
     await page.click('#go-to-page-one')
@@ -209,6 +210,20 @@ describe('route lifecycle hooks', () => {
     page.end()
 
     expect(content).toEqual('2')
+  })
+
+  test('it calls the onLeave hook multiple times when switching between two pages that have onLeave', async () => {
+    const page = browser().goto(base)
+    await page.click('#go-to-page-four')
+    await page.click('#go-to-page-five-bar')
+    await page.click('#go-to-page-four')
+    await page.click('#go-to-page-five-bar')
+    const content = await page.evaluate(() =>
+      document.querySelector('#on-leave-call-count').innerHTML.trim(),
+    )
+    page.end()
+
+    expect(content).toEqual('3')
   })
 
   test('it calls the onUpdate hook when url parameters update', async () => {

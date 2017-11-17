@@ -125,16 +125,18 @@ export default function helix<S, A>(
           newLocation.onUpdate(currentState, previousState, currentActions)
         }
       } else {
-        currentLocation = newLocation
-        if (onLeaveHook) {
-          onLeaveHook(currentState, previousState, currentActions)
-          onLeaveHook = newLocation.onLeave
-        }
         if (newLocation.onEnter) {
           newLocation.onEnter(currentState, previousState, currentActions)
         }
       }
     }
+    if (onLeaveHook) {
+      onLeaveHook(currentState, previousState, currentActions)
+    }
+    onLeaveHook = typeof newLocation !== 'function'
+      ? newLocation.onLeave
+      : undefined
+    currentLocation = newLocation
   }
 
   function wrapRoutes(route: any, newLocation: Types.Helix.Route<S, A>) {
