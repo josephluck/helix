@@ -104,7 +104,7 @@ type State = Helix.HelixState<ModelState>
 
 interface Reducers {
   setState: Helix.Reducer<ModelState, Partial<ModelState>>
-  increment: Helix.Reducer0<ModelState>
+  increment: Helix.Reducer<ModelState>
 }
 
 interface Effects { }
