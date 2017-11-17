@@ -7,3 +7,8 @@ coverage.json
 *.swp
 *.log
 lib/
+dist/
+reports/
+shots/
+tmp/
+selenium-debug.log*
