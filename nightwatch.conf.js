@@ -5,18 +5,19 @@ module.exports = {
   custom_assertions_path: "",
   page_objects_path: "",
   globals_path: "",
+  silent: true,
 
   selenium: {
     start_process: true,
     server_path: require('selenium-server').path,
     log_path: "",
-    port: 4444
+    port: 8371
   },
 
   test_settings: {
     default: {
       launch_url: "http://localhost",
-      selenium_port: 4444,
+      selenium_port: 8371,
       selenium_host: "localhost",
       silent: true,
       screenshots: {

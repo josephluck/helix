@@ -86,7 +86,7 @@ export default {
     browser
       .url(server.domain)
       .waitForElementVisible('body', 2000)
-    browser.click('#go-to-page-two-bar')
+    browser.click('#go-to-page-six-bar-baz')
     browser.getText('#router-params', result => {
       browser.assert.equal(JSON.parse(result.value).foo, 'bar')
       browser.assert.equal(JSON.parse(result.value).bar, 'baz')
