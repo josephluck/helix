@@ -1,6 +1,6 @@
 # Advanced Usage
 
-To facilitate both large complex applications with lots of models and the ability to share functionality between models, Twine supports a model having a child model. The architecture can seem a little daunting at first, but it's super simple after a little experience, and gets really useful when paired with Typescript. Consider the following model:
+To facilitate both large complex applications with lots of models and the ability to share functionality between models, Twine supports a model having a child model. The architecture can seem a little daunting at first, but it's very powerful.
 
 ```javascript
 import helix from 'helix-yo-yo'
@@ -70,17 +70,17 @@ helix({
     },
   },
   component (state, previous, actions) {
-    function renderItem (post) {
-      return html`<div>${post}</div>`
-    }
     function fetchPostsAndComments () {
       actions.fetchPosts().then(() => {
         actions.comments.fetchComments()
       })
     }
+    function renderPost (post) {
+      return html`<div>${post}</div>`
+    }
     return html`
     	<div>
-      	${state.posts.map(renderItem)}
+      	${state.posts.map(renderPost)}
       	<button onclick=${fetchPostsAndComments}>Fetch Posts & Comments</button>
       	${state.comments.comments.map(renderItem)}
       </div>
@@ -90,9 +90,9 @@ helix({
 })
 ```
 
-We've introduced a new property to the first model, `models`. `models` is an object containing one or more keys whose values are other Twine models. We've also chained our original `fetchPosts` effect call with a another effect that fetches the comments. Cool huh?
+We've introduced a new property to the first model, `models`. `models` is an object containing one or more keys whose values are other Twine models. We've also chained our original `fetchPosts` effect call with a another effect that fetches the comments.
 
-However, there's too much control flow in the view now. Let's create a new effect:
+However, there's too much control flow in the view now. Let's create a new effect that will fetch both posts and comments:
 
 ```javascript
 import helix from 'helix-yo-yo'
@@ -166,12 +166,12 @@ helix({
     },
   },
   component (state, previous, actions) {
-    function renderItem (post) {
+    function renderPost (post) {
       return html`<div>${post}</div>`
     }
     return html`
     	<div>
-      	${state.posts.map(renderItem)}
+      	${state.posts.map(renderPost)}
       	<button onclick=${actions.fetchPostsAndComments}>Fetch Posts & Comments</button>
       	${state.comments.comments.map(renderItem)}
       </div>
@@ -181,11 +181,11 @@ helix({
 })
 ```
 
-Effects are orchestrators for a Twine application application and should contain complex flows, error handling and any asynchronous logic, leaving views to be a pure function of state using callbacks to response to user interaction.
+Now that we've used an effect for the complex control logic, our view is a pure function of state using callbacks to response to user interaction and doesn't hold any state of it's own (i.e. promises).
 
 # Scoped Models & Sharing Logic
 
-Applications often have some model logic that needs to work be shared between other models. For example, form controls. Twine has a concept of a scoped model for exactly this purpose:
+Applications often have some state and logic that is reused in different situations. For example, storing, setting, validating and resetting forms. Twine has a concept of a scoped model for exactly this purpose:
 
 ```javascript
 import helix from 'helix-yo-yo'
@@ -281,7 +281,7 @@ document.body.appendChild(mount)
 
 function formModel (defaultForm) {
   return {
-    scoped: true, // <-- this is the key bit!
+    scoped: true, // <-- this is the bit that will allow us to use this model in both places
     state: defaultForm(),
     reducers: {
       resetForm (state) {
@@ -382,12 +382,12 @@ helix({
 
 We've completely shared the form model logic between the two different models and if any improvements are made to the form model (such as adding validation), both models will benefit.
 
-So in essence, scoped models reducers and effects can only access state and actions inside of themselves, allowing them to be completely 'unaware' of their location within the model heirarchy. Here's an example of the form model with an effect:
+So in essence, scoped models reducers and effects can only access state and actions inside of themselves, allowing them to be completely unaware of their location within the model heirarchy. Here's an example of the form model with an effect:
 
 ```javascript
 function formModel (defaultForm) {
   return {
-    scoped: true, // <-- this is the key bit!
+    scoped: true,
     state: defaultForm(),
     reducers: {
       resetForm (state) {
@@ -408,7 +408,7 @@ function formModel (defaultForm) {
     },
     effects: {
       validateAndReset (state, actions) {
-        // Note that actions only has the form model's own actions in it.
+        // Note that actions only has the form model's own actions in it, allowing it to be reused again and again.
         actions.resetForm()
       }
     }

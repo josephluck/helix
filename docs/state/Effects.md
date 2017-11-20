@@ -57,6 +57,6 @@ helix({
 })
 ```
 
-It's important to note that effects receive the application's global state, NOT the current model's state. This differs from reducers. It's an important distinction that allows effects to communicate with other models.
+It's important to note that effects receive the application's global state instead of the current model's state. It's an important distinction that allows effects to communicate with other models.
 
-It's easy to see how constructing models using pure functions this way makes testing and composibility really easy.
+It's easy to see how constructing models using pure functions this way makes testing and composition really easy.
