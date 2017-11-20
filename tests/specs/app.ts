@@ -230,3 +230,24 @@ export default {
     done()
   }
 }
+
+// test('it renders model state', async () => {
+//   const page = browser().goto(base)
+//   const count = await page.evaluate(() =>
+//     document.querySelector('#increment-app-2-count').innerHTML.trim(),
+//   )
+//   page.end()
+
+//   expect(count).toEqual('0')
+// })
+
+// test('it rerenders on model state change', async () => {
+//   const page = browser().goto(base)
+//   await page.click('#increment-app-2-count')
+//   const count = await page.evaluate(() =>
+//     document.querySelector('#increment-app-2-count').innerHTML.trim(),
+//   )
+//   page.end()
+
+//   expect(count).toEqual('1')
+// })
