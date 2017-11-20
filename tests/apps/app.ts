@@ -1,5 +1,5 @@
 import * as yoyo from 'yo-yo'
-import helix, { Helix } from '../'
+import helix, { Helix } from '../../src'
 const html = yoyo
 
 function render(mount: HTMLElement): Helix.Renderer<State, Actions> {
