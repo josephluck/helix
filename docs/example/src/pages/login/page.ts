@@ -19,7 +19,7 @@ function page(state, prev, actions) {
         onsubmit: pageActions.submit,
         submitText: 'Login',
         oncancel() {
-          pageActions.reset()
+          pageActions.resetState()
           actions.location.set('/')
         },
         child: html`

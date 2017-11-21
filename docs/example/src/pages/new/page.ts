@@ -21,7 +21,7 @@ function page(state, prev, actions) {
         submitText: 'Save post',
         oncancel() {
           actions.location.set('/')
-          pageActions.reset()
+          pageActions.resetState()
         },
         child: html`
           <div>
