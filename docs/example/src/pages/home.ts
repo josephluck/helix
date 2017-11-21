@@ -1,7 +1,6 @@
 import * as html from 'yo-yo'
 import * as moment from 'moment'
-
-import base from '../base'
+import base from './base'
 
 function post(post) {
   return html`
@@ -25,10 +24,10 @@ function post(post) {
 function page(state, prev, actions) {
   return html`
     <div>
-      ${state.pages.home.posts.length
+      ${state.posts.posts.length
       ? html`
         <div>
-          ${state.pages.home.posts.map(post)}
+          ${state.posts.posts.map(post)}
         </div>
       `
       : null
@@ -40,10 +39,10 @@ function page(state, prev, actions) {
 export default function () {
   return {
     onEnter(state, prev, actions) {
-      actions.pages.home.requestPosts()
+      actions.posts.requestPosts()
     },
     onLeave(state, prev, actions) {
-      actions.pages.home.resetState()
+      actions.posts.resetState()
     },
     view: base(page),
   }

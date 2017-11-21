@@ -1,10 +1,10 @@
-import home from '../pages/home/page'
-import post from '../pages/post/page'
-import login from '../pages/login/page'
-import newPost from '../pages/new/page'
-import settings from '../pages/settings/page'
+import home from './home'
+import post from './post'
+import login from './login'
+import newPost from './new-post'
+import settings from './settings'
 
-export default function routes () {
+export default function routes() {
   return {
     '': home(),
     'posts/:postId': post(),

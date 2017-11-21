@@ -1,5 +1,5 @@
-import api from '../../api'
-import form from '../../model/form'
+import api from '../api'
+import form from './form'
 
 export default function model() {
   return {
@@ -11,7 +11,7 @@ export default function model() {
     },
     effects: {
       submit(state, actions) {
-        const { title, body } = state.pages.newPost.form
+        const { title, body } = state.newPost.form
         return api.newPost(title, body)
           .then(post => {
             actions.location.set(`/posts/${post.uuid}`)

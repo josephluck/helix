@@ -1,6 +1,5 @@
-import api from '../../api'
-
-import form from '../../model/form'
+import api from '../api'
+import form from './form'
 
 function resetState() {
   return {
@@ -27,13 +26,13 @@ export default function model() {
     },
     effects: {
       requestPost(state, actions) {
-        api.fetchPost().then(actions.pages.post.receivePost)
+        api.fetchPost().then(actions.post.receivePost)
       },
       submitComment(state, actions, comment) {
         api.newComment(comment, state.user.user)
           .then(response => {
-            actions.pages.post.form.setField({ key: 'comment', value: ' ' })
-            actions.pages.post.receiveComment(response)
+            actions.post.form.setField({ key: 'comment', value: ' ' })
+            actions.post.receiveComment(response)
           })
       },
     },

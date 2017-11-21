@@ -1,6 +1,6 @@
-import api from '../../api'
-import form from '../../model/form'
-import user from '../../api/fixtures/user'
+import api from '../api'
+import form from './form'
+import user from '../api/fixtures/user'
 
 let currentUser = user() // mock out authenticated user
 
@@ -14,7 +14,7 @@ export default function model() {
     },
     effects: {
       submit(state, actions) {
-        let { username, password } = state.pages.login.form
+        let { username, password } = state.login.form
         return api.login(currentUser, username, password)
           .then(resp => {
             actions.alert.showSuccess(`Hey, ${resp.user.name}!`)

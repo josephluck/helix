@@ -1,5 +1,5 @@
 import helix from '../../../src'
-import model from './model'
+import model from './models'
 import pages from './pages'
 import * as html from 'yo-yo'
 

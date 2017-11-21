@@ -1,6 +1,6 @@
-import form from '../../model/form'
+import form from './form'
 
-export default function model () {
+export default function model() {
   return {
     state: {},
     reducers: {
@@ -9,8 +9,8 @@ export default function model () {
       },
     },
     effects: {
-      init (state, actions, user) {
-        return actions.pages.settings.form.setForm(user)
+      init(state, actions, user) {
+        return actions.settings.form.setForm(user)
       },
     },
     models: {

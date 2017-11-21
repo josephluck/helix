@@ -1,12 +1,12 @@
 import * as html from 'yo-yo'
 import * as moment from 'moment'
-import base from '../base'
-import form from '../../components/form'
-import textarea from '../../components/textarea'
+import base from './base'
+import form from '../components/form'
+import textarea from '../components/textarea'
 
 function page(state, prev, actions) {
-  const updateFormField = (key) => (e) => actions.pages.post.form.setField({ key, value: e.target.value })
-  let post = state.pages.post.post
+  const updateFormField = (key) => (e) => actions.post.form.setField({ key, value: e.target.value })
+  let post = state.post.post
   if (post) {
     return html`
       <div>
@@ -20,36 +20,36 @@ function page(state, prev, actions) {
           </div>
         </div>
         ${state.user.user
-          ? html`
+        ? html`
             <div class='mt5'>
               <span class='f4 b dib mb3'>Have your say</span>
               ${form({
-                onsubmit() {
-                  actions.pages.post.submitComment(state.pages.post.form.comment)
-                },
-                submitText: 'Save comment',
-                child: html`
+            onsubmit() {
+              actions.post.submitComment(state.post.form.comment)
+            },
+            submitText: 'Save comment',
+            child: html`
                   <div>
                     ${textarea({
-                      value: state.pages.post.form.comment,
-                      oninput: updateFormField('comment'),
-                    })}
+                value: state.post.form.comment,
+                oninput: updateFormField('comment'),
+              })}
                   </div>
                 `,
-              })}
+          })}
             </div>
           `
-          : ''
-        }
+        : ''
+      }
         ${post.comments.length
-          ? html`
+        ? html`
             <div class='mt5'>
               <div class='mb4'>
                 <span class='f4 b dib'>
                   ${post.comments.length} Response${post.comments.length > 1 ? 's' : ''}
                 </span>
                 ${!state.user.user
-                  ? html`
+            ? html`
                     <span class='ml2 i black-60 f6'>
                       You must be 
                       <a 
@@ -61,7 +61,7 @@ function page(state, prev, actions) {
                       to respond
                     </span>
                   ` : ''
-                }
+          }
               </div>
               ${post.comments.map(comment => html`
                 <div class='mb4 pb4 bb b--near-white'>
@@ -82,8 +82,8 @@ function page(state, prev, actions) {
               `)}
             </div> 
           `
-          : ''
-        }
+        : ''
+      }
       </div>
     `
   }
@@ -93,10 +93,10 @@ function page(state, prev, actions) {
 export default function () {
   return {
     onEnter(state, prev, actions) {
-      actions.pages.post.requestPost()
+      actions.post.requestPost()
     },
     onLeave(state, prev, actions) {
-      actions.pages.post.resetState()
+      actions.post.resetState()
     },
     view: base(page),
   }
