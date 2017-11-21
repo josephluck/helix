@@ -61,7 +61,10 @@ State can take any shape, but typically it's an object:
 
 ```javascript
 const state = {
-  title: 'Learn Helix'
+  posts: [
+    'Learn Helix',
+    'Profit'
+  ]
 }
 ```
 
@@ -71,10 +74,8 @@ Actions make an application interactive:
 
 ```javascript
 const reducers = {
-  setTitle (state, title) {
-    return {
-      title
-    }
+  setPosts (state, posts) {
+    return { posts }
   }
 }
 ```
@@ -89,60 +90,9 @@ A user interface is essential for a web application. The interface both shows th
 import * as html from 'yo-yo'
 const component = (state, previousState, actions) => html`
   <div>
-    <p>${state.title}</p>
-    <input
-      value=${state.title}
-      oninput=${e => actions.setTitle(e.target.value)}
-    />
+    ${state.posts.map(post => html`<span>${post}</span>`)}
   </div>
 `
 ```
 
-So now we've got all our pieces, time to tie them together.
-
-### All together now
-
-We're going to use the `helix-yo-yo` package to pair helix with the `yo-yo` view library. If you're interested in the specifics of rendering to different UI libraries, like React or Vue, take a look at the `rendering.md` document. The following example also demonstrates an asynchronous `effect` to reset the title after two seconds of clicking a button.
-
-```javascript
-import helix from 'helix-yo-yo'
-import * as html from 'yo-yo'
-
-const mount = document.createElement('div')
-document.body.appendChild(mount)
-
-helix({
-  model: {
-    state: {
-      title: 'Learn Helix'
-    },
-    reducers: {
-      setTitle (state, title) {
-        return {
-          title
-        }
-      }
-    },
-    effects: {
-      reset (state, actions, time) {
-        setTimeout(() => {
-          actions.setTitle('')
-        }, time)
-      }
-    },
-  },
-  component: (state, previous, actions) => html`
-    <div>
-      <p>${state.title}</p>
-      <input
-        value=${state.title}
-        oninput=${e => actions.setTitle(e.target.value)}
-      />
-      <button onclick=${() => actions.reset(2000)}>
-        Reset after 2 seconds
-      </button>
-    </div>
-  `,
-  mount,
-})
-```
+Over the course of this documentation, we'll build a simple blog application, where you can register, log in, create posts and create comments.

@@ -1,0 +1,26 @@
+{
+  "name": "helix-example",
+  "version": "1.0.0",
+  "description": "Blog example of helix",
+  "main": "./src/index.ts",
+  "scripts": {
+    "start": "budo ./src/index.ts --live --pushstate --host=localhost --port=8888 --base=/ --css ./node_modules/tachyons/css/tachyons.css -- -t babelify -p tsify"
+  },
+  "author": "Joseph Luck",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "babelify": "^7.3.0",
+    "browserify": "^14.1.0",
+    "budo": "^9.4.7",
+    "faker": "^4.1.0",
+    "moment": "^2.17.1",
+    "tachyons": "^4.6.2",
+    "tsify": "^3.0.1",
+    "tslint": "^4.4.2",
+    "tslint-config-standard": "^4.0.0",
+    "typescript": "^2.2.1"
+  }
+}

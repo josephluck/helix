@@ -22,6 +22,9 @@ const Navigation: Helix.Component<State, Actions> = (state, prev, actions) => ht
     <a href='/page-one' id='go-to-page-one'>
       PageOneLink
     </a>
+    <a href='/page-one?query=foo/bar/baz' id='go-to-page-one-query-encoded'>
+      PageOneLinkQueryEncoded
+    </a>
     <br />
     <span id='go-to-page-one-programatically' onclick=${() => actions.location.set('/page-one')}>
       PageOneProgramaticLink

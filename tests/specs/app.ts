@@ -141,6 +141,16 @@ export default {
     // Page 5 has an onUpdate & onLeave hook so +2 counts
     browser.end()
   },
+  
+  'It allows query parameters with /^%£$%£^/ chars'(browser: NightwatchBrowser) {
+    browser
+      .url(server.domain)
+      .waitForElementVisible('body', 2000)
+    browser.click('#go-to-page-one-query-encoded')
+    browser.expect.element('#number-of-times-rendered')
+      .text.to.equal('2')
+    browser.end()
+  },
 
   'It calls the onEnter hook when a page is visited'(browser: NightwatchBrowser) {
     browser

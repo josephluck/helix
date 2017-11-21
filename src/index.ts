@@ -46,16 +46,12 @@ function parseQueryFromLocation(query: string): Types.Params {
 }
 
 function stringifyQueryFromLocation(query?: Types.Params): string {
-  return query ? `?${qs.stringify(query)}` : ''
+  return query ? `?${qs.stringify(query, { encode: false })}` : ''
 }
 
 function location(
   rerender: Types.Render,
-): Types.Helix.Model<
-Types.LocationState,
-Types.LocationReducers,
-Types.LocationEffects
-> {
+): Types.Helix.Model<Types.LocationState, Types.LocationReducers, Types.LocationEffects> {
   return {
     state: {
       pathname: '',
