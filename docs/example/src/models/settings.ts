@@ -1,6 +1,6 @@
-import form from './form'
+import * as Form from './form'
 
-export default function model() {
+export function model() {
   return {
     state: {},
     reducers: {
@@ -14,7 +14,7 @@ export default function model() {
       },
     },
     models: {
-      form: form({
+      form: Form.model({
         name: '',
         username: '',
         password: '',

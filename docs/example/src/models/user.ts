@@ -4,7 +4,7 @@ function defaultState() {
   }
 }
 
-export default function user() {
+export function model() {
   return {
     state: defaultState(),
     reducers: {
@@ -12,9 +12,7 @@ export default function user() {
         return defaultState()
       },
       receiveUser(state, user) {
-        return {
-          user,
-        }
+        return { user }
       },
     },
   }

@@ -1,6 +1,13 @@
 import * as faker from 'faker'
 
-export default function user () {
+export interface User {
+  username: string
+  password: string
+  name: string
+  avatar: string
+}
+
+export default function user(): User {
   return {
     username: faker.internet.email(),
     password: faker.random.word(),

@@ -15,11 +15,12 @@ function page(state, prev, actions) {
       </span>
       ${form({
       onsubmit() {
+        actions.location.set(state.location.query.redirect || '/')
         console.log('update user')
       },
       submitText: 'Save',
       oncancel() {
-        actions.location.set('/')
+        actions.location.set(state.location.query.redirect || '/')
         pageActions.resetState()
       },
       child: html`

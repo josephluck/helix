@@ -1,31 +1,52 @@
-import walk from '../utils/walk'
-import promisify from '../utils/promisify'
-import authResponse from './fixtures/authResponse'
-import post from './fixtures/post'
-import comment from './fixtures/comment'
+import authResponse, { AuthResponse } from './fixtures/authResponse'
+import post, { Post } from './fixtures/post'
+import comment, { Comment } from './fixtures/comment'
 
-export default walk({
-  login (user, username, password) {
-    if (user.password !== password || user.username !== username) {
-      return new Error('Whoops! Please try again...')
-    }
-    return authResponse()
+const timeout = 2000 // Simulate Async
+
+export default {
+  login(user, username, password): Promise<AuthResponse> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (user.password !== password || user.username !== username) {
+          reject('Whoops! Please try again...')
+        } else {
+          resolve(authResponse())
+        }
+      }, timeout)
+    })
   },
-  fetchPosts () {
-    return Array.from({ length: 10 }).map(() => post())
+  fetchPosts(): Promise<Post[]> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(Array.from({ length: 10 }).map(() => post()))
+      }, timeout)
+    })
   },
-  fetchPost () {
-    return post()
+  fetchPost(): Promise<Post> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        return post()
+      }, timeout)
+    })
   },
-  newPost (title, body) {
-    return post()
+  newPost(title, body): Promise<Post> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(post())
+      }, timeout)
+    })
   },
-  newComment (_comment, user) {
-    return {
-      ...comment(),
-      createdOn: new Date(),
-      createdBy: user,
-      body: _comment,
-    }
+  newComment(_comment, user): Promise<Comment> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({
+          ...comment(),
+          createdOn: new Date(),
+          createdBy: user,
+          body: _comment,
+        })
+      }, timeout)
+    })
   }
-}, promisify)
+}

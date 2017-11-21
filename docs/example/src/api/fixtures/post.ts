@@ -1,9 +1,19 @@
 import * as faker from 'faker'
 
-import comment from './comment'
-import user from './user'
+import comment, { Comment } from './comment'
+import user, { User } from './user'
 
-export default function post () {
+export interface Post {
+  uuid: string
+  title: string
+  createdOn: string
+  createdBy: User
+  comments: Comment[]
+  votes: number
+  body: string[]
+}
+
+export default function post(): Post {
   return {
     uuid: faker.random.uuid(),
     title: faker.company.catchPhrase(),

@@ -1,7 +1,12 @@
 import * as faker from 'faker'
-import user from './user'
+import user, { User } from './user'
 
-export default function authResponse () {
+export interface AuthResponse {
+  token: string
+  user: User
+}
+
+export default function authResponse(): AuthResponse {
   return {
     token: faker.random.uuid,
     user: user(),

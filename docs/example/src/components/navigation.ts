@@ -7,7 +7,7 @@ export default function navigation({
   return html`
     <div class='pv4 h3 ttu b f6 flex items-center'>
       <div class='flex-auto'>
-        <span class='mr2'>Reddit Clone</span>
+        <span class='mr3'>Bloggy</span>
         <a class='mr2 no-underline blue' href='/posts/new'>
           New post
         </a>

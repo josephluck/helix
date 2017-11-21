@@ -33,7 +33,8 @@ export namespace Helix {
   export type Reducer<S, P = any> = Twine.Reducer<S, P>
   export type Effect0<S, A, R = void> = Twine.Effect0<S, A, R>
   export type Effect<S, A, P = any, R = void> = Twine.Effect<S, A, P, R>
-  export type Actions<S, R> = Twine.Actions<S, R>
+  export type Actions<R, E> = Twine.Actions<R, E>
+  export type Models<M> = Twine.Models<M>
 
   // View types
   export type Component<S, A> = (state: S, previous: S, actions: A) => any

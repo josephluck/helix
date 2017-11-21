@@ -1,10 +1,17 @@
 import * as faker from 'faker'
-import user from './user'
+import user, { User } from './user'
 
-export default function comment () {
+export interface Comment {
+  uuid: string
+  createdOn: Date
+  createdBy: User
+  body: string
+}
+
+export default function comment(): Comment {
   return {
     uuid: faker.random.uuid(),
-    createdOn: faker.date.past().toString(),
+    createdOn: faker.date.past(),
     createdBy: user(),
     body: faker.lorem.paragraph(),
   }

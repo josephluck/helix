@@ -6,7 +6,7 @@ function resetState() {
   }
 }
 
-export default function model() {
+export function model() {
   return {
     scoped: true,
     state: resetState(),

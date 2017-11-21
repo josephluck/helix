@@ -1,12 +1,36 @@
-function emptyAlert() {
+import { Helix } from '../../../../src'
+
+export interface Alert {
+  showing: boolean
+  description: string
+  type: 'is-success' | 'is-danger'
+}
+
+function emptyAlert(): Alert {
   return {
     showing: false,
     description: '',
-    type: '',
+    type: 'is-success',
   }
 }
 
-export default function alert() {
+export interface State {
+  alert: Alert
+}
+
+export interface Reducers {
+  setAlert: Helix.Reducer<State, Alert>
+  removeAlert: Helix.Reducer0<State>
+}
+
+export interface Effects {
+  showError: Helix.Effect<State, Actions, Error>
+  showSuccess: Helix.Effect<State, Actions, string>
+}
+
+export type Actions = Helix.Actions<Reducers, Effects>
+
+export function model(): Helix.Model<State, Reducers, Effects> {
   return {
     scoped: true,
     state: {
@@ -17,7 +41,7 @@ export default function alert() {
         return { alert }
       },
       removeAlert(state) {
-        return { alert: emptyAlert() }
+        return { alert: { ...state.alert, showing: false } }
       },
     },
     effects: {

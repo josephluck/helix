@@ -1,10 +1,40 @@
+import { Helix } from '../../../../src'
+import { GlobalState, GlobalActions } from './'
 import api from '../api'
-import form from './form'
+import * as Form from './form'
 import user from '../api/fixtures/user'
 
 let currentUser = user() // mock out authenticated user
 
-export default function model() {
+export interface Fields {
+  username: string
+  password: string
+  name: string
+  avatar: string
+}
+
+export interface LocalState { }
+
+export interface State {
+  form: Form.State<Fields>
+}
+
+export interface Reducers {
+  resetState: Helix.Reducer0<State>
+}
+
+export interface Effects {
+  submit: Helix.Effect0<GlobalState, GlobalActions>
+  logout: Helix.Effect0<GlobalState, GlobalActions>
+}
+
+export type LocalActions = Helix.Actions<Reducers, Effects>
+
+export interface Actions {
+  form: Form.Actions<Fields>
+}
+
+export function model(): Helix.Model<LocalState, Reducers, Effects> {
   return {
     state: {},
     reducers: {
@@ -29,7 +59,7 @@ export default function model() {
       },
     },
     models: {
-      form: form(Object.assign({}, currentUser, {})),
+      form: Form.model(Object.assign({}, currentUser, {})),
     },
   }
 }

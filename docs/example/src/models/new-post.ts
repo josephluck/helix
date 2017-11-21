@@ -1,7 +1,34 @@
+import { Helix } from '../../../../src'
 import api from '../api'
-import form from './form'
+import * as Form from './form'
+import { GlobalState, GlobalActions } from './'
 
-export default function model() {
+export interface Fields {
+  title: string
+  body: string
+}
+
+export interface LocalState { }
+
+export interface State {
+  form: Form.State<Fields>
+}
+
+export interface Reducers {
+  resetState: Helix.Reducer0<LocalState>
+}
+
+export interface Effects {
+  submit: Helix.Effect0<GlobalState, GlobalActions>
+}
+
+export type LocalActions = Helix.Actions<Reducers, Effects>
+
+export interface Actions {
+  form: Form.Actions<Fields>
+}
+
+export function model(): Helix.Model<LocalState, Reducers, Effects> {
   return {
     state: {},
     reducers: {
@@ -21,7 +48,7 @@ export default function model() {
       },
     },
     models: {
-      form: form({
+      form: Form.model({
         title: '',
         body: '',
       }),

@@ -1,13 +1,33 @@
+import { Helix } from '../../../../src'
+import { GlobalState, GlobalActions } from './'
 import api from '../api'
-import form from './form'
+import * as Form from './form'
 
-function resetState() {
+
+
+export interface Post {
+  title: string
+  body: string
+  comments: Comment[]
+}
+
+export interface State {
+  post: null | Post
+}
+
+export interface Reducers {
+  resetState: Helix.Reducer0<State>
+  receivePost: Helix.Reducer<State, Post>
+  receiveComment: Helix.Reducer<State, Post>
+}
+
+function resetState(): State {
   return {
     post: null,
   }
 }
 
-export default function model() {
+export function model() {
   return {
     state: resetState(),
     reducers: {
@@ -37,7 +57,7 @@ export default function model() {
       },
     },
     models: {
-      form: form({}),
+      form: Form.model({}),
     },
   }
 }
