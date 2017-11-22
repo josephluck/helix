@@ -15,32 +15,32 @@ const page: Helix.Component<GlobalState, GlobalActions> = (state, prev, actions)
   return html`
     <div>
       ${form({
-      onsubmit: pageActions.submit,
-      submitText: 'Save post',
-      oncancel() {
-        actions.location.set('/')
-        pageActions.resetState()
-      },
-      child: html`
+        onsubmit: pageActions.submit,
+        submitText: 'Save post',
+        oncancel() {
+          actions.location.set('/')
+          pageActions.resetState()
+        },
+        child: html`
           <div>
             ${textfield({
-          label: 'Title',
-          value: pageState.form.title,
-          oninput: updateFormField('title'),
-        })}
+              label: 'Title',
+              value: pageState.form.title,
+              oninput: updateFormField('title'),
+            })}
             ${textarea({
-          label: 'Body',
-          value: pageState.form.body,
-          oninput: updateFormField('body'),
-        })}
+              label: 'Body',
+              value: pageState.form.body,
+              oninput: updateFormField('body'),
+            })}
           </div>
         `,
-    })}
+      })}
     </div>
   `
 }
 
-export default function () {
+export default function(): Helix.Page<GlobalState, GlobalActions> {
   return {
     onEnter(state, prev, actions) {
       if (!state.user.user) {

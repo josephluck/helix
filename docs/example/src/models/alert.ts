@@ -24,7 +24,7 @@ export interface Reducers {
 }
 
 export interface Effects {
-  showError: Helix.Effect<State, Actions, Error>
+  showError: Helix.Effect<State, Actions, Error | string>
   showSuccess: Helix.Effect<State, Actions, string>
 }
 

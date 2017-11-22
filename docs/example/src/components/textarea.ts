@@ -1,13 +1,13 @@
 import * as html from 'yo-yo'
 
-export interface Opts {
+export interface Props {
   label?: string
   type?: string
   value: string
   oninput: (event) => any
 }
 
-export default function textField({ label, type = 'text', value, oninput }: Opts) {
+export default function textField({ label, type = 'text', value, oninput }: Props) {
   return html`
     <div class='mb3'>
       ${label ? html`<label class='db mb2 black-60 f6'>${label}</label>` : ''}

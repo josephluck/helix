@@ -1,5 +1,12 @@
 import * as html from 'yo-yo'
 
+export interface Props {
+  label?: string
+  type?: string
+  value: string
+  oninput: (event) => any
+}
+
 export default function textField({ label, type = 'text', value, oninput }) {
   return html`
     <div class='mb3'>

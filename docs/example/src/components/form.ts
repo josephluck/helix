@@ -1,7 +1,7 @@
 import * as html from 'yo-yo'
 import button from './button'
 
-export interface Opts {
+export interface Props {
   onsubmit: () => any
   oncancel?: () => any
   child: HTMLElement
@@ -15,7 +15,7 @@ export default function Form({
   child,
   submitText,
   cancelText = 'cancel',
-}: Opts) {
+}: Props) {
   return html`
     <form
       onsubmit=${e => {

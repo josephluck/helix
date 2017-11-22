@@ -1,6 +1,12 @@
 import * as html from 'yo-yo'
+import { User } from '../api/fixtures/user'
 
-export default function navigation({ user = null, onAvatarClick }) {
+export interface Props {
+  user: null | User
+  onAvatarClick: () => any
+}
+
+export default function navigation({ user = null, onAvatarClick }: Props) {
   return html`
     <div class='pv4 h3 ttu b f6 flex items-center'>
       <div class='flex-auto'>

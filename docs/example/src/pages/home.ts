@@ -27,19 +27,19 @@ const page: Helix.Component<GlobalState, GlobalActions> = (state, prev, actions)
   return html`
     <div>
       ${
-    state.posts.posts.length
-      ? html`
+        state.posts.posts.length
+          ? html`
         <div>
           ${state.posts.posts.map(post)}
         </div>
       `
-      : null
-    }
+          : null
+      }
     </div>
   `
 }
 
-export default function () {
+export default function(): Helix.Page<GlobalState, GlobalActions> {
   return {
     onEnter(state, prev, actions) {
       actions.posts.requestPosts()

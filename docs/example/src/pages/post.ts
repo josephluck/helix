@@ -102,7 +102,7 @@ const page: Helix.Component<GlobalState, GlobalActions> = (state, prev, actions)
   return ''
 }
 
-export default function() {
+export default function(): Helix.Page<GlobalState, GlobalActions> {
   return {
     onEnter(state, prev, actions) {
       actions.post.requestPost()

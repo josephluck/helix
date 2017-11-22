@@ -8,7 +8,7 @@ export interface Fields {
   body: string
 }
 
-export interface LocalState { }
+export interface LocalState {}
 
 export interface State extends LocalState {
   form: Form.State<Fields>

@@ -1,6 +1,13 @@
 import * as html from 'yo-yo'
 
-export default function alert({ showing, description, type, onDelete }) {
+export interface Props {
+  showing: boolean
+  description: string
+  type: string
+  onDelete: () => any
+}
+
+export default function alert({ showing, description, type, onDelete }: Props) {
   let className = `pa3 bg-white br1 ba b--black-20`
   let style = `
     display: inline-block;

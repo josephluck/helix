@@ -16,40 +16,40 @@ const page: Helix.Component<GlobalState, GlobalActions> = (state, prev, actions)
         Your details
       </span>
       ${form({
-      onsubmit() {
-        actions.location.set(state.location.query.redirect || '/')
-        console.log('update user')
-      },
-      submitText: 'Save',
-      oncancel() {
-        actions.location.set(state.location.query.redirect || '/')
-      },
-      child: html`
+        onsubmit() {
+          actions.location.set(state.location.query.redirect || '/')
+          console.log('update user')
+        },
+        submitText: 'Save',
+        oncancel() {
+          actions.location.set(state.location.query.redirect || '/')
+        },
+        child: html`
           <div>
             ${textfield({
-          label: 'Name',
-          value: pageState.form.name,
-          oninput: updateFormField('name'),
-        })}
+              label: 'Name',
+              value: pageState.form.name,
+              oninput: updateFormField('name'),
+            })}
             ${textfield({
-          label: 'Email address',
-          value: pageState.form.username,
-          oninput: updateFormField('username'),
-        })}
+              label: 'Email address',
+              value: pageState.form.username,
+              oninput: updateFormField('username'),
+            })}
             ${textfield({
-          label: 'Password',
-          type: 'password',
-          value: pageState.form.password,
-          oninput: updateFormField('password'),
-        })}
+              label: 'Password',
+              type: 'password',
+              value: pageState.form.password,
+              oninput: updateFormField('password'),
+            })}
           </div>
         `,
-    })}
+      })}
     </div>
   `
 }
 
-export default function () {
+export default function(): Helix.Page<GlobalState, GlobalActions> {
   return {
     onEnter(state, prev, actions) {
       if (!state.user.user) {

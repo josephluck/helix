@@ -26,7 +26,7 @@ export default {
   fetchPost(): Promise<Post> {
     return new Promise(resolve => {
       setTimeout(() => {
-        return post()
+        resolve(post())
       }, timeout)
     })
   },
