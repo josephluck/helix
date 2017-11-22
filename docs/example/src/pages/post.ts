@@ -1,11 +1,14 @@
+import { Helix } from '../../../../src'
 import * as html from 'yo-yo'
 import * as moment from 'moment'
 import base from './base'
 import form from '../components/form'
 import textarea from '../components/textarea'
+import updater from '../utils/update-form-field'
+import { GlobalState, GlobalActions } from '../models'
 
-function page(state, prev, actions) {
-  const updateFormField = key => e => actions.post.form.setField({ key, value: e.target.value })
+const page: Helix.Component<GlobalState, GlobalActions> = (state, prev, actions) => {
+  const updateFormField = updater(actions.post.form.setField)
   let post = state.post.post
   if (post) {
     return html`
