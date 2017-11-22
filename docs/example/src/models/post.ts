@@ -25,7 +25,7 @@ export interface Reducers {
 
 export interface Effects {
   requestPost: Helix.Effect0<GlobalState, GlobalActions>
-  submitComment: Helix.Effect<GlobalState, GlobalActions, Comment>
+  submitComment: Helix.Effect<GlobalState, GlobalActions, string>
 }
 
 export type LocalActions = Helix.Actions<Reducers, Effects>

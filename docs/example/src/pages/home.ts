@@ -1,6 +1,8 @@
+import { Helix } from '../../../../src'
 import * as html from 'yo-yo'
 import * as moment from 'moment'
 import base from './base'
+import { GlobalState, GlobalActions } from '../models'
 
 function post(post) {
   return html`
@@ -21,23 +23,23 @@ function post(post) {
   `
 }
 
-function page(state, prev, actions) {
+const page: Helix.Component<GlobalState, GlobalActions> = (state, prev, actions) => {
   return html`
     <div>
       ${
-        state.posts.posts.length
-          ? html`
+    state.posts.posts.length
+      ? html`
         <div>
           ${state.posts.posts.map(post)}
         </div>
       `
-          : null
-      }
+      : null
+    }
     </div>
   `
 }
 
-export default function() {
+export default function () {
   return {
     onEnter(state, prev, actions) {
       actions.posts.requestPosts()

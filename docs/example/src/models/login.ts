@@ -13,9 +13,9 @@ export interface Fields {
   avatar: string
 }
 
-export interface LocalState {}
+export interface LocalState { }
 
-export interface State {
+export interface State extends LocalState {
   form: Form.State<Fields>
 }
 
@@ -30,7 +30,7 @@ export interface Effects {
 
 export type LocalActions = Helix.Actions<Reducers, Effects>
 
-export interface Actions {
+export interface Actions extends LocalActions {
   form: Form.Actions<Fields>
 }
 

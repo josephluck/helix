@@ -1,10 +1,12 @@
+import { Helix } from '../../../../src'
 import * as html from 'yo-yo'
 import textfield from '../components/textfield'
 import form from '../components/form'
 import base from './base'
 import updater from '../utils/update-form-field'
+import { GlobalState, GlobalActions } from '../models'
 
-function page(state, prev, actions) {
+const page: Helix.Component<GlobalState, GlobalActions> = (state, prev, actions) => {
   let pageState = state.settings
   let pageActions = actions.settings
   const updateFormField = updater(pageActions.form.setField)
@@ -14,41 +16,40 @@ function page(state, prev, actions) {
         Your details
       </span>
       ${form({
-        onsubmit() {
-          actions.location.set(state.location.query.redirect || '/')
-          console.log('update user')
-        },
-        submitText: 'Save',
-        oncancel() {
-          actions.location.set(state.location.query.redirect || '/')
-          pageActions.resetState()
-        },
-        child: html`
+      onsubmit() {
+        actions.location.set(state.location.query.redirect || '/')
+        console.log('update user')
+      },
+      submitText: 'Save',
+      oncancel() {
+        actions.location.set(state.location.query.redirect || '/')
+      },
+      child: html`
           <div>
             ${textfield({
-              label: 'Name',
-              value: pageState.form.name,
-              oninput: updateFormField('name'),
-            })}
+          label: 'Name',
+          value: pageState.form.name,
+          oninput: updateFormField('name'),
+        })}
             ${textfield({
-              label: 'Email address',
-              value: pageState.form.username,
-              oninput: updateFormField('username'),
-            })}
+          label: 'Email address',
+          value: pageState.form.username,
+          oninput: updateFormField('username'),
+        })}
             ${textfield({
-              label: 'Password',
-              type: 'password',
-              value: pageState.form.password,
-              oninput: updateFormField('password'),
-            })}
+          label: 'Password',
+          type: 'password',
+          value: pageState.form.password,
+          oninput: updateFormField('password'),
+        })}
           </div>
         `,
-      })}
+    })}
     </div>
   `
 }
 
-export default function() {
+export default function () {
   return {
     onEnter(state, prev, actions) {
       if (!state.user.user) {

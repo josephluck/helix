@@ -30,21 +30,25 @@ export default {
       }, timeout)
     })
   },
-  newPost(title, body): Promise<Post> {
+  newPost(title: string, body: string): Promise<Post> {
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve(post())
+        resolve({
+          ...post(),
+          title,
+          body: [body],
+        })
       }, timeout)
     })
   },
-  newComment(_comment, user): Promise<Comment> {
+  newComment(body: string, user): Promise<Comment> {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve({
           ...comment(),
           createdOn: new Date(),
           createdBy: user,
-          body: _comment,
+          body,
         })
       }, timeout)
     })
