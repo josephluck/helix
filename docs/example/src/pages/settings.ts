@@ -14,41 +14,41 @@ function page(state, prev, actions) {
         Your details
       </span>
       ${form({
-      onsubmit() {
-        actions.location.set(state.location.query.redirect || '/')
-        console.log('update user')
-      },
-      submitText: 'Save',
-      oncancel() {
-        actions.location.set(state.location.query.redirect || '/')
-        pageActions.resetState()
-      },
-      child: html`
+        onsubmit() {
+          actions.location.set(state.location.query.redirect || '/')
+          console.log('update user')
+        },
+        submitText: 'Save',
+        oncancel() {
+          actions.location.set(state.location.query.redirect || '/')
+          pageActions.resetState()
+        },
+        child: html`
           <div>
             ${textfield({
-          label: 'Name',
-          value: pageState.form.name,
-          oninput: updateFormField('name'),
-        })}
+              label: 'Name',
+              value: pageState.form.name,
+              oninput: updateFormField('name'),
+            })}
             ${textfield({
-          label: 'Email address',
-          value: pageState.form.username,
-          oninput: updateFormField('username'),
-        })}
+              label: 'Email address',
+              value: pageState.form.username,
+              oninput: updateFormField('username'),
+            })}
             ${textfield({
-          label: 'Password',
-          type: 'password',
-          value: pageState.form.password,
-          oninput: updateFormField('password'),
-        })}
+              label: 'Password',
+              type: 'password',
+              value: pageState.form.password,
+              oninput: updateFormField('password'),
+            })}
           </div>
         `,
-    })}
+      })}
     </div>
   `
 }
 
-export default function () {
+export default function() {
   return {
     onEnter(state, prev, actions) {
       if (!state.user.user) {

@@ -1,33 +1,46 @@
 import { Helix } from '../../../../src'
-import { GlobalState, GlobalActions } from './'
 import api from '../api'
 import * as Form from './form'
+import { Comment } from '../api/fixtures/comment'
+import { Post } from '../api/fixtures/post'
+import { GlobalActions, GlobalState } from './'
 
-
-
-export interface Post {
-  title: string
-  body: string
-  comments: Comment[]
+export interface Fields {
+  comment: string
 }
 
-export interface State {
+export interface LocalState {
   post: null | Post
 }
 
-export interface Reducers {
-  resetState: Helix.Reducer0<State>
-  receivePost: Helix.Reducer<State, Post>
-  receiveComment: Helix.Reducer<State, Post>
+export interface State extends LocalState {
+  form: Form.State<Fields>
 }
 
-function resetState(): State {
+export interface Reducers {
+  resetState: Helix.Reducer0<LocalState>
+  receivePost: Helix.Reducer<LocalState, Post>
+  receiveComment: Helix.Reducer<LocalState, Comment>
+}
+
+export interface Effects {
+  requestPost: Helix.Effect0<GlobalState, GlobalActions>
+  submitComment: Helix.Effect<GlobalState, GlobalActions, Comment>
+}
+
+export type LocalActions = Helix.Actions<Reducers, Effects>
+
+export interface Actions extends LocalActions {
+  form: Form.Actions<Fields>
+}
+
+function resetState(): LocalState {
   return {
     post: null,
   }
 }
 
-export function model() {
+export function model(): Helix.Model<LocalState, Reducers, Effects> {
   return {
     state: resetState(),
     reducers: {
@@ -49,15 +62,16 @@ export function model() {
         api.fetchPost().then(actions.post.receivePost)
       },
       submitComment(state, actions, comment) {
-        api.newComment(comment, state.user.user)
-          .then(response => {
-            actions.post.form.setField({ key: 'comment', value: ' ' })
-            actions.post.receiveComment(response)
-          })
+        api.newComment(comment, state.user.user).then(response => {
+          actions.post.form.setField({ key: 'comment', value: ' ' })
+          actions.post.receiveComment(response)
+        })
       },
     },
     models: {
-      form: Form.model({}),
+      form: Form.model({
+        comment: '',
+      }),
     },
   }
 }

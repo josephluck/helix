@@ -7,12 +7,7 @@ export interface Opts {
   oninput: (event) => any
 }
 
-export default function textField({
-  label,
-  type = 'text',
-  value,
-  oninput,
-}: Opts) {
+export default function textField({ label, type = 'text', value, oninput }: Opts) {
   return html`
     <div class='mb3'>
       ${label ? html`<label class='db mb2 black-60 f6'>${label}</label>` : ''}

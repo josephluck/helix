@@ -1,12 +1,29 @@
+import { Helix } from '../../../../src'
 import api from '../api'
+import { Post } from '../api/fixtures/post'
 
-function resetState() {
+export interface State {
+  posts: Post[]
+}
+
+export interface Reducers {
+  resetState: Helix.Reducer0<State>
+  receivePosts: Helix.Reducer<State, Post[]>
+}
+
+export interface Effects {
+  requestPosts: Helix.Effect0<State, Actions>
+}
+
+export type Actions = Helix.Actions<Reducers, Effects>
+
+function resetState(): State {
   return {
     posts: [],
   }
 }
 
-export function model() {
+export function model(): Helix.Model<State, Reducers, Effects> {
   return {
     scoped: true,
     state: resetState(),

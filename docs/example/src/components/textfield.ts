@@ -1,11 +1,6 @@
 import * as html from 'yo-yo'
 
-export default function textField({
-  label,
-  type = 'text',
-  value,
-  oninput,
-}) {
+export default function textField({ label, type = 'text', value, oninput }) {
   return html`
     <div class='mb3'>
       <label class='db mb2 black-60 f6'>${label}</label>

@@ -8,7 +8,7 @@ export interface Fields {
   body: string
 }
 
-export interface LocalState { }
+export interface LocalState {}
 
 export interface State {
   form: Form.State<Fields>
@@ -39,7 +39,8 @@ export function model(): Helix.Model<LocalState, Reducers, Effects> {
     effects: {
       submit(state, actions) {
         const { title, body } = state.newPost.form
-        return api.newPost(title, body)
+        return api
+          .newPost(title, body)
           .then(post => {
             actions.location.set(`/posts/${post.uuid}`)
             actions.alert.showSuccess('Post saved')

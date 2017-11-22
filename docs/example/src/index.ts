@@ -8,7 +8,7 @@ document.body.appendChild(mount)
 
 function renderer(dom) {
   let _dom = dom
-  return function (node, state, prev, actions) {
+  return function(node, state, prev, actions) {
     if (node) {
       _dom = html.update(_dom, node(state, prev, actions))
     }

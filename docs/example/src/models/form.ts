@@ -4,10 +4,10 @@ export type State<S> = S
 
 export interface Reducers<S> {
   setForm: Helix.Reducer<State<S>, S>
-  setField: Helix.Reducer<State<S>, { key: keyof S, value: S[keyof S] }>
+  setField: Helix.Reducer<State<S>, { key: keyof S; value: S[keyof S] }>
 }
 
-export interface Effects { }
+export interface Effects {}
 
 export type Actions<S> = Helix.Actions<Reducers<S>, Effects>
 

@@ -1,24 +1,34 @@
 import { Helix } from '../../../../src'
 import * as Alert from './alert'
-import * as User from './user'
 import * as Login from './login'
-import * as Posts from './posts'
-import * as Post from './post'
 import * as NewPost from './new-post'
+import * as Post from './post'
+import * as Posts from './posts'
 import * as Settings from './settings'
+import * as User from './user'
+import { Twine } from 'twine-js'
+export { Twine } from 'twine-js'
 
-export type Models = Helix.Models<
-  Helix.ModelApi<Alert.State, Alert.Actions> &
-  Helix.ModelApi<Login.State, Login.Actions> &
-  Helix.ModelApi<NewPost.State, NewPost.Actions> &
-  Helix.ModelApi<Post.State, Post.Actions> &
-  Helix.ModelApi<Posts.State, Posts.Actions> &
-  Helix.ModelApi<Settings.State, Settings.Actions> &
-  Helix.ModelApi<User.State, User.Actions>
-  >
+export type Models = Twine.Models<
+  {
+    alert: Helix.ModelApi<Alert.State, Alert.Actions>
+  } & {
+    login: Helix.ModelApi<Login.State, Login.Actions>
+  } & {
+    newPost: Helix.ModelApi<NewPost.State, NewPost.Actions>
+  } & {
+    post: Helix.ModelApi<Post.State, Post.Actions>
+  } & {
+    posts: Helix.ModelApi<Posts.State, Posts.Actions>
+  } & {
+    settings: Helix.ModelApi<Settings.State, Settings.Actions>
+  } & {
+    user: Helix.ModelApi<User.State, User.Actions>
+  }
+>
 
-export type GlobalState = Models['state']
-export type GlobalActions = Models['actions']
+export type GlobalState = Helix.HelixState<Models['state']>
+export type GlobalActions = Helix.HelixActions<Models['actions']>
 
 export default function model() {
   return {

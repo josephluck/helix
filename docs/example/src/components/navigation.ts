@@ -1,9 +1,6 @@
 import * as html from 'yo-yo'
 
-export default function navigation({
-  user = null,
-  onAvatarClick,
-}) {
+export default function navigation({ user = null, onAvatarClick }) {
   return html`
     <div class='pv4 h3 ttu b f6 flex items-center'>
       <div class='flex-auto'>
@@ -16,8 +13,9 @@ export default function navigation({
         </a>
       </div>
       <div>
-        ${user
-      ? html`
+        ${
+          user
+            ? html`
             <div class='inline-flex items-center'>
               <img
                 class='mr2 br-pill w2 h2 overflow-hidden'
@@ -26,12 +24,12 @@ export default function navigation({
               />
             </div>
           `
-      : html`
+            : html`
             <a class='ml3 no-underline blue' href='/login'>
               Login
             </a>
           `
-    }
+        }
       </div>
     </div>
   `

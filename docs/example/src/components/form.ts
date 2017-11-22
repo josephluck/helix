@@ -19,25 +19,27 @@ export default function Form({
   return html`
     <form
       onsubmit=${e => {
-      e.preventDefault()
-      onsubmit()
-    }}
+        e.preventDefault()
+        onsubmit()
+      }}
     >
       ${child}
       <div class='inline-flex items-center'>
         ${button({
-      label: submitText,
-    })}
-        ${oncancel
-      ? html`
+          label: submitText,
+        })}
+        ${
+          oncancel
+            ? html`
             <a
               class='ml3 black-60 f6'
               onclick=${oncancel}
             >
               ${cancelText}
             </a>
-          ` : ''
-    }
+          `
+            : ''
+        }
       </div>
     </form>
   `

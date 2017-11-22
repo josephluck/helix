@@ -13,7 +13,7 @@ export interface Fields {
   avatar: string
 }
 
-export interface LocalState { }
+export interface LocalState {}
 
 export interface State {
   form: Form.State<Fields>
@@ -45,12 +45,14 @@ export function model(): Helix.Model<LocalState, Reducers, Effects> {
     effects: {
       submit(state, actions) {
         let { username, password } = state.login.form
-        return api.login(currentUser, username, password)
-          .then(resp => {
+        return api.login(currentUser, username, password).then(
+          resp => {
             actions.alert.showSuccess(`Hey, ${resp.user.name}!`)
             actions.user.receiveUser(resp.user)
             actions.location.set(state.location.query.redirect || '/')
-          }, err => actions.alert.showError(err))
+          },
+          err => actions.alert.showError(err),
+        )
       },
       logout(state, actions) {
         actions.location.set('/')

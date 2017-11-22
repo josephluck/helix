@@ -4,7 +4,9 @@
   "description": "Blog example of helix",
   "main": "./src/index.ts",
   "scripts": {
-    "start": "budo ./src/index.ts --live --pushstate --host=localhost --port=8888 --base=/ --css ./node_modules/tachyons/css/tachyons.css -- -t babelify -p tsify"
+    "start": "budo ./src/index.ts --live --pushstate --host=localhost --port=8888 --base=/ --css ./node_modules/tachyons/css/tachyons.css -- -t babelify -p tsify",
+    "build": "rm -rf dist && tsc",
+    "format": "prettier --write \"./src/**/*.{ts,tsx}\""
   },
   "author": "Joseph Luck",
   "license": "ISC",
@@ -20,7 +22,10 @@
     "tachyons": "^4.6.2",
     "tsify": "^3.0.1",
     "tslint": "^4.4.2",
-    "tslint-config-standard": "^4.0.0",
     "typescript": "^2.2.1"
+  },
+  "dependencies": {
+    "prettier": "^1.8.2",
+    "tslint-config-prettier": "^1.6.0"
   }
 }

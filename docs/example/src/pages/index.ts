@@ -9,7 +9,7 @@ export default function routes() {
     '': home(),
     'posts/:postId': post(),
     'posts/new': newPost(),
-    'login': login(),
-    'settings': settings(),
+    login: login(),
+    settings: settings(),
   }
 }
