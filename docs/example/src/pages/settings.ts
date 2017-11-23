@@ -10,20 +10,16 @@ const page: Helix.Component<GlobalState, GlobalActions> = (state, prev, actions)
   let pageState = state.settings
   let pageActions = actions.settings
   const updateFormField = updater(pageActions.form.setField)
+  const redirect = state.location.query.redirect || '/'
   return html`
     <div>
       <span class='mb4 f4 b dib'>
         Your details
       </span>
       ${form({
-        onsubmit() {
-          actions.location.set(state.location.query.redirect || '/')
-          console.log('update user')
-        },
+        onsubmit: () => actions.location.set(redirect),
+        oncancel: () => actions.location.set(redirect),
         submitText: 'Save',
-        oncancel() {
-          actions.location.set(state.location.query.redirect || '/')
-        },
         child: html`
           <div>
             ${textfield({
