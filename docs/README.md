@@ -4,7 +4,7 @@ Helix provides provides an architecture that allows front-end developers to buil
 
 Created by Joseph Luck and the good folks at Goodlord.
 
-You can see an example of Helix here. Take a peek at the [source code](../examples/blog/src) too.
+You can see an example of Helix [here](http://helix-blog.surge.sh). Take a peek at the [source code](../examples/blog/src) too.
 
 # Omakase
 

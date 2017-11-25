@@ -20,7 +20,8 @@
     "minify": "uglifyjs lib/bundle.js -c -m -o lib/bundle.min.js",
     "deploy": "npm run dist && npm publish",
     "format": "prettier --write \"./src/**/*.{ts,tsx}\"",
-    "build-examples": "cd ./examples/blog && npm run build && cd ../../"
+    "build-examples": "cd ./examples/blog && npm run build && cd ../../",
+    "deploy-examples": "npm run build-examples && surge ./examples/blog/dist helix-blog.surge.sh"
   },
   "author": "Joseph Luck",
   "license": "ISC",
