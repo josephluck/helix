@@ -53,7 +53,7 @@ Redux showed the front-end community that state management need not be complex, 
 
 Cycle allows front-end developers to represent applications as pure functions with a clear separation between purity and side-effects, i.e. rendering. This means that each part of a cycle application can be tested independently and in isolation. Helix offers the same functional approach to state and views, allowing them to be tested in isolation from one another.
 
-# The gist
+# Example
 
 A typical web application will have state, actions that can modify state and a user interface. Let's break it down into these three sections and combine them into a simple application:
 
@@ -96,4 +96,34 @@ const component = (state, previousState, actions) => html`
 `
 ```
 
-Over the course of this documentation, we'll showcase Helix's architecture by building a simple blog application.
+### Altogether now
+
+```javascript
+import helix from 'helix-js'
+import renderer from 'helix-yo-yo'
+
+helix({
+  model: {
+    state: {
+      posts: [
+        'Learn Helix',
+        'Profit'
+      ]
+    },
+    reducers: {
+      addPost (state, post) {
+        return { posts: [...state.posts, post] }
+      }
+    },
+  },
+  component: (state, previousState, actions) => html`
+    <div>
+      ${state.posts.map(post => html`<span>${post}</span>`)}
+      <button onclick=${e => actions.addPost('New Post')}>Add Post</button>
+    </div>
+  `,
+  render: renderer(document.getElementById('root'))
+})
+```
+
+Over the course of [the documentation](docs), we'll showcase Helix's architecture by building a simple blog application.
