@@ -54,8 +54,8 @@ export namespace Helix {
 
   export interface Config<S, A> {
     model: Twine.Model<any, any, any>
-    routes?: any
-    component?: any
+    routes?: Routes<S, A>
+    component?: Component<S, A>
     render: Renderer<S, A>
     plugins?: Twine.Plugin<S, A>[]
   }
