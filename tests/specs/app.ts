@@ -52,7 +52,11 @@ export default {
     browser
       .url(server.domain)
       .waitForElementVisible('body', 2000)
+    browser.expect.element('#number-of-times-rendered')
+      .text.to.equal('1')
     browser.click('#increment-counter-button')
+    browser.expect.element('#number-of-times-rendered')
+      .text.to.equal('2')
     browser.click('#go-to-page-one')
     browser.expect.element('#increment-counter-button')
       .text.to.equal('1')
@@ -141,7 +145,7 @@ export default {
     // Page 5 has an onUpdate & onLeave hook so +2 counts
     browser.end()
   },
-  
+
   'It allows query parameters with /^%£$%£^/ chars'(browser: NightwatchBrowser) {
     browser
       .url(server.domain)

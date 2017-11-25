@@ -1,6 +1,7 @@
 import { Helix } from '../../../../src'
 import api from '../api'
 import { Post } from '../api/fixtures/post'
+import { GlobalState, GlobalActions } from './'
 
 export interface State {
   posts: Post[]
@@ -12,30 +13,28 @@ export interface Reducers {
 }
 
 export interface Effects {
-  requestPosts: Helix.Effect0<State, Actions>
+  requestPosts: Helix.Effect0<GlobalState, GlobalActions>
 }
 
 export type Actions = Helix.Actions<Reducers, Effects>
 
-function resetState(): State {
-  return {
-    posts: [],
-  }
-}
-
 export function model(): Helix.Model<State, Reducers, Effects> {
   return {
-    scoped: true,
-    state: resetState(),
+    state: {
+      posts: [],
+    },
     reducers: {
-      resetState,
+      resetState() {
+        return { posts: [] }
+      },
       receivePosts(state, posts) {
         return { posts }
       },
     },
     effects: {
-      requestPosts(state, actions) {
-        api.fetchPosts().then(actions.receivePosts)
+      async requestPosts(state, actions) {
+        const posts = await api.fetchPosts()
+        actions.posts.receivePosts(posts)
       },
     },
   }

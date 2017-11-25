@@ -6,10 +6,10 @@ import settings from './settings'
 
 export default function routes() {
   return {
-    '': home(),
-    'posts/:postId': post(),
-    'posts/new': newPost(),
-    login: login(),
-    settings: settings(),
+    '/': home(),
+    '/posts/:postId': post(),
+    '/posts/new': newPost(),
+    '/login': login(),
+    '/settings': settings(),
   }
 }

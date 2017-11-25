@@ -19,7 +19,8 @@
     "browserify": "browserify -g babelify lib/index.js -o lib/bundle.js",
     "minify": "uglifyjs lib/bundle.js -c -m -o lib/bundle.min.js",
     "deploy": "npm run dist && npm publish",
-    "format": "prettier --write \"./src/**/*.{ts,tsx}\""
+    "format": "prettier --write \"./src/**/*.{ts,tsx}\"",
+    "build-examples": "cd ./examples/blog && npm run build && cd ../../"
   },
   "author": "Joseph Luck",
   "license": "ISC",
