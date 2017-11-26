@@ -1,6 +1,6 @@
 # Rendering
 
-Helix support multiple render targets through the `renderer` property. Typically, Helix is rendered with React and it's super simple:
+Helix support multiple render targets through the `renderer` property. Typically, Helix is rendered with React and it's super simple to set up:
 
 ```javascript
 import helix from 'helix-js'
