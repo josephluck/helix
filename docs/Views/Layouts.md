@@ -43,4 +43,4 @@ const routes = {
 }
 ```
 
-So we've wrapped both the login and new post pages with a layout that provides the alert component. Alerts can be shown in all of our pages without repitition or inconsistency.
+So we've wrapped both the login and new post pages with a layout that provides the alert component. Alerts can be shown in all of our pages without repetition or inconsistency.
