@@ -21,3 +21,6 @@ Sometimes it's useful to know what the updated state is from the call-site. Sinc
 const state = actions.receivePosts(['Helix is awesome'])
 console.log(state) // { posts: ['Helix is awesome'] }
 ```
+
+
+
