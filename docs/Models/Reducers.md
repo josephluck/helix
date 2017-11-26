@@ -5,7 +5,7 @@ The only way to update a model's state in Helix is through a reducer. A reducer 
 ```javascript
 const reducers = {
   resetState() {
-    return { posts: ['Learn Helix'] }
+    return { posts: [] }
   },
   receivePosts(state, posts) {
     return { posts }

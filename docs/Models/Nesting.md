@@ -9,10 +9,10 @@ To solve this scaling problem, Helix models support "Nesting" models [inside one
 {
   state: {},
   models: {
-    posts: postsModel,
-    newPost: newPostModel,
-    user: userModel,
-    alert: alertModel
+    posts: posts(api),
+    newPost: newPost(api),
+    user: user(api),
+    alert: alert()
   }
 }
 ```
@@ -27,7 +27,7 @@ function posts(api) {
     },
     reducers: {
       resetState () {
-        return { posts: ['Learn Helix'] }
+        return { posts: [] }
       },
       receivePosts(state, posts) {
         return { posts }
@@ -59,7 +59,7 @@ function posts(api) {
     },
     reducers: {
       resetState () {
-        return { posts: ['Learn Helix'] }
+        return { posts: [] }
       },
       receivePosts(state, posts) {
         return { posts }
