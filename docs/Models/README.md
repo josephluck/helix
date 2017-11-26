@@ -33,10 +33,10 @@ Let's dive in to the details.
 
 ### Basic
 
-* [Reducers](Reducers.md)
-* [Effects](Effects.md)
+* [Reducers](/docs/Models/Reducers.md)
+* [Effects](/docs/Models/Effects.md)
 
 ### Advanced
 
-* [Nesting](Nesting.md)
-* [Scoping](Scoping.md)
+* [Nesting](/docs/Models/Nesting.md)
+* [Scoping](/docs/Models/Scoping.md)
