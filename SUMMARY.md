@@ -1,5 +1,1 @@
-# Summary
-
-* [Introduction](README.md)
-* [Models](models.md)
-
+docs/README.md
