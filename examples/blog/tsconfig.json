@@ -6,8 +6,8 @@
 		"moduleResolution": "node",
 		"allowSyntheticDefaultImports": true,
 		"preserveConstEnums": true,
-		"declaration": true,
-		"outDir": "lib",
+		"declaration": false,
+		"outDir": "dist",
 		"sourceMap": false,
 		"lib": [
 			"es6",
@@ -16,8 +16,7 @@
 		],
 		"noUnusedLocals": true,
 		"strictNullChecks": false,
-		"removeComments": false,
-		"noImplicitAny": true
+		"removeComments": false
 	},
 	"include": [
 		"src/**/*"

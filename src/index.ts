@@ -1,25 +1,34 @@
-import * as rlite from 'rlite-router'
 import * as href from 'sheet-router/href'
 import * as qs from 'qs'
-import twine from 'twine-js'
+import * as rlite from 'rlite-router'
 import * as twineLog from 'twine-js/lib/log'
+import twine, { Twine } from 'twine-js'
+import * as Types from './types'
+export { Twine } from 'twine-js'
+export { Helix } from './types'
 
 export const log = twineLog.default
 
-function combineObjects (a, b) {
+function combineObjects(a: any, b: any) {
   return Object.assign({}, a, b)
 }
 
-function wrap (routes, fn) {
-  return Object.keys(routes).map(key => {
-    let route = routes[key]
-    return {
-      [key]: fn(key, route),
-    }
-  }).reduce(combineObjects, {})
+function wrap<S, A>(routes: Types.Helix.Routes<S, A>, fn: (key: string, route: any) => any): Types.Helix.Routes<S, A> {
+  return Object.keys(routes)
+    .map(key => {
+      let route = routes[key]
+      return {
+        [key]: fn(key, route),
+      }
+    })
+    .reduce(combineObjects, {})
 }
 
-function createModel (model, routes, render) {
+function createModel<S, A>(
+  model: Types.Helix.Model<any, any, any>,
+  routes: Types.Helix.Routes<S, A> | undefined,
+  render: () => void,
+) {
   if (routes) {
     if (model.models) {
       model.models.location = location(render)
@@ -32,23 +41,30 @@ function createModel (model, routes, render) {
   return model
 }
 
-function getQueryFromLocation (search) {
-  return search.length ? qs.parse(search.slice(1)) : {}
+function parseQueryFromLocation(query: string): Types.Params {
+  return query.length ? qs.parse(query.slice(1)) : {}
 }
 
-function location (rerender) {
+function stringifyQueryFromLocation(query?: Types.Params): string {
+  return query ? `?${qs.stringify(query, { encode: false })}` : ''
+}
+
+function location(
+  rerender: Types.Render,
+): Types.Helix.Model<Types.LocationState, Types.LocationReducers, Types.LocationEffects> {
   return {
     state: {
       pathname: '',
       params: {},
+      query: {},
     },
     reducers: {
-      receiveRoute (_state, { pathname, params }) {
-        return { pathname, params }
+      receiveRoute(currentState, { pathname, params, query }) {
+        return { pathname, params, query }
       },
     },
     effects: {
-      set (_state, _actions, pathname) {
+      set(currentState, currentActions, pathname) {
         window.history.pushState('', '', pathname)
         rerender(pathname)
       },
@@ -56,33 +72,41 @@ function location (rerender) {
   }
 }
 
-export default function (configuration) {
-  const routes = configuration.routes ? wrap(configuration.routes, wrapRoutes) : null
-  const notFound = configuration.routes && configuration.routes.notFound ? configuration.routes.notFound : () => null
+export default function helix<S, A>(
+  configuration: Types.Helix.Config<S, A>,
+): Types.Twine.Return<S, A> {
+  const routes = configuration.routes ? wrap<S, A>(configuration.routes, wrapRoutes) : null
+  const notFound =
+    configuration.routes && configuration.routes.notFound
+      ? configuration.routes.notFound
+      : () => null as () => null
   const router = rlite(notFound, routes)
-  const model = createModel(configuration.model, configuration.routes, renderCurrentLocation)
-  const plugins = [onStateChange].concat(configuration.plugins || [])
-  const store = twine(plugins)(model)
+  const model = createModel<S, A>(configuration.model, configuration.routes, renderCurrentLocation)
+  const plugins = [onStateChange as Twine.Plugin<S, A>].concat(configuration.plugins || [])
+  const store = twine<S, A>(model, plugins)
   const render = configuration.render
 
-  let _state = store.state
-  let _prev = store.state
-  let _actions = store.actions
-  let _onLeave
-  let _handler
+  let currentState = store.state as Types.Helix.HelixState<S>
+  let previousState = store.state as Types.Helix.HelixState<S>
+  let currentActions = store.actions as Types.Helix.HelixActions<A>
+  let subscribe = store.subscribe
+  let onLeaveHook: Types.Helix.Component<S, A>
+  let currentLocation: Types.Helix.Route<S, A>
 
-  function rerender (node) {
-    render(node, _state, _prev, _actions)
+  function rerender(node: any) {
+    if (node) {
+      render(node, currentState, previousState, currentActions)
+    }
   }
 
-  function onStateChange (state, prev, actions) {
-    _state = state
-    _prev = prev
-    _actions = actions
-    rerender(getComponent(window.location.pathname))
+  function onStateChange(newState: Types.Helix.HelixState<S>, newPrev: Types.Helix.HelixState<S>, newActions: Types.Helix.HelixActions<A>) {
+    currentState = newState
+    previousState = newPrev
+    currentActions = newActions
+    renderCurrentLocation()
   }
 
-  function getComponent (path) {
+  function getComponent(path: string) {
     if (configuration.routes) {
       return router(path)
     } else {
@@ -90,50 +114,70 @@ export default function (configuration) {
     }
   }
 
-  function lifecycle (handler) {
-    if (_handler === handler) {
-      if (handler.onUpdate) {
-        handler.onUpdate(_state, _prev, _actions)
-      }
-    } else {
-      _handler = handler
-      if (_onLeave) {
-        _onLeave(_state, _prev, _actions)
-        _onLeave = handler.onLeave
-      }
-      if (handler.onEnter) {
-        handler.onEnter(_state, _prev, _actions)
+  function lifecycle(newLocation: Types.Helix.Route<S, A>) {
+    if (typeof newLocation !== 'function') {
+      if (currentLocation === newLocation) {
+        if (newLocation.onUpdate) {
+          newLocation.onUpdate(currentState, previousState, currentActions)
+        }
+      } else {
+        if (newLocation.onEnter) {
+          newLocation.onEnter(currentState, previousState, currentActions)
+        }
       }
     }
+    if (onLeaveHook) {
+      onLeaveHook(currentState, previousState, currentActions)
+    }
+    onLeaveHook = typeof newLocation !== 'function'
+      ? newLocation.onLeave
+      : undefined
+    currentLocation = newLocation
   }
 
-  function wrapRoutes (route, handler) {
-    let view = typeof handler === 'object' ? handler.view : handler
-    return function (params, _, pathname) {
-      if (_state.location.pathname !== pathname) {
-        let query = getQueryFromLocation(window.location.search)
-        _actions.location.receiveRoute({ pathname, params: Object.assign({}, params, query) })
-        lifecycle(handler)
-        _onLeave = handler.onLeave
+  function wrapRoutes(route: any, newLocation: Types.Helix.Route<S, A>) {
+    // Route isn't used??? Check what it is...
+    return function (params: Record<string, string>, _: any, pathname: string) {
+      const differentRoute = currentState.location.pathname !== pathname
+      const differentQuery =
+        stringifyQueryFromLocation(currentState.location.query) !== (window.location.search || '?')
+      if (differentRoute || differentQuery) {
+        currentActions.location.receiveRoute({
+          pathname,
+          query: parseQueryFromLocation(window.location.search),
+          params,
+        })
+        lifecycle(newLocation)
+        onLeaveHook = typeof newLocation !== 'function' ? newLocation.onLeave : undefined
         return false
       }
-      return view
+      return typeof newLocation === 'object' ? newLocation.view : newLocation
     }
   }
 
-  function renderCurrentLocation () {
+  function renderCurrentLocation() {
     rerender(getComponent(window.location.pathname))
   }
 
-  function setLocationAndRender (location): void {
-    const search = Object.keys(location.search).length ? `?${qs.stringify(location.search, {encode: false})}` : ''
+  function setLocationAndRender(location: Window['location']): void {
+    const search = Object.keys(location.search).length
+      ? `?${qs.stringify(location.search, { encode: false })}`
+      : ''
     const path = `${location.pathname}${search}`
     window.history.pushState('', '', path)
     rerender(getComponent(location.pathname))
   }
 
-  href(setLocationAndRender)
-  window.onpopstate = renderCurrentLocation
+  if (routes) {
+    href(setLocationAndRender)
+    window.onpopstate = renderCurrentLocation
+  }
+
   renderCurrentLocation()
-  return _actions
+
+  return {
+    state: currentState,
+    actions: currentActions,
+    subscribe,
+  }
 }

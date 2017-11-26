@@ -6,3 +6,9 @@ coverage.json
 .DS_Store
 *.swp
 *.log
+lib/
+dist/
+reports/
+shots/
+tmp/
+selenium-debug.log*
