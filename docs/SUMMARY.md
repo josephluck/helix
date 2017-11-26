@@ -1,6 +1,7 @@
 # Table Of Contents
 
 * [Models](Models/README.md)
+  * [State](Models/State.md)
   * [Reducers](Models/Reducers.md)
   * [Effects](Models/Effects.md)
   * [Nesting](Models/Nesting.md)
@@ -10,4 +11,7 @@
   * [Accessing State and Actions](Views/State-And-Actions.md)
   * [Lifecycle Hooks](Views/Lifecycle-Hooks.md)
   * [Layouts](Views/Layouts.md)
-* [Rendering](Rendering.md)
+* [Rendering](Rendering/Rendering.md)
+  * [React](Rendering/React.md)
+  * [Yo Yo](Rendering/Yo-Yo.md)
+  * [Vanilla](Rendering/Vanilla.md)

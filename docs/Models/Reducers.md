@@ -13,11 +13,11 @@ const reducers = {
 }
 ```
 
-Sometimes it's useful to know what the updated state is from the call-site. Since a reducer returns the state of the model, whoever calls a reducer will receive updated copy, for example:
+Sometimes it's useful to know what the updated state is from the call-site. Since a reducer returns the state of the model, whoever calls a reducer will receive an updated copy of the model's state, for example:
 
 ```javascript
-const state = actions.receivePosts(['Helix is awesome'])
-console.log(state) // { posts: ['Helix is awesome'] }
+const state = actions.receivePosts(['Learn Helix', 'Profit'])
+console.log(state) // { posts: ['Learn Helix', 'Profit'] }
 ```
 
 ### The model so far
