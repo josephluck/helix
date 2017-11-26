@@ -3,14 +3,12 @@
 The only way to update a model's state in Helix is through a reducer. A reducer is a pure function that receives the current state of the model, any arguments passed in from the caller of the reducer and is expected to return a copy of the models state with the change applied. In our blog application, we'll need a way to receive posts from the server and set them in state, so that when we can display them in the page. We'll create a `resetState` reducer as well, so that when the user leaves the "Posts" page we can clear out the state and keep it fresh for next time.
 
 ```javascript
-const model = {
-  reducers: {
-    resetState() {
-      return { posts: [] }
-    },
-    receivePosts(state, posts) {
-      return { posts }
-    },
+const reducers = {
+  resetState() {
+    return { posts: ['Learn Helix'] }
+  },
+  receivePosts(state, posts) {
+    return { posts }
   }
 }
 ```
@@ -29,7 +27,7 @@ Let's recap what we've got:
 ```javascript
 const model = {
   state: {
-    posts: []
+    posts: ['Learn Helix']
   },
   reducers: {
     resetState () {

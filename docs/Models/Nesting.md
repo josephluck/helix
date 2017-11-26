@@ -23,18 +23,18 @@ We've changed our application model to include a `models` key where we have "nes
 function posts(api) {
   return {
     state: {
-      posts: []
+      posts: ['Learn Helix']
     },
     reducers: {
       resetState () {
-        return { posts: [] }
+        return { posts: ['Learn Helix'] }
       },
       receivePosts(state, posts) {
         return { posts }
       }
     },
     effects: {
-      async requestPosts(state, actions) {
+      async fetch(state, actions) {
         const posts = await api.fetchPosts()
         actions.posts.receivePosts(posts)
       }
@@ -55,18 +55,18 @@ When we scale our application to include other models, we can use effects to our
 function posts(api) {
   return {
     state: {
-      posts: []
+      posts: ['Learn Helix']
     },
     reducers: {
       resetState () {
-        return { posts: [] }
+        return { posts: ['Learn Helix'] }
       },
       receivePosts(state, posts) {
         return { posts }
       }
     },
     effects: {
-      async requestPosts(state, actions) {
+      async fetch(state, actions) {
         const posts = await api.fetchPosts()
         actions.posts.receivePosts(posts)
         actions.alert.showSuccess('Posts Loaded')
@@ -77,4 +77,4 @@ function posts(api) {
 }
 ```
 
-You'll notice that when we `requestPosts`, we can show an alert to the user to let them know that the posts have loaded, we're reaching in to other models.
+You'll notice that when we `fetch`, we can show an alert to the user to let them know that the posts have loaded, we're reaching in to other models.

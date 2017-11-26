@@ -7,9 +7,9 @@ const routes = {
   '/posts' (state, prev, actions) {
     return html`
       <div>
-        <p>Posts</p>
+        <h1>Posts</h1>
         ${state.posts.posts.map(post => html`<a href="/posts/${post.id}">${post.title}</a>`)}
-        <button onclick=${e => actions.posts.fetch()}>Load Posts</button>
+        <button onclick=${actions.posts.fetch}>Load Posts</button>
       </div>
     `
   },
@@ -32,7 +32,7 @@ const routes = {
     view (state, prev, actions) {
       return html`
         <div>
-          <p>Posts</p>
+          <h1>Posts</h1>
           ${state.posts.posts.map(post => html`<a href="/posts/${post.id}">${post.title}</a>`)}
         </div>
       `

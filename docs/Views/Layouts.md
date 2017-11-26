@@ -32,12 +32,12 @@ const routes = {
       }
     },
     view (state, prev, actions) {
-      return html`<p>New Post</p>`
+      return html`<h1>New Post</h1>`
     },
   }),
   '/login': layout({
     view (state, prev, actions) {
-      return html`<p>Login</p>`
+      return html`<h1>Login</h1>`
     }
   })
 }

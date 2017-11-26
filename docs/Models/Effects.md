@@ -3,12 +3,10 @@
 Effects allow us to orchestrate complex control flows in our application. Normally, effects are used for things like fetching data from an external service, submitting forms, error checking or anything that involves side-effects. Let's create an asynchronous effect that fetches posts from the API and calls the reducer we made [earlier](./Reducers.md).
 
 ```javascript
-const model = {
-  effects: {
-    async requestPosts(state, actions) {
-      const posts = await api.fetchPosts()
-      actions.receivePosts(posts)
-    }
+const effects = {
+  async fetch(state, actions) {
+    const posts = await api.fetchPosts()
+    actions.receivePosts(posts)
   }
 }
 ```
@@ -21,7 +19,7 @@ Since models in Helix are simple Javascript objects, we are able to take advanta
 function model(api) {
   return {
     effects: {
-      async requestPosts(state, actions) {
+      async fetch(state, actions) {
         const posts = await api.fetchPosts()
         actions.receivePosts(posts)
       }
@@ -37,7 +35,7 @@ We've achived a kind of dependency injection through function arguments. We're a
 Effects don't need to return anything by design (as in, the return of an effect is never used internally by Helix), however, should you return anything from an effect, the callee will receive it. For example:
 
 ```javascript
-const message = await actions.posts.requestPosts()
+const message = await actions.fetch()
 console.log(message) // 'All done'
 ```
 
@@ -49,7 +47,7 @@ Let's recap what we've got:
 function model (api) {
   return {
     state: {
-      posts: []
+      posts: ['Learn Helix']
     },
     reducers: {
       resetState () {
@@ -60,7 +58,7 @@ function model (api) {
       }
     },
     effects: {
-      async requestPosts(state, actions) {
+      async fetch(state, actions) {
         const posts = await api.fetchPosts()
         actions.receivePosts(posts)
       }
