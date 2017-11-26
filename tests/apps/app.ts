@@ -18,6 +18,12 @@ const Navigation: Helix.Component<State, Actions> = (state, prev, actions) => ht
     <a href='/' id='go-to-home'>
       HomeLink
     </a>
+    <a href='/?foo=bar' id='go-to-home-query-foo'>
+      HomeLinkFoo
+    </a>
+    <a href='/?bar=baz' id='go-to-home-query-bar'>
+      HomeLinkBar
+    </a>
     <br />>
     <a href='/page-one' id='go-to-page-one'>
       PageOneLink

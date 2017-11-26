@@ -134,6 +134,10 @@ export default {
     browser.end()
   },
 
+  'It allows query parameters at the base route'(browser: NightwatchBrowser) {
+    // TODO: implement
+  },
+
   'It rerenders when query params change on the same route'(browser: NightwatchBrowser) {
     browser
       .url(server.domain)
