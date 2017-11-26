@@ -15,6 +15,7 @@ export default function(child): Helix.Component<GlobalState, GlobalActions> {
             onAvatarClick() {
               actions.location.set(`/settings?redirect=${state.location.pathname}`)
             },
+            redirect: state.location.pathname,
           })}
           <div class='mt4'>
             ${child(state, prev, actions)}

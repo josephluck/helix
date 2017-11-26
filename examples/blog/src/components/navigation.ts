@@ -4,9 +4,33 @@ import { User } from '../api/fixtures/user'
 export interface Props {
   user: null | User
   onAvatarClick: () => any
+  redirect: string
 }
 
-export default function navigation({ user = null, onAvatarClick }: Props) {
+function loginLink(redirect: string) {
+  return html`
+    <a
+      class='ml3 no-underline blue'
+      href=${`/login?redirect=${redirect}`}
+    >
+      Login
+    </a>
+  `
+}
+
+function avatar(src: string, onclick: () => any) {
+  return html`
+    <div class='inline-flex items-center'>
+      <img
+        class='mr2 br-pill w2 h2 overflow-hidden'
+        src=${src}
+        onclick=${onclick}
+      />
+    </div>
+  `
+}
+
+export default function navigation({ user, onAvatarClick, redirect }: Props) {
   return html`
     <div class='pv4 h3 ttu b f6 flex items-center'>
       <div class='flex-auto'>
@@ -19,23 +43,7 @@ export default function navigation({ user = null, onAvatarClick }: Props) {
         </a>
       </div>
       <div>
-        ${
-          user
-            ? html`
-            <div class='inline-flex items-center'>
-              <img
-                class='mr2 br-pill w2 h2 overflow-hidden'
-                src=${user.avatar}
-                onclick=${onAvatarClick}
-              />
-            </div>
-          `
-            : html`
-            <a class='ml3 no-underline blue' href='/login'>
-              Login
-            </a>
-          `
-        }
+        ${user ? avatar(user.avatar, onAvatarClick) : loginLink(redirect)}
       </div>
     </div>
   `
