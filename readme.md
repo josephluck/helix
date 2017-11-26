@@ -16,8 +16,6 @@ Helix is made up of the following pieces:
 
 Helix supports rendering to any front-end UI framework, be it React, Vue, jQuery, or vanilla DOM. The core of Helix is under `10kb` gzipped, and when paired with a light-weight view library like `yo-yo`, it's around `40kb`. For comparison, React + Redux is `139kb` at the time of writing.
 
-Since Helix is aimed for use with Typescript, it's common to pair it with React, but for simplicity, we'll be using the [`yo-yo`](https://github.com/maxogden/yo-yo) package in this documentation.
-
 # Motivation
 
 There's a plethora of front-end frameworks around each solving the same problem in a slightly different way. Helix solves the very same problems, but offers the following:

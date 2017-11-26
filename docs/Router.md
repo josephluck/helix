@@ -17,7 +17,7 @@ const routes = {
 
 ### Accessing state and actions
 
-Every route in a Helix application will receive state and actions:
+Every route in a Helix application will receive state, previous state and actions:
 
 ```javascript
 const routes = {
@@ -47,7 +47,7 @@ const routes = {
 
 ### Query Parameters
 
-In our blog example, we may want to paginate the list of posts so that the page loads quickly. To improve the user experience, we'll store the state of the current page and ordering in the URL using query parameters, so that if the user refreshes the page, they see the same content on the screen. We don't need to do anything special with the route definition to take advantage of query parameters. Helix automatically places any query parameters it detects in the URL as parsed JSON.
+In our blog example, we may want to paginate the list of posts so that the page loads quickly when there are many posts. To improve the user experience, we'll store the state of the current page and ordering in the URL using query parameters, so that if the user refreshes the page, they see the same content on the screen. We don't need to do anything special with the route definition to take advantage of query parameters. Helix automatically places any query parameters it detects in the URL as parsed JSON.
 
 In our blog example, `/posts?page=1&order=asc` results in the following:
 
@@ -59,9 +59,11 @@ const routes = {
 }
 ```
 
+When the user clicks to load a new page, Helix will detect that the query parameter for `page` has changed and rerender the page. We'll want to fetch the new page from the server when this happens, and for that we'll use lifecycle hooks.
+
 ### Lifecycle hooks
 
-So now we've set up the routes we need we need to show  blog posts when the user views the `/posts` route, and a single post when the user views the `/posts/:postId` route. Assuming we have already made an action to fetch and set posts in our model, where's the best place to fetch posts? One option is that we have a button that the user must press in order to load posts: 
+Now that we've set up the routes we need we need to show blog posts when the user views the `/posts` route, and a single post when the user views the `/posts/:postId` route, assuming we have already made an action to fetch and set posts in our model, where's the best place to fetch posts? One option is that we have a button that the user must click in order to load posts: 
 
 ```javascript
 const routes = {
@@ -104,10 +106,10 @@ const routes = {
 
 The execution order of lifecycle hooks is important. When a user navigates between two different pages:
 
-1. `onLeave` of the current page is called
-2. `onEnter` of the new page is called
+1. `onLeave` of the left page is called
+2. `onEnter` of the entered page is called
 
-If the user navigates to the same page the `onChange` lifecycle is called instead of `onEnter` and `onLeave`. For example, if the post page has a link to related posts at the bottom, the page has not really changed, but the `postId` URL parameter will have.
+If the user navigates to the same page the `onChange` lifecycle is called instead of `onEnter` and `onLeave`. For example, if the "View Post" page has a link to the next post, the page has not really changed, but the `postId` URL parameter will have. Similarly, if the user clicks to load a new page in the list of pages, the query parameter `page` will change, so the `onChange` lifecycle hook will be called instead of `onEnter` and `onLeave`.
 
 ### Standard Navigation
 
@@ -115,11 +117,11 @@ Helix assumes that you want to serve a single page application. What this means 
 
 ### Programatic Navigation
 
-We're at the stage in our application where we can view a list of posts and view a single post. We want all users to be able to view these two pages, however, being able to create a new post should only be available for users that have logged in. If the user tries to navigate to the Create Post page without being logged in, we want to redirect them to the login page.
+We're at the stage in our application where we can view a list of posts and view a single post. We want all users to be able to view these two pages, however, being able to create a new post should only be available for users that have logged in. If the user tries to navigate to the "Create Post" page without being logged in, we want to redirect them to the login page.
 
 Using what we have already learned, we could place a check in the Create Post page for `state.user` and show a link to the login page if the user isn't present, but really we want to be able to redirect the user without them having to press a button.
 
-Helix comes with a `location` model which contains a `set` effect that we'll use.
+Helix comes with a `location` model which contains a `set` effect that we'll use to achieve this.
 
 ```javascript
 const routes = {
@@ -133,6 +135,14 @@ const routes = {
     view (state, prev, actions) {
       return html`<p>New Post</p>`
     },
+  },
+  '/login' (state, prev, actions) {
+    return html`
+      <div>
+        <p>Login</p>
+        ${alert(state.alert)}
+      <div>
+    `
   }
 }
 ```
@@ -153,4 +163,51 @@ helix({
 })
 ```
 
-That more or less sums up all there is to know about routing in Helix. We'll dive in to some best practises and advanced usage later in the tutorial.
+That more or less sums up all there is to know about routing and views in Helix.
+
+### Layouts
+
+In the example above, we want to show an alert when the user views the create post page if the user isn't logged in, however, we haven't included the alert component in both pages, so as it stands, alerts can only be shown when the user is visiting the login page.
+
+To solve this, we can leverage the higher-order function pattern to provide these common components to both pages without repeating ourselves through a layout.
+
+```javascript
+function layout (child) {
+  return {
+    onEnter (state, prev, actions) {
+      if (child.onEnter) {
+        child.onEnter(state, prev, actions)
+      }
+    },
+    view (state, prev, actions) {
+      return html`
+        <div>
+          ${child.view(state, prev, actions)}
+          ${alert(state.alert)}
+        </div>
+      `
+    }
+  }
+}
+
+const routes = {
+  '/posts/new': layout({
+    onEnter (state, prev, actions) {
+      if (!state.user.user) {
+        actions.alert.showError('You must be logged in to create a post')
+        actions.location.set('/login')
+      }
+    },
+    view (state, prev, actions) {
+      return html`<p>New Post</p>`
+    },
+  }),
+  '/login': layout({
+    view (state, prev, actions) {
+      return html`<p>Login</p>`
+    }
+  })
+}
+```
+
+So we've wrapped both the login and new post pages with a layout that provides the alert component. Alerts can be shown in all of our pages without repitition or inconsistency.
