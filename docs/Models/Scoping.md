@@ -3,8 +3,7 @@
 There are two types of model in Helix, one being a "Standard" model and the other a "Scoped" model. All the models we've made so far have been of the "Standard" type. The main difference between the two is that a "Scoped" model is designed to be reused in multiple situations in an application. For example, we will be creating a "Form" model for our blog application that will be reused in the "Login" and "Create Post" pages.
 
 ```javascript
-// Form Model
-export function form(emptyForm) {
+function form(emptyForm) {
   return {
     scoped: true,
     state: emptyForm,
@@ -34,8 +33,7 @@ export function form(emptyForm) {
 The form model can manage the state of form fields, including a call to the API, so let's use it in our "Login" model:
 
 ```javascript
-// Login Model
-{
+const loginModel = {
   state: {},
   reducers: {},
   effects: {},
@@ -44,8 +42,7 @@ The form model can manage the state of form fields, including a call to the API,
   }
 }
 
-// Create Post Model
-{
+const newPostModel = {
   state: {},
   reducers: {},
   effects: {},

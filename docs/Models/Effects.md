@@ -40,3 +40,31 @@ Effects don't need to return anything by design (as in, the return of an effect 
 const message = await actions.posts.requestPosts()
 console.log(message) // 'All done'
 ```
+
+### The model so far
+
+Let's recap what we've got:
+
+```javascript
+function model (api) {
+  return {
+    state: {
+      posts: []
+    },
+    reducers: {
+      resetState () {
+        return { posts: [] }
+      },
+      receivePosts(state, posts) {
+        return { posts }
+      }
+    },
+    effects: {
+      async requestPosts(state, actions) {
+        const posts = await api.fetchPosts()
+        actions.receivePosts(posts)
+      }
+    }
+  }
+}
+```

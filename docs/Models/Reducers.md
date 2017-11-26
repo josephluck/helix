@@ -22,5 +22,22 @@ const state = actions.receivePosts(['Helix is awesome'])
 console.log(state) // { posts: ['Helix is awesome'] }
 ```
 
+### The model so far
 
+Let's recap what we've got:
 
+```javascript
+const model = {
+  state: {
+    posts: []
+  },
+  reducers: {
+    resetState () {
+      return { posts: [] }
+    },
+    receivePosts(state, posts) {
+      return { posts }
+    }
+  }
+}
+```
