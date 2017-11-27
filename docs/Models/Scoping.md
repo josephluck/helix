@@ -59,20 +59,20 @@ The only difference between "Standard" and "Scoped" models, is that effects in "
 There's only one subtle difference to making "Scoped" models typesafe. Instead of effects receiving global state and global actions, they only receive state and actions from the scoped model itself. So instead of passing in `GlobalState` and `GlobalActions` from the top level application model types, simply pass in `State` and `Actions` from the scoped model:
 
 ```typescript
-export type State<F> = F
+type State<F> = F
 
-export interface Reducers<F> {
+interface Reducers<F> {
   setForm: Helix.Reducer<State<F>, F>
   setField: Helix.Reducer<State<F>, { key: keyof F; value: F[keyof F] }>
 }
 
-export interface Effects<F> {
+interface Effects<F> {
   submit: Helix.Effect<State<F>, Actions<F>, string>
 }
 
-export type Actions<F> = Helix.Actions<Reducers<F>, Effects<F>>
+type Actions<F> = Helix.Actions<Reducers<F>, Effects<F>>
 
-export function model<F>(state: S): Helix.Model<State<F>, Reducers<F>, Effects<F>> {
+function form<S>(state: S): Helix.Model<State<F>, Reducers<F>, Effects<F>> {
   return {
     state,
     reducers: {

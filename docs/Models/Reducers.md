@@ -31,7 +31,7 @@ interface Reducers {
 }
 ```
 
-The type definition for `resetState` is a `Helix.Reducer0`, this is simply a reducer that takea 0 arguments. Similarly, the standard `Helix.Reducer` is a reducer that takes one argument.
+The type definition for `resetState` is a `Helix.Reducer0`, this is simply a withing without any arguments. Similarly, the standard `Helix.Reducer` is a reducer that takes one argument.
 
 ### The model so far
 
