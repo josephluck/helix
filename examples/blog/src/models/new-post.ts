@@ -8,7 +8,7 @@ export interface Fields {
   body: string
 }
 
-export interface LocalState {}
+export interface LocalState { }
 
 export interface State extends LocalState {
   form: Form.State<Fields>
@@ -44,12 +44,13 @@ export function model(): Helix.Model<LocalState, Reducers, Effects> {
           .then(post => {
             actions.location.set(`/posts/${post.uuid}`)
             actions.alert.showSuccess('Post saved')
+            actions.newPost.form.setField({ key: 'foobar', value: 123 })
           })
           .catch(actions.alert.showError)
       },
     },
     models: {
-      form: Form.model({
+      form: Form.model<Fields>({
         title: '',
         body: '',
       }),

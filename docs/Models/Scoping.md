@@ -53,3 +53,71 @@ const newPostModel = {
 ```
 
 The only difference between "Standard" and "Scoped" models, is that effects in "Scoped" models can only use state and actions from the scoped model. If this wasn't the case, we wouldn't be able to reset our form in the `submit` effect in the form model, as the form model wouldn't know whether to reset the "Login" or "Create Post" form.
+
+### Typescript
+
+There's only one subtle difference to making "Scoped" models typesafe. Instead of effects receiving global state and global actions, they only receive state and actions from the scoped model itself. So instead of passing in `GlobalState` and `GlobalActions` from the top level application model types, simply pass in `State` and `Actions` from the scoped model:
+
+```typescript
+export type State<F> = F
+
+export interface Reducers<F> {
+  setForm: Helix.Reducer<State<F>, F>
+  setField: Helix.Reducer<State<F>, { key: keyof F; value: F[keyof F] }>
+}
+
+export interface Effects<F> {
+  submit: Helix.Effect<State<F>, Actions<F>, string>
+}
+
+export type Actions<F> = Helix.Actions<Reducers<F>, Effects<F>>
+
+export function model<F>(state: S): Helix.Model<State<F>, Reducers<F>, Effects<F>> {
+  return {
+    state,
+    reducers: {
+      setForm(state, form) {
+        return form
+      },
+      setField(state, { key, value }) {
+        return {
+          [key]: value,
+        } as Partial<F>
+      }
+    },
+    effects: {
+      async submit(state, actions, endpoint) {
+        await api.post(endpoint, state)
+        actions.reset()
+      }
+    }
+  }
+}
+```
+
+So this may looks super complex as we're passing this `F` generic all over the place, however the power we get here is huge. For example, if I create a form model with the `F` defined as follows:
+
+```typescript
+interface Fields {
+  name: string
+  phone: number
+}
+
+const formModel = form<Fields>({ name: 'Chloe', phone: '01234567890' })
+```
+```
+Argument of type '{ name: string; phone: string; }' is not assignable to parameter of type 'Fields'.
+Types of property 'phone' are incompatible.
+Type 'string' is not assignable to type 'number'.
+```
+
+Similarly, if I try and set a property on the form that isn't in our `Fields` interface, typescript will complain too:
+
+```typescript
+actions.setField({ key: 'nickname', value: 'Chlo' })
+```
+```
+Argument of type '{ key: "nickname"; value: string; }' is not assignable to parameter of type '{ key: "name" | "phone"; value: string | number; }'.
+Types of property 'key' are incompatible.
+Type '"nickname"' is not assignable to type '"name" | "phone"'.
+```

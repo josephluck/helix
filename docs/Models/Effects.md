@@ -39,12 +39,28 @@ const message = await actions.fetch()
 console.log(message) // 'All done'
 ```
 
+### Typescript
+
+To be sure that when we call `actions.fetch` that we are passing the correct arguments, let's add some types to our effects:
+
+```typescript
+type Actions = Helix.Actions<Reducers, Effects>
+
+interface Effects {
+  fetch: Helix.Effect0<State, Actions>
+}
+```
+
+You'll notice that we've made a type for `Actions` that is a combination of `Reducers` and `Effects`. The `Actions` type gets passed to our `fetch` effect type, so that Typescript knows what actions are available.
+
+That's all there is to making models typesafe in Helix. We'll reuse `State` and `Actions` in our pages to add type safety to all of our views.
+
 ### The model so far
 
 Let's recap what we've got:
 
-```javascript
-function model (api) {
+```typescript
+function model (api): Helix.Model<State, Reducers, Effects> {
   return {
     state: {
       posts: ['Learn Helix']

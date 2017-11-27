@@ -20,12 +20,34 @@ const state = actions.receivePosts(['Learn Helix', 'Profit'])
 console.log(state) // { posts: ['Learn Helix', 'Profit'] }
 ```
 
+### Typescript
+
+To be sure that when we call `actions.receivePosts`, we are passing the correct arguments, let's add some types to our reducers:
+
+```typescript
+interface Reducers {
+  resetState: Helix.Reducer0<State>
+  receivePosts: Helix.Reducer<State, string[]>
+}
+```
+
+The type definition for `resetState` is a `Helix.Reducer0`, this is simply a reducer that takea 0 arguments. Similarly, the standard `Helix.Reducer` is a reducer that takes one argument.
+
 ### The model so far
 
 Let's recap what we've got:
 
-```javascript
-const model = {
+```typescript
+interface State {
+  posts: string[]
+}
+
+interface Reducers {
+  resetState: Helix.Reducer0<State>
+  receivePosts: Helix.Reducer<State, string[]>
+}
+
+const model: Helix.Model<State, Reducers, Effects> = {
   state: {
     posts: ['Learn Helix']
   },
