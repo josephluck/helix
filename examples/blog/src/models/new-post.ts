@@ -44,7 +44,6 @@ export function model(): Helix.Model<LocalState, Reducers, Effects> {
           .then(post => {
             actions.location.set(`/posts/${post.uuid}`)
             actions.alert.showSuccess('Post saved')
-            actions.newPost.form.setField({ key: 'foobar', value: 123 })
           })
           .catch(actions.alert.showError)
       },

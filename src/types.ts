@@ -23,40 +23,40 @@ export type Render = (pathname: string) => any
 
 export namespace Helix {
   // State types
-  export type HelixState<S> = S & { location: LocationState }
-  export type HelixActions<A> = A & { location: LocationActions }
-  export type Model<S, R, E> = Twine.Model<S, R, E>
-  export type ModelApi<S, A> = Twine.ModelApi<S, A>
-  export type Plugin<S, A> = Twine.Plugin<S, A>
-  export type Subscriber<S, A> = Twine.Subscriber<S, A>
-  export type Reducer0<S> = Twine.Reducer0<S>
-  export type Reducer<S, P = any> = Twine.Reducer<S, P>
-  export type Effect0<S, A, R = void> = Twine.Effect0<S, A, R>
-  export type Effect<S, A, P = any, R = void> = Twine.Effect<S, A, P, R>
-  export type Actions<R, E> = Twine.Actions<R, E>
-  export type Models<M> = Twine.Models<M>
+  export type HelixState<State> = State & { location: LocationState }
+  export type HelixActions<Actions> = Actions & { location: LocationActions }
+  export type Model<State, Reducers, Effects> = Twine.Model<State, Reducers, Effects>
+  export type ModelApi<State, Actions> = Twine.ModelApi<State, Actions>
+  export type Plugin<State, Actions> = Twine.Plugin<State, Actions>
+  export type Subscriber<State, Actions> = Twine.Subscriber<State, Actions>
+  export type Reducer0<State> = Twine.Reducer0<State>
+  export type Reducer<State, Payload> = Twine.Reducer<State, Payload>
+  export type Effect0<Statetate, Actions, Return = void> = Twine.Effect0<Statetate, Actions, Return>
+  export type Effect<State, Actions, Payload, Return = void> = Twine.Effect<State, Actions, Payload, Return>
+  export type Actions<Reducers, Effects> = Twine.Actions<Reducers, Effects>
+  export type Models<Models> = Twine.Models<Models>
 
   // View types
-  export type Component<S, A> = (state: S, previous: S, actions: A) => any
-  export interface Page<S, A> {
-    onEnter?: Component<S, A>
-    onUpdate?: Component<S, A>
-    onLeave?: Component<S, A>
-    view: Component<S, A>
+  export type Component<State, Actions> = (state: State, previous: State, actions: Actions) => any
+  export interface Page<State, Actions> {
+    onEnter?: Component<State, Actions>
+    onUpdate?: Component<State, Actions>
+    onLeave?: Component<State, Actions>
+    view: Component<State, Actions>
   }
 
   // Router types
-  export type Route<S, A> = Component<S, A> | Page<S, A>
-  export type Routes<S, A> = Record<string, Route<S, A>>
+  export type Route<State, Actions> = Component<State, Actions> | Page<State, Actions>
+  export type Routes<State, Actions> = Record<string, Route<State, Actions>>
 
   // Config
-  export type Renderer<S, A> = (node: any, state: S, previous: S, actions: A) => any
+  export type Renderer<State, Actions> = (node: any, state: State, previous: State, actions: Actions) => any
 
-  export interface Config<S, A> {
+  export interface Config<State, Actions> {
     model: Twine.Model<any, any, any>
-    routes?: Routes<S, A>
-    component?: Component<S, A>
-    render: Renderer<S, A>
-    plugins?: Twine.Plugin<S, A>[]
+    routes?: Routes<State, Actions>
+    component?: Component<State, Actions>
+    render: Renderer<State, Actions>
+    plugins?: Twine.Plugin<State, Actions>[]
   }
 }

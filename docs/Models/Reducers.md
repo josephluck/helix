@@ -20,6 +20,8 @@ const state = actions.receivePosts(['Learn Helix', 'Profit'])
 console.log(state) // { posts: ['Learn Helix', 'Profit'] }
 ```
 
+You'll notice that we don't have to pass `state` when we call `actions.receivePosts`. Helix takes care of injecting the latest state in to the reducer function for us.
+
 ### Typescript
 
 To be sure that when we call `actions.receivePosts`, we are passing the correct arguments, let's add some types to our reducers:

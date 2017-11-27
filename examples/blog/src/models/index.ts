@@ -6,10 +6,8 @@ import * as Post from './post'
 import * as Posts from './posts'
 import * as Settings from './settings'
 import * as User from './user'
-import { Twine } from 'twine-js'
-export { Twine } from 'twine-js'
 
-export type Models = Twine.Models<{
+export type Models = Helix.Models<{
   alert: Helix.ModelApi<Alert.State, Alert.Actions>
   login: Helix.ModelApi<Login.State, Login.Actions>
   newPost: Helix.ModelApi<NewPost.State, NewPost.Actions>

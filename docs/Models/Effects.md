@@ -39,21 +39,23 @@ const message = await actions.fetch()
 console.log(message) // 'All done'
 ```
 
+You'll notice that we don't need to pass `state` and `actions` when we call `fetch`. Helix takes care of injecting the latest state and actions in to the effect function for us. 
+
 ### Typescript
 
 To be sure that when we call `actions.fetch` that we are passing the correct arguments, let's add some types to our effects:
 
 ```typescript
 interface Effects {
-  fetch: Helix.Effect0<State, Actions>
+  fetch: Helix.ReturnEffect0<State, Actions, Promise<string>>
 }
 
 type Actions = Helix.Actions<Reducers, Effects>
 ```
 
-You'll notice that we've made a type for `Actions` that is a combination of `Reducers` and `Effects`. The `Actions` type gets passed to our `fetch` effect type, so that Typescript knows what actions are available.
+We've made a type for `Actions` that is a combination of `Reducers` and `Effects`. The `Actions` type gets passed to our `fetch` effect type, so that Typescript knows what actions are available.
 
-That's all there is to making models typesafe in Helix. We'll reuse `State` and `Actions` in our pages to add type safety to all of our views.
+We've also provided a third generic to the `fetch` effect; `Promise<string>`. This generic let's Typescript know what this effect will return, which means that whoever calls the effect will know what the effect returns. Normally effects do not return anything, so the default value for the return generic is `void`.
 
 ### The model so far
 
@@ -70,12 +72,12 @@ interface Reducers {
 }
 
 interface Effects {
-  fetch: Helix.Effect0<State, Actions>
+  fetch: Helix.ReturnEffect0<State, Actions, Promise<string>>
 }
 
 type Actions = Helix.Actions<Reducers, Effects>
 
-function model (api): Helix.Model<State, Reducers, Effects> {
+function model(api): Helix.Model<State, Reducers, Effects> {
   return {
     state: {
       posts: ['Learn Helix']
@@ -92,6 +94,7 @@ function model (api): Helix.Model<State, Reducers, Effects> {
       async fetch(state, actions) {
         const posts = await api.fetchPosts()
         actions.receivePosts(posts)
+        return 'All done'
       }
     }
   }
