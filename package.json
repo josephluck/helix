@@ -21,7 +21,8 @@
     "deploy": "npm run dist && npm publish",
     "format": "prettier --write \"./src/**/*.{ts,tsx}\"",
     "build-examples": "cd ./examples/blog && npm run build && cd ../../",
-    "deploy-examples": "npm run build-examples && surge ./examples/blog/dist helix-blog.surge.sh"
+    "deploy-examples": "cd ./examples/blog && npm run deploy && cd ../../",
+    "build-and-deploy-examples": "npm run build-examples && npm run deploy-examples"
   },
   "author": "Joseph Luck",
   "license": "ISC",

@@ -1,20 +1,18 @@
 # Helix
 
-Helix provides provides an architecture that allows front-end developers to build robust, predictable, rich client side applications. Helix is a thin library that provides the glue between routes, views, state and rendering.
+Helix provides provides an architecture that allows front-end developers to build robust, predictable, rich client side applications. Helix is a thin library that provides the glue between views, state and rendering.
 
 Created by Joseph Luck and the good folks at Goodlord.
-
-You can see an example of Helix [here](http://helix-blog.surge.sh). Take a peek at the [source code](examples/blog/src) and [the docs](docs) too.
 
 # Omakase
 
 Helix is made up of the following pieces:
 
-- Router
-- State management
-- Renderer
+- [Routing](https://josephluck.gitbooks.io/helix/Views/)
+- [State management](https://josephluck.gitbooks.io/helix/Models/)
+- [Rendering](https://josephluck.gitbooks.io/helix/Rendering/Rendering.html)
 
-Helix supports rendering to any front-end UI framework, be it React, Vue, jQuery, or vanilla DOM. The core of Helix is under `10kb` gzipped, and when paired with a light-weight view library like `yo-yo`, it's around `40kb`. For comparison, React + Redux is `139kb` at the time of writing.
+Helix supports rendering to any front-end UI framework, be it React, Vue, jQuery, or vanilla DOM and works really well with Typescript.
 
 # Motivation
 
@@ -22,34 +20,16 @@ There's a plethora of front-end frameworks around each solving the same problem 
 
 - Purely functional state, views and components
 - 100% type safety when paired with Typescript
-- Clean, concise API with little boilerplate
+- Clean, concise API with minimal boilerplate
 - Only a few, simple concepts to learn
 
 # Purity
 
 Helix is a built around functional programming concepts such as referential transparency and purity. This means that as a developer, you can be confident navigating, understanding and refactoring your code.
 
-# Prior art
+Since Helix can be paired with many view libraries, the documentation doesn't focus too much on the specifics of the HTML, although it'd be difficult to showcase Helix without it. The [`yo-yo`](https://github.com/maxogden/yo-yo) library will be used in the examples, which is a simple view library that uses [tagged template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals).
 
-Helix is inspired by the following languages and packages:
-
-### Typescript
-
-Typescript's ability to provide confidence in front-end codebases is formidable. Developers building apps with Helix should seriously consider Typescript with official typings for state management and views.
-
-### Elm
-
-Elm programs are typically very easy to navigate and reason about, leading to a very efficient developer workflow. Elm popularized the "Elm Architecture" which Helix's state management is inspired by.
-
-Elm's developer experience is second to none; Helix aims to be as helpful as it can when paired with Typescript.
-
-### Redux
-
-Redux showed the front-end community that state management need not be complex, and that one global state store for an entire application is okay. Helix shares the same philosophy, with a single store to hold the application's state, and pure reducers to modify state. Helix differs in that it provides first-class support for side-effects.
-
-### Cycle
-
-Cycle allows front-end developers to represent applications as pure functions with a clear separation between purity and side-effects, i.e. rendering. This means that each part of a cycle application can be tested independently and in isolation. Helix offers the same functional approach to state and views, allowing them to be tested in isolation from one another.
+Through the course of the documentation, the three main concepts; models, routes and rendering will be discussed in the context of a simple [blog application](http://helix-blog.surge.sh) using Helix. Take a peek at the [source code](http://github.com/josephluck/helix/tree/master/examples/blog) as you follow along.
 
 # Example
 
@@ -124,4 +104,4 @@ helix({
 })
 ```
 
-Over the course of [the documentation](docs), we'll showcase Helix's architecture by building a simple blog application.
+Over the course of [the documentation](https://josephluck.gitbooks.io/helix), we'll showcase Helix's architecture by building a simple blog application.

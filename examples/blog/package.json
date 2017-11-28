@@ -9,7 +9,8 @@
     "assets": "cp dist.html dist/index.html && cp dist.html dist/200.html && cp dist.html dist/404.html",
     "browserify": "browserify src/index.ts -p [ tsify ] -o dist/assets/index.js",
     "minify": "uglifyjs ./dist/assets/index.js --compress --mangle -o ./dist/assets/index.js",
-    "format": "prettier --write \"./src/**/*.{ts,tsx}\""
+    "format": "prettier --write \"./src/**/*.{ts,tsx}\"",
+    "deploy": "surge ./dist helix-blog.surge.sh"
   },
   "author": "Joseph Luck",
   "license": "ISC",
