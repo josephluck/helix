@@ -12,7 +12,7 @@ const model = {
 
 ### Typescript
 
-Typescript is at the heart of Helix, let's add some type safety to our state:
+Helix was designed with Typescript in mind, let's add some type safety to our state:
 
 ```typescript
 interface State {
@@ -26,4 +26,4 @@ const model: Helix.Model<State, Reducers, Effects> = {
 }
 ```
 
-You'll notice `State` and `Effects` being used in `Helix.Model`, don't worry - we'll fill these in later.
+You'll notice `State` and `Effects` being used in `Helix.Model`, don't worry; we'll fill these in later.

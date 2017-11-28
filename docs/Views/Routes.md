@@ -56,5 +56,3 @@ const routes = {
   }
 }
 ```
-
-That more or less sums up all there is to know defining routes in Helix. Just remember, they're pure functions, no side effects allowed.

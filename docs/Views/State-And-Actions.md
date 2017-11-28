@@ -26,4 +26,4 @@ const routes = {
 }
 ```
 
-Since routes are pure functions, they can be tested independently from the rest of the application easily by injecting a mocked state, prev and actions.
+Since routes are pure functions, they can be tested independently from the rest of the application easily by injecting a mocked `state`, `prev` and `actions`.

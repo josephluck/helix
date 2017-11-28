@@ -30,7 +30,7 @@ function form(emptyForm) {
 }
 ```
 
-The form model can manage the state of form fields, including a call to the API, so let's use it in our "Login" model:
+The form model can manage the state of form fields, including a call to the API. Let's use it in our "Login" model and our "New Post" model:
 
 ```javascript
 const loginModel = {
@@ -56,7 +56,7 @@ The only difference between "Standard" and "Scoped" models, is that effects in "
 
 ### Typescript
 
-There's only one subtle difference to making "Scoped" models typesafe. Instead of effects receiving global state and global actions, they only receive state and actions from the scoped model itself. So instead of passing in `State` and `Actions` from the top level application model types to effects, simply pass in `State` and `Actions` from the scoped model:
+There's only one subtle difference to making "Scoped" models typesafe. Instead of effects receiving global state and global actions, they only receive state and actions from the scoped model itself. So instead of passing in `GlobalState` and `GlobalActions` from the top level application model types to effects, simply pass in `State` and `Actions` from the within the scoped model:
 
 ```typescript
 type State<F> = F

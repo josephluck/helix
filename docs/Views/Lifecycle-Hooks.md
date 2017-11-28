@@ -1,6 +1,6 @@
 # Lifecycle hooks
 
-We need to show blog posts when the user views the `/posts` route, and a single post when the user views the `/posts/:postId` route, assuming we have already made an action to fetch and set posts in our model, where's the best place to fetch posts? One option is that we have a button that the user must click in order to load posts: 
+We want to show blog posts when the user views the `/posts` route, and a single post when the user views the `/posts/:postId` route, assuming we have already made a model responsible for [fetching](../Models/Effects) and [setting](../Models/Reducers) posts in our model, where's the best place to fetch posts? One option is that we have a button that the user must click in order to load posts: 
 
 ```javascript
 const routes = {

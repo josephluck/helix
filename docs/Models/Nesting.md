@@ -1,8 +1,8 @@
 # Nesting
 
-So far, we've made a simple model that can fetch posts from an API and set the posts in state. However, as we build out our application, we'll be creating many models that serve different purposes, for example, there'll be a model to control the authentication and user logic and another model to allow the user to create a new post. If we limited ourselves to one model to do all of these things, we'd struggle to keep track of everything.
+So far, we've made a simple model that can [fetch posts](./Effects) from an API and [set posts](./Reducers) in [state](./State). However, as we build out our application, we'll be creating many models that serve different purposes. For example, a model to control the authentication and user logic and another model to allow the user to create a new post. If we limited ourselves to one model to do all of these things, we'd struggle to keep track of everything.
 
-To solve this scaling problem, Helix models support "Nesting" models like [russian dolls](https://media.giphy.com/media/X8HbeXDF7nzaM/giphy.gif).
+To solve this scaling problem, Helix models support "Nesting" models.
 
 ```javascript
 // Top Level Application Model
@@ -17,7 +17,7 @@ To solve this scaling problem, Helix models support "Nesting" models like [russi
 }
 ```
 
-We've changed our application model be state-less with a `models` key where we have "nested" our posts model alongside some other models in our application. We need to change our posts model to use the new nesting:
+The `models` key is used to "nest" our posts model alongside some other models in our application. Let's change our posts model to use the new nesting:
 
 ```javascript
 function posts(api) {
@@ -44,9 +44,9 @@ function posts(api) {
 }
 ```
 
-If you have a keen eye, you'll notice the only difference is where we call `receivePosts` in the effect. We need to reach further into actions as we've namespaced the "Posts" model under a `posts` key. Similarly, our state will be namespaced, so if we want to use posts from state, we need to access them under `state.posts.posts`. Essentially, state and actions for nested models get merged together under the key provided in `models`.
+If you have a keen eye, you'll notice the only difference between the nested model and the model we made [earlier](./Effects) is where we call the `receivePosts` reducer in the `fetch` effect. We need to reach further into actions as we've namespaced the "Posts" model under a `posts` key. Similarly, the "Posts" state will be namespaced, so if we want access posts, we need to reach into `state.posts.posts`. Essentially, `state` and `actions` for nested models get merged together under the key provided in the parent model's `models`.
 
-There's no limit to how much nesting you can do with Helix, and you still get 100% type safety.
+There's no limit to how much nesting you can do with Helix, and you can achieve 100% type safety.
 
 ### Effects
 
@@ -78,11 +78,11 @@ function posts(api) {
 }
 ```
 
-You'll notice that when we `fetch`, we're reaching in to other models to show an alert to the user to let them know that the posts have finished loading. Let's update our Typescript typings to deal with the new nesting.
+Inside the `fetch` effect, we're able to reach into other models to show an alert to the user to let them know that the posts have finished loading. Let's update our Typescript typings to deal with the new nesting.
 
 ### Typescript
 
-Let's make a type definition for our application-level `GlobalState` and `GlobalActions`. These new types will be used to tell Typescript what our application-level state and actions look like for pages and effects.
+We need a new type definition to describe our application-level `State` and `Actions`. We'll call these `GlobalState` and `GlobalActions` to differentiate them from model `State` and `Actions`.
 
 ```typescript
 // model.ts
@@ -112,7 +112,7 @@ const model = {
 }
 ```
 
-We'll make use of `GlobalState` and `GlobalActions` in our `Effect` types so that Typescript knows which state and actions are available in our `fetch` effect.
+Let's make use of `GlobalState` and `GlobalActions` in our `Effect` types so that the effect knows about the application-level state and actions:
 
 ```typescript
 // posts.ts
@@ -150,6 +150,7 @@ export default function model(api): Helix.Model<State, Reducers, Effects> {
       async fetch(state, actions) {
         const posts = await api.fetchPosts()
         actions.posts.receivePosts(posts)
+        actions.alert.showSuccess('Posts Loaded')
         return 'All done'
       }
     }

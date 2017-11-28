@@ -1,6 +1,8 @@
 # Reducers
 
-The only way to update a model's state in Helix is through a reducer. A reducer is a pure function that receives the current state of the model, any arguments passed in from the caller of the reducer and is expected to return a copy of the models state with the change applied. In our blog application, we'll need a way to receive posts from the server and set them in state, so that when we can display them in the page. We'll create a `resetState` reducer as well, so that when the user leaves the "Posts" page we can clear out the state and keep it fresh for next time.
+The only way to update a model's state in Helix is through a reducer. A reducer is a pure function that receives the current state of the model, any arguments passed in from the caller of the reducer and is expected to return a copy of the models state with the change applied. In our blog application, we'll need a way to receive posts from the server and set them in state, so that when we can display them in the page. We'll create a `resetState` reducer as well, so that when the user [leaves the page](../Views/Lifecycle-Hooks) we can clear out the state and keep it fresh for next time.
+
+Calling a reducer has the side effect of re-rendering the current page with the new state of the application.
 
 ```javascript
 const reducers = {
@@ -33,7 +35,7 @@ interface Reducers {
 }
 ```
 
-The type definition for `resetState` is a `Helix.Reducer0`, this is simply a withing without any arguments. Similarly, the standard `Helix.Reducer` is a reducer that takes one argument.
+The type definition for `resetState` is a `Helix.Reducer0`, this is simply a reducer without any arguments. Similarly, the standard `Helix.Reducer` is a reducer that takes one argument.
 
 ### The model so far
 

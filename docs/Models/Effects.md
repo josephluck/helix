@@ -1,6 +1,6 @@
 # Effects
 
-Effects allow us to orchestrate complex control flows in our application. Normally, effects are used for things like fetching data from an external service, submitting forms, error checking or anything that involves side-effects. Let's create an asynchronous effect that fetches posts from the API and calls the reducer we made [earlier](./Reducers.md).
+Effects allow us to orchestrate complex control flows in our application. Normally, effects are used for things like fetching data from an external service, submitting forms, error checking or anything that involves side-effects. Let's create an asynchronous effect that fetches posts from the API and calls the [reducer we made earlier](./Reducers.md).
 
 ```javascript
 const effects = {
@@ -43,7 +43,7 @@ You'll notice that we don't need to pass `state` and `actions` when we call `fet
 
 ### Typescript
 
-To be sure that when we call `actions.fetch` that we are passing the correct arguments, let's add some types to our effects:
+To be sure that when we call `actions.fetch` that we are passing the correct arguments, let's add some types:
 
 ```typescript
 interface Effects {
@@ -53,9 +53,9 @@ interface Effects {
 type Actions = Helix.Actions<Reducers, Effects>
 ```
 
-We've made a type for `Actions` that is a combination of `Reducers` and `Effects`. The `Actions` type gets passed to our `fetch` effect type, so that Typescript knows what actions are available.
+The `Actions` type is a combination of `Reducers` and `Effects` that passed to our `fetch` effect type, so that effect knows what actions are available.
 
-We've also provided a third generic to the `fetch` effect; `Promise<string>`. This generic let's Typescript know what this effect will return, which means that whoever calls the effect will know what the effect returns. Normally effects do not return anything, so the default value for the return generic is `void`.
+We've also provided a third generic to the `fetch` effect; `Promise<string>`. This generic informs Typescript of what this effect returns. Normally effects do not return anything, so the default value for the return generic is `void`.
 
 ### The model so far
 
