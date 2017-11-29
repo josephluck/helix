@@ -21,7 +21,7 @@ const title = ({ title, createdOn, createdBy, numberOfComments }: TitleProps) =>
     <div class='black-60 f6 mt4'>
       submitted
       ${moment(createdOn).fromNow()}
-      by ${name}.
+      by ${createdBy}.
       ${numberOfComments} comments
     </div>
   </div>
