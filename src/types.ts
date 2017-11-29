@@ -32,7 +32,12 @@ export namespace Helix {
   export type Reducer0<State> = Twine.Reducer0<State>
   export type Reducer<State, Payload> = Twine.Reducer<State, Payload>
   export type Effect0<Statetate, Actions, Return = void> = Twine.Effect0<Statetate, Actions, Return>
-  export type Effect<State, Actions, Payload, Return = void> = Twine.Effect<State, Actions, Payload, Return>
+  export type Effect<State, Actions, Payload, Return = void> = Twine.Effect<
+    State,
+    Actions,
+    Payload,
+    Return
+  >
   export type Actions<Reducers, Effects> = Twine.Actions<Reducers, Effects>
   export type Models<Models> = Twine.Models<Models>
 
@@ -50,7 +55,12 @@ export namespace Helix {
   export type Routes<State, Actions> = Record<string, Route<State, Actions>>
 
   // Config
-  export type Renderer<State, Actions> = (node: any, state: State, previous: State, actions: Actions) => any
+  export type Renderer<State, Actions> = (
+    node: Component<State, Actions>,
+    state: State,
+    previous: State,
+    actions: Actions,
+  ) => any
 
   export interface Config<State, Actions> {
     model: Twine.Model<any, any, any>

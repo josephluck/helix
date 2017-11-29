@@ -13,7 +13,10 @@ function combineObjects(a: any, b: any) {
   return Object.assign({}, a, b)
 }
 
-function wrap<S, A>(routes: Types.Helix.Routes<S, A>, fn: (key: string, route: any) => any): Types.Helix.Routes<S, A> {
+function wrap<S, A>(
+  routes: Types.Helix.Routes<S, A>,
+  fn: (key: string, route: any) => any,
+): Types.Helix.Routes<S, A> {
   return Object.keys(routes)
     .map(key => {
       let route = routes[key]
@@ -99,7 +102,11 @@ export default function helix<S, A>(
     }
   }
 
-  function onStateChange(newState: Types.Helix.HelixState<S>, newPrev: Types.Helix.HelixState<S>, newActions: Types.Helix.HelixActions<A>) {
+  function onStateChange(
+    newState: Types.Helix.HelixState<S>,
+    newPrev: Types.Helix.HelixState<S>,
+    newActions: Types.Helix.HelixActions<A>,
+  ) {
     currentState = newState
     previousState = newPrev
     currentActions = newActions
@@ -129,15 +136,13 @@ export default function helix<S, A>(
     if (onLeaveHook) {
       onLeaveHook(currentState, previousState, currentActions)
     }
-    onLeaveHook = typeof newLocation !== 'function'
-      ? newLocation.onLeave
-      : undefined
+    onLeaveHook = typeof newLocation !== 'function' ? newLocation.onLeave : undefined
     currentLocation = newLocation
   }
 
   function wrapRoutes(route: any, newLocation: Types.Helix.Route<S, A>) {
     // Route isn't used??? Check what it is...
-    return function (params: Record<string, string>, _: any, pathname: string) {
+    return function(params: Record<string, string>, _: any, pathname: string) {
       const differentRoute = currentState.location.pathname !== pathname
       const differentQuery =
         stringifyQueryFromLocation(currentState.location.query) !== (window.location.search || '?')
