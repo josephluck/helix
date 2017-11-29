@@ -41,7 +41,7 @@ const routes = {
 }
 ```
 
-When the user clicks to load the next page, Helix will detect that the query parameter for `page` has changed and rerender the page. We'll want to fetch the new page from the server when this happens, and for that we'll use lifecycle hooks.
+When the user clicks to load the next page, Helix will detect that the query parameter for `page` has changed and rerender the page. We'll want to fetch the new page from the server when this happens, and for that we'll use [lifecycle hooks](./Lifecycle-Hooks.md).
 
 ### 404 / Not Found Handling
 

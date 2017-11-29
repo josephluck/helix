@@ -50,7 +50,7 @@ If the user navigates to the same page the `onChange` lifecycle is called instea
 
 ### Typescript
 
-Since there are two types of page in Helix, "Component" and "Page", naturally, there are two typescript types:
+Since there are two types of page in Helix, "Component" and "Page", naturally, there are two corresponding typescript types:
 
 ```typescript
 import { GlobalState, GlobalActions } from './models'
