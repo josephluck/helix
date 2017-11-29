@@ -1,6 +1,6 @@
 # Lifecycle hooks
 
-We want to show blog posts when the user views the `/posts` route, and a single post when the user views the `/posts/:postId` route, assuming we have already made a model responsible for [fetching](../Models/Effects) and [setting](../Models/Reducers) posts in our model, where's the best place to fetch posts? One option is that we have a button that the user must click in order to load posts: 
+We want to show blog posts when the user views the `/posts` route, and a single post when the user views the `/posts/:postId` route, assuming we have already made a model responsible for [fetching](../Models/Effects.md) and [setting](../Models/Reducers.md) posts in our model, where's the best place to fetch posts? One option is that we have a button that the user must click in order to load posts: 
 
 ```javascript
 const routes = {
@@ -75,7 +75,7 @@ const routes: Helix.Routes<GlobalState, GlobalActions> = {
 }
 ```
 
-If we declare our pages inside the routes object, we can type our routes as `Helix.Routes<GlobalState, GlobalActions>` just like [before](./Routes). However, if we move our "Page" to a new file, we'll need to use the `Helix.Page<GlobalState, GlobalActions>` type instead:
+If we declare our pages inside the routes object, we can type our routes as `Helix.Routes<GlobalState, GlobalActions>` just like [before](./Routes.md). However, if we move our "Page" to a new file, we'll need to use the `Helix.Page<GlobalState, GlobalActions>` type instead:
 
 
 ```typescript

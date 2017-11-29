@@ -57,7 +57,7 @@ const routes = {
 
 ### Typescript
 
-Head over to the [models](../Models) section for an in-depth tutorial on type safety in models.
+Head over to the [models](../Models/README.md) section for an in-depth tutorial on type safety in models.
 
 It's simple to add type safety to Helix route definitions:
 
@@ -74,4 +74,4 @@ const routes: Helix.Routes<GlobalState, GlobalActions> = {
 }
 ```
 
-We'll get to the significance of `GlobalState` and `GlobalActions` in the [next section](./State-And-Actions).
+We'll get to the significance of `GlobalState` and `GlobalActions` in the [next section](./State-And-Actions/README.md).

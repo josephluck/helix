@@ -1,6 +1,6 @@
 # Nesting
 
-So far, we've made a simple model that can [fetch posts](./Effects) from an API and [set posts](./Reducers) in [state](./State). However, as we build out our application, we'll be creating many models that serve different purposes. For example, a model to control the authentication and user logic and another model to allow the user to create a new post. If we limited ourselves to one model to do all of these things, we'd struggle to keep track of everything.
+So far, we've made a simple model that can [fetch posts](./Effects.md) from an API and [set posts](./Reducers.md) in [state](./State.md). However, as we build out our application, we'll be creating many models that serve different purposes. For example, a model to control the authentication and user logic and another model to allow the user to create a new post. If we limited ourselves to one model to do all of these things, we'd struggle to keep track of everything.
 
 To solve this scaling problem, Helix models support "Nesting" models.
 
@@ -44,7 +44,7 @@ function posts(api) {
 }
 ```
 
-If you have a keen eye, you'll notice the only difference between the nested model and the model we made [earlier](./Effects) is where we call the `receivePosts` reducer in the `fetch` effect. We need to reach further into actions as we've namespaced the "Posts" model under a `posts` key. Similarly, the "Posts" state will be namespaced, so if we want access posts, we need to reach into `state.posts.posts`. Essentially, `state` and `actions` for nested models get merged together under the key provided in the parent model's `models`.
+If you have a keen eye, you'll notice the only difference between the nested model and the model we made [earlier](./Effects.md) is where we call the `receivePosts` reducer in the `fetch` effect. We need to reach further into actions as we've namespaced the "Posts" model under a `posts` key. Similarly, the "Posts" state will be namespaced, so if we want access posts, we need to reach into `state.posts.posts`. Essentially, `state` and `actions` for nested models get merged together under the key provided in the parent model's `models`.
 
 There's no limit to how much nesting you can do with Helix, and you can achieve 100% type safety.
 
