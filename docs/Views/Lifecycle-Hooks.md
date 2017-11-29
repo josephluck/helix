@@ -47,3 +47,58 @@ The execution order of lifecycle hooks is important. When a user navigates betwe
 2. `onEnter` of the entered page is called
 
 If the user navigates to the same page the `onChange` lifecycle is called instead of `onEnter` and `onLeave`. For example, if the "View Post" page has a link to the next post, the page has not really changed, but the `postId` URL parameter will have. Similarly, if the user clicks to load a new page in the list of pages, the query parameter `page` will change, so the `onChange` lifecycle hook will be called instead of `onEnter` and `onLeave`.
+
+### Typescript
+
+Since there are two types of page in Helix, "Component" and "Page", naturally, there are two typescript types:
+
+```typescript
+import { GlobalState, GlobalActions } from './models'
+
+const routes: Helix.Routes<GlobalState, GlobalActions> = {
+  '/posts': {
+    onEnter (state, prev, actions) {
+      actions.posts.fetch()
+    },
+    onLeave (state, prev, actions) {
+      actions.posts.reset()
+    },
+    view (state, prev, actions) {
+      return html`
+        <div>
+          <h1>Posts</h1>
+          ${state.posts.posts.map(post => html`<a href="/posts/${post.id}">${post.title}</a>`)}
+        </div>
+      `
+    }
+  },
+}
+```
+
+If we declare our pages inside the routes object, we can type our routes as `Helix.Routes<GlobalState, GlobalActions>` just like [before](./Routes). However, if we move our "Page" to a new file, we'll need to use the `Helix.Page<GlobalState, GlobalActions>` type instead:
+
+
+```typescript
+import { GlobalState, GlobalActions } from './models'
+
+const posts: Helix.Page<GlobalState, GlobalActions> = {
+  onEnter (state, prev, actions) {
+    actions.posts.fetch()
+  },
+  onLeave (state, prev, actions) {
+    actions.posts.reset()
+  },
+  view (state, prev, actions) {
+    return html`
+      <div>
+        <h1>Posts</h1>
+        ${state.posts.posts.map(post => html`<a href="/posts/${post.id}">${post.title}</a>`)}
+      </div>
+    `
+  }
+}
+
+const routes: Helix.Routes<GlobalState, GlobalActions> = {
+  '/posts': posts,
+}
+```

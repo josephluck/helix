@@ -11,6 +11,8 @@ const effects = {
 }
 ```
 
+The `fetch` effect doesn't take any arguments, however, similar to reducers, effects are able to take a single argument if necessary.
+
 You may have noticed that this effect is not referentially transparent, as in, you cannot be certain that every time you call it, you'll receive the same result, which makes testing particularly difficult. It would be useful if we could make this effect more reliable by injecting the API function.
 
 Since models in Helix are simple Javascript objects, we are able to take advantage of functions to make our effect more reliable during testing. Let's turn our object in to a function: 
@@ -28,7 +30,7 @@ function model(api) {
 }
 ```
 
-We've achived a kind of dependency injection through function arguments. We're able to mock out the API during testing so that we can perform assertions without having to worry about the impurity of the production API.
+We've achived a kind of dependency injection through function arguments. We're able to mock out the API during testing so that we can perform assertions that the API calls are being made.
 
 ### Returns
 
@@ -55,7 +57,7 @@ type Actions = Helix.Actions<Reducers, Effects>
 
 The `Actions` type is a combination of `Reducers` and `Effects` that passed to our `fetch` effect type, so that effect knows what actions are available.
 
-We've also provided a third generic to the `fetch` effect; `Promise<string>`. This generic informs Typescript of what this effect returns. Normally effects do not return anything, so the default value for the return generic is `void`.
+The third generic to the `fetch` effect (`Promise<string>`) informs Typescript of what the effect returns. Normally effects do not return anything so the default value for the return generic is `void`.
 
 ### The model so far
 
