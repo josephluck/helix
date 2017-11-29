@@ -14,6 +14,3 @@
   * [Lifecycle Hooks](Views/Lifecycle-Hooks.md)
   * [Layouts](Views/Layouts.md)
 * [Rendering](Rendering/README.md)
-  * [React](Rendering/React.md)
-  * [Yo Yo](Rendering/Yo-Yo.md)
-  * [Vanilla](Rendering/Vanilla.md)
