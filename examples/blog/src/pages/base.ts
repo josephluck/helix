@@ -1,4 +1,4 @@
-import { Helix } from '../../../../src'
+import { Helix } from '../../../../src' // 'helix-js'
 import * as html from 'yo-yo'
 import alert from '../components/alert'
 import navigation from '../components/navigation'

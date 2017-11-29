@@ -1,4 +1,4 @@
-import { Helix } from '../../../../src'
+import { Helix } from '../../../../src' // 'helix-js'
 import * as Alert from './alert'
 import * as Login from './login'
 import * as NewPost from './new-post'

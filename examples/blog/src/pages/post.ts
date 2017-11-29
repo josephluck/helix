@@ -1,4 +1,4 @@
-import { Helix } from '../../../../src'
+import { Helix } from '../../../../src' // 'helix-js'
 import * as html from 'yo-yo'
 import * as moment from 'moment'
 import base from './base'

@@ -1,5 +1,6 @@
 # Table Of Contents
 
+* [Getting Started](Getting-Started.md)
 * [Models](Models/README.md)
   * [State](Models/State.md)
   * [Reducers](Models/Reducers.md)
@@ -7,7 +8,8 @@
   * [Nesting](Models/Nesting.md)
   * [Scoping](Models/Scoping.md)
 * [Views & Routing](Views/README.md)
-  * [Defining Routes](Views/Routes.md)
+  * [Component Usage](Views/Component.md)
+  * [Route Usage](Views/Routes.md)
   * [Accessing State and Actions](Views/State-And-Actions.md)
   * [Lifecycle Hooks](Views/Lifecycle-Hooks.md)
   * [Layouts](Views/Layouts.md)

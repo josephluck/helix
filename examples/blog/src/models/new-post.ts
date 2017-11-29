@@ -1,4 +1,4 @@
-import { Helix } from '../../../../src'
+import { Helix } from '../../../../src' // 'helix-js'
 import api from '../api'
 import * as Form from './form'
 import { GlobalState, GlobalActions } from './'
@@ -8,7 +8,7 @@ export interface Fields {
   body: string
 }
 
-export interface LocalState { }
+export interface LocalState {}
 
 export interface State extends LocalState {
   form: Form.State<Fields>

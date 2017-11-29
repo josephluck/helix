@@ -1,4 +1,4 @@
-import { Helix } from '../../../../src'
+import { Helix } from '../../../../src' // 'helix-js'
 import api from '../api'
 import * as Form from './form'
 import { Comment } from '../api/fixtures/comment'

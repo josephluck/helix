@@ -1,15 +1,6 @@
-import * as yoyo from 'yo-yo'
-import helix, { Helix } from '../../src'
-const html = yoyo
-
-function render(mount: HTMLElement): Helix.Renderer<State, Actions> {
-  let _dom = mount
-  return function (route, state, prev, actions) {
-    if (route) {
-      _dom = yoyo.update(_dom, route(state, prev, actions))
-    }
-  }
-}
+import helix, { Helix } from '../../src' // 'helix-js'
+import renderer from '../../src/renderers/yo-yo'
+import * as html from 'yo-yo'
 
 let numberOfTimesRendered: number = 0
 
@@ -79,7 +70,11 @@ const Navigation: Helix.Component<State, Actions> = (state, prev, actions) => ht
   </div>
 `
 
-const Layout = (child: Helix.Component<State, Actions>): Helix.Component<State, Actions> => (state, prev, actions) => {
+const Layout = (child: Helix.Component<State, Actions>): Helix.Component<State, Actions> => (
+  state,
+  prev,
+  actions,
+) => {
   numberOfTimesRendered++
   return html`
     <div>
@@ -113,10 +108,10 @@ type State = Helix.HelixState<ModelState>
 
 interface Reducers {
   setState: Helix.Reducer<ModelState, Partial<ModelState>>
-  increment: Helix.Reducer<ModelState>
+  increment: Helix.Reducer0<ModelState>
 }
 
-interface Effects { }
+interface Effects {}
 
 type ModelActions = Helix.Actions<Reducers, Effects>
 type Actions = Helix.HelixActions<ModelActions>
@@ -131,7 +126,7 @@ function model(): Helix.Model<ModelState, Reducers, Effects> {
     },
     reducers: {
       setState: (state, newState) => newState,
-      increment: (state) => ({ count: state.count + 1 }),
+      increment: state => ({ count: state.count + 1 }),
     },
   }
 }
@@ -215,14 +210,14 @@ document.body.appendChild(app1)
 helix({
   model: model(),
   routes: routes(),
-  render: render(app1),
+  render: renderer(app1),
 })
 
 const app2 = document.createElement('div')
 document.body.appendChild(app2)
 
 function component(): Helix.Component<State, Actions> {
-  return function (state, prev, actions) {
+  return function(state, prev, actions) {
     return html`
       <div>
         <a href='#' id='app-2-anchor'>AppTwoAnchor</a>
@@ -240,5 +235,5 @@ function component(): Helix.Component<State, Actions> {
 helix({
   model: model(),
   component: component(),
-  render: render(app2),
+  render: renderer(app2),
 })

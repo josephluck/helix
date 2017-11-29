@@ -1,4 +1,4 @@
-import { Helix } from '../../../../src'
+import { Helix } from '../../../../src' // 'helix-js'
 import api from '../api'
 import { Post } from '../api/fixtures/post'
 import { GlobalState, GlobalActions } from './'

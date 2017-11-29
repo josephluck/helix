@@ -1,5 +1,5 @@
-import { Helix } from '../../../../src'
-import { GlobalState, GlobalActions } from '../models' 
+import { Helix } from '../../../../src' // 'helix-js'
+import { GlobalState, GlobalActions } from '../models'
 import home from './home'
 import post from './post'
 import login from './login'
