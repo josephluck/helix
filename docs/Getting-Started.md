@@ -18,7 +18,7 @@ Typical for large single-page-applications, the `routes` option instructs Helix 
 helix({
   model: model,
   routes: routes,
-  renderer: renderer(document.getElementById('root))
+  renderer: renderer(document.getElementById('root'))
 })
 ```
 
@@ -34,7 +34,7 @@ Typical for adding interactivity to static websites, or using Helix in existing 
 helix({
   model: model,
   component: component,
-  renderer: renderer(document.getElementById('root))
+  renderer: renderer(document.getElementById('root'))
 })
 ```
 

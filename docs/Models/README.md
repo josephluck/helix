@@ -2,7 +2,7 @@
 
 Models are at the heart of Helix. Models are responsible for holding and manipulating the state of a Helix application in a safe and reliable way.
 
-In Helix, there is only one model; a single place to store and control the state of the application. The model is passed in to the [Helix configuration](../Configuration):
+In Helix, there is only one model; a single place to store and control the state of the application. The model is passed in to the [configuration](../Getting-Started.md):
 
 ```javascript
 import model from './model'
