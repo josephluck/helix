@@ -60,7 +60,7 @@
     "selenium-server": "^3.7.1",
     "sheet-router": "^4.2.3",
     "ts-node": "^3.3.0",
-    "twine-js": "*"
+    "twine-js": "git://github.com/ohgoodlord/twine.git#feature/2.0.0"
   },
   "jest": {
     "transform": {
