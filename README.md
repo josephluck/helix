@@ -1,8 +1,8 @@
-# Helix
+# ⚒ Helix
 
 Helix provides provides an architecture that allows front-end developers to build robust, predictable, rich client side applications. Helix is a thin library that provides the glue between views, state and rendering.
 
-Created by Joseph Luck and the good folks at Goodlord.
+Created by [Joseph Luck](http://www.josephluck.co.uk/) and the good folks at [Goodlord](http://www.goodlord.co).
 
 # Omakase
 
@@ -78,7 +78,7 @@ const component = (state, previousState, actions) => html`
 
 ```javascript
 import helix from 'helix-js'
-import renderer from 'helix-yo-yo'
+import renderer from 'helix-js/src/renderers/yo-yo'
 
 helix({
   model: {
