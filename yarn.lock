@@ -4143,6 +4143,10 @@ prettier-bytes@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/prettier-bytes/-/prettier-bytes-1.0.4.tgz#994b02aa46f699c50b6257b5faaa7fe2557e62d6"
 
+prettier@^1.7.4:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.9.2.tgz#96bc2132f7a32338e6078aeb29727178c6335827"
+
 prettier@^1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.8.2.tgz#bff83e7fd573933c607875e5ba3abbdffb96aeb8"
@@ -5222,7 +5226,7 @@ tsify@^3.0.3:
     through2 "^2.0.0"
     tsconfig "^5.0.3"
 
-tslint-config-prettier@^1.6.0:
+tslint-config-prettier@^1.5.0, tslint-config-prettier@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/tslint-config-prettier/-/tslint-config-prettier-1.6.0.tgz#fec1ee8fb07e8f033c63fed6b135af997f31962a"
 
@@ -5258,9 +5262,12 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
 
-twine-js@*:
-  version "1.9.3"
-  resolved "https://registry.yarnpkg.com/twine-js/-/twine-js-1.9.3.tgz#f105c42603a2a4db95f399d66d4606cfe27d71ca"
+twine-js@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/twine-js/-/twine-js-2.0.0.tgz#26c66ad13f8540e84422bb0e11b44dd55c990122"
+  dependencies:
+    prettier "^1.7.4"
+    tslint-config-prettier "^1.5.0"
 
 type-check@~0.3.2:
   version "0.3.2"

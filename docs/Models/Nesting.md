@@ -4,88 +4,7 @@ So far, we've made a simple model that can [fetch posts](./Effects.md) from an A
 
 To solve this scaling problem, Helix models support "Nesting" models.
 
-```javascript
-// Top Level Application Model
-{
-  state: {},
-  models: {
-    posts: posts(api),
-    newPost: newPost(api),
-    user: user(api),
-    alert: alert()
-  }
-}
-```
-
-The `models` key is used to "nest" our posts model alongside some other models in our application. Let's change our posts model to use the new nesting:
-
-```javascript
-function posts(api) {
-  return {
-    state: {
-      posts: ['Learn Helix']
-    },
-    reducers: {
-      resetState () {
-        return { posts: [] }
-      },
-      receivePosts(state, posts) {
-        return { posts }
-      }
-    },
-    effects: {
-      async fetch(state, actions) {
-        const posts = await api.fetchPosts()
-        actions.posts.receivePosts(posts)
-        return 'All done'
-      }
-    }
-  }
-}
-```
-
-If you have a keen eye, you'll notice the only difference between the nested model and the model we made [earlier](./Effects.md) is where we call the `receivePosts` reducer in the `fetch` effect. We need to reach further into actions as we've namespaced the "Posts" model under a `posts` key. Similarly, the "Posts" state will be namespaced, so if we want access posts, we need to reach into `state.posts.posts`. Essentially, `state` and `actions` for nested models get merged together under the key provided in the parent model's `models`.
-
-There's no limit to how much nesting you can do with Helix, and you can achieve 100% type safety.
-
-### Effects
-
-When we break our application up in to many smaller models, we can use effects to our advantage. Unless a model is [scoped](./Scoping.md), effects are able to use the state and actions from all over our application:
-
-```javascript
-function posts(api) {
-  return {
-    state: {
-      posts: ['Learn Helix']
-    },
-    reducers: {
-      resetState () {
-        return { posts: [] }
-      },
-      receivePosts(state, posts) {
-        return { posts }
-      }
-    },
-    effects: {
-      async fetch(state, actions) {
-        const posts = await api.fetchPosts()
-        actions.posts.receivePosts(posts)
-        actions.alert.showSuccess('Posts Loaded')
-        return 'All done'
-      }
-    }
-  }
-}
-```
-
-Inside the `fetch` effect, we're able to reach into other models to show an alert to the user to let them know that the posts have finished loading. Let's update our Typescript typings to deal with the new nesting.
-
-### Typescript
-
-We need a new type definition to describe our application-level `State` and `Actions`. We'll call these `GlobalState` and `GlobalActions` to differentiate them from model `State` and `Actions`.
-
 ```typescript
-// model.ts
 import * as Posts from './posts'
 import * as NewPost from './new-post'
 import * as User from './user'
@@ -112,10 +31,9 @@ const model = {
 }
 ```
 
-Let's make use of `GlobalState` and `GlobalActions` in our `Effect` types so that the effect knows about the application-level state and actions:
+The `models` key is used to "nest" our posts model alongside some other models in our application. Let's change our posts model to use the new nesting:
 
 ```typescript
-// posts.ts
 import { GlobalState, GlobalActions } from './model'
 
 export interface State {
@@ -133,7 +51,7 @@ interface Effects {
 
 export type Actions = Helix.Actions<Reducers, Effects>
 
-export default function model(api): Helix.Model<State, Reducers, Effects> {
+export function model(api): Helix.Model<State, Reducers, Effects> {
   return {
     state: {
       posts: ['Learn Helix']
@@ -157,3 +75,9 @@ export default function model(api): Helix.Model<State, Reducers, Effects> {
   }
 }
 ```
+
+If you have a keen eye, you'll notice the only difference between the nested model and the model we made [earlier](./Effects.md) is where we call the `receivePosts` reducer in the `fetch` effect. We need to reach further into actions as we've namespaced the "Posts" model under a `posts` key. Similarly, the "Posts" state will be namespaced, so if we want access posts, we need to reach into `state.posts.posts`. Essentially, `state` and `actions` for nested models get merged together under the key provided in the parent model's `models`.
+
+When we break our application up in to many smaller models, we can use effects to our advantage. Unless a model is [scoped](./Scoping.md), effects are able to use the state and actions from all over our application, and we've demonstrated this by reaching in to another model, alert, to show a success message when the posts have finished loading.
+
+There's no limit to how much nesting you can do with Helix, and you can achieve 100% type safety.

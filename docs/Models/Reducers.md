@@ -4,43 +4,6 @@ The only way to update a model's state in Helix is through a reducer. A reducer 
 
 Calling a reducer has the side effect of re-rendering the current page with the new state of the application.
 
-```javascript
-const reducers = {
-  resetState() {
-    return { posts: [] }
-  },
-  receivePosts(state, posts) {
-    return { posts }
-  }
-}
-```
-
-Sometimes it's useful to know what the updated state is from the call-site. Since a reducer returns the state of the model, whoever calls a reducer will receive an updated copy of the model's state, for example:
-
-```javascript
-const state = actions.receivePosts(['Learn Helix', 'Profit'])
-console.log(state) // { posts: ['Learn Helix', 'Profit'] }
-```
-
-You'll notice that we don't have to pass `state` when we call `actions.receivePosts`. Helix takes care of injecting the latest state in to the reducer function for us.
-
-### Typescript
-
-To be sure that when we call `actions.receivePosts`, we are passing the correct arguments, let's add some types to our reducers:
-
-```typescript
-interface Reducers {
-  resetState: Helix.Reducer0<State>
-  receivePosts: Helix.Reducer<State, string[]>
-}
-```
-
-The type definition for `resetState` is a `Helix.Reducer0`, this is simply a reducer without any arguments. Similarly, the standard `Helix.Reducer` is a reducer that takes one argument.
-
-### The model so far
-
-Let's recap what we've got:
-
 ```typescript
 interface State {
   posts: string[]
@@ -50,6 +13,8 @@ interface Reducers {
   resetState: Helix.Reducer0<State>
   receivePosts: Helix.Reducer<State, string[]>
 }
+
+interface Effects {}
 
 const model: Helix.Model<State, Reducers, Effects> = {
   state: {
@@ -62,6 +27,19 @@ const model: Helix.Model<State, Reducers, Effects> = {
     receivePosts(state, posts) {
       return { posts }
     }
-  }
+  },
 }
 ```
+
+Sometimes it's useful to know what the updated state is from the call-site. Since a reducer returns the state of the model, whoever calls a reducer will receive an updated copy of the model's state, for example:
+
+```typescript
+const state = actions.receivePosts(['Learn Helix', 'Profit'])
+console.log(state) // { posts: ['Learn Helix', 'Profit'] }
+```
+
+You'll notice that we don't have to pass `state` when we call `actions.receivePosts`. Helix takes care of injecting the latest state in to the reducer function for our convenience.
+
+### Types
+
+The type definition for `resetState` is a `Helix.Reducer0`, this is simply a reducer without any arguments. Similarly, the standard type `Helix.Reducer` is a reducer that takes one argument.
