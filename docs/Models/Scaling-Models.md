@@ -1,4 +1,4 @@
-# Reusing Model Logic
+# Scaling Models
 
 So far, we've made a simple model that can [fetch posts](./Effects.md) from an API and [set posts](./Reducers.md) in [state](./State.md). However, as we build out our application, we'll be creating many models that serve different purposes. For example, a model to control the authentication and user logic and another model to allow the user to create a new post. If we limited ourselves to one model to do all of these things, we'd struggle to keep track of everything.
 

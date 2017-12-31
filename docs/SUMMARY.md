@@ -5,7 +5,7 @@
   * [State](Models/State.md)
   * [Reducers](Models/Reducers.md)
   * [Effects](Models/Effects.md)
-  * [Model Reuse](Models/Model-Reuse.md)
+  * [Scaling Models](Models/Scaling-Models.md)
   * [Scoping](Models/Scoping.md)
 * [Views & Routing](Views/README.md)
   * [Component Usage](Views/Component.md)
