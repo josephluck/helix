@@ -96,21 +96,3 @@ helix({
 ```
 
 Over the course of [the documentation](https://josephluck.gitbooks.io/helix), we'll showcase Helix's architecture by building a simple blog application.
-
-# Comparisons to other libraries
-
-One of the most common questions I get asked is 'Why not use Redux?', and my answer is that you should definitely use this stack if you're happy with it.
-
-Whilst the below may seem like a rant, Redux is an amazingly simple library that popularised many concepts from functional programming such as immutable single-state data structures and pure functions. You should definitely use Redux if you want to use something thats battle-tested with a huge community behind it, however I built Helix to solve some of the gripes I had with Redux and I want to be honest in my reasoning.
-
-The main problem I had was with Redux's dispatcher; Actions in Redux are meant to be serializable for the purpose of time-travel debugging and hot-reloading, but the dispatcher's additional level of indirection introduced patterns such as action constants and action creators, increasing the amount of boilerplate necessary to achive a good level of safety. Additionally, when paired with React, the Redux store is connected directly to a react component which makes the react component impure more difficult to test. Helix is designed with simplicity in mind, using the most common tools in the JavaScript language such as objects and functions. 
-
-The second problem I had was that it feels cumbersome to scale Redux to a large application whilst maintaining a decent level of safety. For example, it's difficult to know when you dispatch an action what actions are available unless you introduce boilerplate with constants or action creators (as is recommended in the [Redux documentation](https://redux.js.org/docs/faq/Actions.html#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants)). Helix has official Typescript types that allow you to easily see what actions are available through editor auto-completion. 
-
-The third problem was that I found it difficult use the same reducer multiple times. The official pattern to solve this in Redux is to use [string identifiers](https://redux.js.org/docs/recipes/reducers/ReusingReducerLogic.html) to namespace reducers. It feels hacky modifying strings for this purpose (not to mention that it's particularly difficult to make these reducers type-safe) and often ended up resorting back to local React component state which is considered an anti-pattern. Helix's state management system is designed with scale and safety in mind; allowing nesting models in one another to build a type-safe tree-like structure; models can be reused multiple times without having to use string identifiers.
-
-I originally built the state management library [Twine](http://github.com/ohgoodlord/twine) that Helix uses to solve these gripes before fleshing out Helix. Twine naturally evolved in to Helix to provide a batteries-included framework for building these safe, functional and scalable applications.
-
-Whilst React, Redux and React Router are all amazing tried and tested technologies that have helped front-end developers build rich client-side applications, there's a lot of 'magic' involved using React [higher-order-components](https://reactjs.org/docs/higher-order-components.html) and React's context feature to connect the pieces together, which can lead to confusion and ambiguity.
-
-Helix applications are connected and represented by pure functions and plain ol' JavaScript objects that are both safe and easy to understand. This isn't to say there isn't magic happening under Helix's hood though, for example, Helix listens to the browser's history API for client-side routing and sprinkles some magic in your state-management code for your convenience. If you want to use the most popular and battle tested technologies, definitely combine React with Redux and React Router.

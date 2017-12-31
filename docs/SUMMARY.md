@@ -5,7 +5,7 @@
   * [State](Models/State.md)
   * [Reducers](Models/Reducers.md)
   * [Effects](Models/Effects.md)
-  * [Nesting](Models/Nesting.md)
+  * [Model Reuse](Models/Model-Reuse.md)
   * [Scoping](Models/Scoping.md)
 * [Views & Routing](Views/README.md)
   * [Component Usage](Views/Component.md)
@@ -14,3 +14,4 @@
   * [Lifecycle Hooks](Views/Lifecycle-Hooks.md)
   * [Layouts](Views/Layouts.md)
 * [Rendering](Rendering/README.md)
+* [FAQ](FAQ.md)
