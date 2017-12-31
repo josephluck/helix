@@ -6,7 +6,7 @@
   * [Reducers](Models/Reducers.md)
   * [Effects](Models/Effects.md)
   * [Scaling Models](Models/Scaling-Models.md)
-  * [Scoping](Models/Scoping.md)
+  * [Reusing Logic](Models/Reusing-Model-Logic.md)
 * [Views & Routing](Views/README.md)
   * [Component Usage](Views/Component.md)
   * [Route Usage](Views/Routes.md)

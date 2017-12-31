@@ -78,6 +78,6 @@ export function model(api): Helix.Model<State, Reducers, Effects> {
 
 If you have a keen eye, you'll notice the only difference between the nested model and the model we made [earlier](./Effects.md) is where we call the `receivePosts` reducer in the `fetch` effect. We need to reach further into actions as we've namespaced the "Posts" model under a `posts` key. Similarly, the "Posts" state will be namespaced, so if we want access posts, we need to reach into `state.posts.posts`. Essentially, `state` and `actions` for nested models get merged together under the key provided in the parent model's `models`.
 
-When we break our application up in to many smaller models, we can use effects to our advantage. Unless a model is [scoped](./Scoping.md), effects are able to use the state and actions from all over our application, and we've demonstrated this by reaching in to another model, alert, to show a success message when the posts have finished loading.
+When we break our application up in to many smaller models, we can use effects to our advantage. Unless a model is [scoped](./Reusing-Model-Logic.md), effects are able to use the state and actions from all over our application, and we've demonstrated this by reaching in to another model, alert, to show a success message when the posts have finished loading.
 
 There's no limit to how much nesting you can do with Helix, and you can achieve 100% type safety.
