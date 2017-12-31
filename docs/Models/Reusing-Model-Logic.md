@@ -1,4 +1,4 @@
-# Scoped Models
+# Reusing Model Logic
 
 There are two types of model in Helix, one being a "Standard" model and the other a "Scoped" model. All the models we've made so far have been of the "Standard" type. The main difference between the two is that a "Scoped" model is designed to be reused in multiple situations in an application. For example, we will be creating a "Form" model for our blog application that will be reused in the "Login" and "Create Post" pages.
 
@@ -16,9 +16,9 @@ interface Effects<F> {
 
 type Actions<F> = Helix.Actions<Reducers<F>, Effects<F>>
 
-function form<F>(state: F): Helix.Model<State<F>, Reducers<F>, Effects<F>> {
+function form<F>(defaultForm: F): Helix.Model<State<F>, Reducers<F>, Effects<F>> {
   return {
-    state,
+    state: defaultForm,
     reducers: {
       setForm(state, form) {
         return form
@@ -39,24 +39,18 @@ function form<F>(state: F): Helix.Model<State<F>, Reducers<F>, Effects<F>> {
 }
 ```
 
+You can see from the use of the `F` generic that we've created a general purpose model that can be configured with many different form fields.
+
 The form model can manage the state of form fields, including a call to the API. Let's use it in our "Login" model and our "New Post" model:
 
 ```javascript
-const loginModel = {
+const model = {
   state: {},
   reducers: {},
   effects: {},
   models: {
-    form: form({ username: '', password: '' })
-  }
-}
-
-const newPostModel = {
-  state: {},
-  reducers: {},
-  effects: {},
-  models: {
-    form: form({ title: '', body: '', excerpt: '' })
+    loginForm: form({ username: '', password: '' }),
+    newPostForm: form({ title: '', body: '', excerpt: '' }),
   }
 }
 ```
@@ -86,7 +80,7 @@ function form<F>(state: F): Helix.Model<State<F>, Reducers<F>, Effects<F>> {
 }
 ```
 
-So this may looks super complex as we're passing this `F` generic all over the place, however the power we get here is huge. For example, if I create a form model with the `F` defined as follows:
+So this may looks super complex as we're passing this `F` generic all over the place, however the power we get here is huge. For example, if we create a form model with the `F` defined as follows:
 
 ```typescript
 interface Fields {
@@ -108,7 +102,7 @@ Type 'string' is not assignable to type 'number'.
 Similarly, if I try and set a property on the form that isn't in our `Fields` interface:
 
 ```typescript
-actions.setField({ key: 'nickname', value: 'Chlo' })
+actions.loginForm.setField({ key: 'nickname', value: 'Chlo' })
 ```
 
 We receive an error since we've tried to set a key that is not in our form definition:
