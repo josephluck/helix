@@ -57,13 +57,14 @@ function location(
 ): Types.Helix.Model<Types.LocationState, Types.LocationReducers, Types.LocationEffects> {
   return {
     state: {
+      name: '',
       pathname: '',
       params: {},
       query: {},
     },
     reducers: {
-      receiveRoute(currentState, { pathname, params, query }) {
-        return { pathname, params, query }
+      receiveRoute(currentState, { name, pathname, params, query }) {
+        return { name, pathname, params, query }
       },
     },
     effects: {
@@ -140,14 +141,14 @@ export default function helix<S, A>(
     currentLocation = newLocation
   }
 
-  function wrapRoutes(route: any, newLocation: Types.Helix.Route<S, A>) {
-    // Route isn't used??? Check what it is...
+  function wrapRoutes(routeName: string, newLocation: Types.Helix.Route<S, A>) {
     return function(params: Record<string, string>, _: any, pathname: string) {
       const differentRoute = currentState.location.pathname !== pathname
       const differentQuery =
         stringifyQueryFromLocation(currentState.location.query) !== (window.location.search || '?')
       if (differentRoute || differentQuery) {
         currentActions.location.receiveRoute({
+          name: routeName,
           pathname,
           query: parseQueryFromLocation(window.location.search),
           params,

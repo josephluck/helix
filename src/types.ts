@@ -4,6 +4,7 @@ export { Twine } from 'twine-js'
 export type Params = Record<string, string>
 
 export interface LocationState {
+  name: string
   pathname: string
   params: Params
   query: Params
