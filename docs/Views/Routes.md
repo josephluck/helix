@@ -15,7 +15,7 @@ const routes = {
 
 ### Route parameters
 
-In our blog application, we want our users to be able to click on a post to read it's contents. The URL may look something like `/posts/123`, where `123` is a route parameter that corresponds to a post's `id` in the database.
+In our blog application, we want our users to be able to click on a post to read its contents. The URL may look something like `/posts/123`, where `123` is a route parameter that corresponds to a post's `id` in the database.
 
 Helix will place any route parameters in state under `state.location.params`. The `params` object is keyed according to the name of the parameter, i.e:
 
