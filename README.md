@@ -69,30 +69,34 @@ const component = (state, previousState, actions) => html`
 
 ```JavaScript
 import helix from 'helix-js'
+import * as html from 'yo-yo'
 import renderer from 'helix-js/src/renderers/yo-yo'
 
-helix({
-  model: {
-    state: {
-      todos: [
-        'Learn Helix',
-        'Profit'
-      ]
-    },
-    reducers: {
-      addTodo (state, todo) {
-        return { todos: [...state.todos, todo] }
-      }
-    },
-  },
-  component: (state, previousState, actions) => html`
-    <div>
-      ${state.todos.map(todo => html`<span>${todo}</span>`)}
-      <button onclick=${e => actions.addTodo('New Todo')}>Add Todo</button>
-    </div>
-  `,
-  render: renderer(document.getElementById('root'))
-})
+const state = {
+  todos: [
+    'Learn Helix',
+    'Profit'
+  ]
+}
+
+const reducers = {
+  addTodo (state, todo) {
+    return { todos: [...state.todos, todo] }
+  }
+}
+
+const model = { state, reducers }
+
+const component = (state, _previous, actions) => html`
+  <div>
+    ${state.todos.map(todo => html`<span>${todo}</span>`)}
+    <button onclick=${e => actions.addTodo('New Todo')}>Add Todo</button>
+  </div>
+`
+
+const render = renderer(document.getElementById('root'))
+
+helix({ model, component, render })
 ```
 
 Over the course of [the documentation](https://josephluck.gitbooks.io/helix), we'll showcase Helix's architecture by building a simple blog application.
