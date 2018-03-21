@@ -1,4 +1,4 @@
-import * as href from 'sheet-router/href'
+import * as href from 'nanohref'
 import * as qs from 'qs'
 import * as rlite from 'rlite-router'
 import * as twineLog from 'twine-js/lib/log'
@@ -63,8 +63,8 @@ function location(
       query: {},
     },
     reducers: {
-      receiveRoute(currentState, { name, pathname, params, query }) {
-        return { name, pathname, params, query }
+      receiveRoute(currentState, params) {
+        return params
       },
     },
     effects: {
@@ -147,10 +147,11 @@ export default function helix<S, A>(
       const differentQuery =
         stringifyQueryFromLocation(currentState.location.query) !== (window.location.search || '?')
       if (differentRoute || differentQuery) {
+        const query = parseQueryFromLocation(window.location.search)
         currentActions.location.receiveRoute({
           name: routeName,
           pathname,
-          query: parseQueryFromLocation(window.location.search),
+          query,
           params,
         })
         lifecycle(newLocation)
@@ -166,10 +167,7 @@ export default function helix<S, A>(
   }
 
   function setLocationAndRender(location: Window['location']): void {
-    const search = Object.keys(location.search).length
-      ? `?${qs.stringify(location.search, { encode: false })}`
-      : ''
-    const path = `${location.pathname}${search}`
+    const path = `${location.pathname}${location.search}`
     window.history.pushState('', '', path)
     rerender(getComponent(location.pathname))
   }

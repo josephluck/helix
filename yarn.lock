@@ -3669,6 +3669,10 @@ nanoassert@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/nanoassert/-/nanoassert-1.1.0.tgz#4f3152e09540fde28c76f44b19bbcd1d5a42478d"
 
+nanohref@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/nanohref/-/nanohref-3.0.1.tgz#3879428e4fa80b7d5484692471cfa0b4a3348f8e"
+
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
@@ -4723,14 +4727,6 @@ shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
 
-sheet-router@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/sheet-router/-/sheet-router-4.2.3.tgz#c587779e0e252112e7f63e4fd873a568bee5fc62"
-  dependencies:
-    global "^4.3.0"
-    wayfarer "^6.2.1"
-    xtend "^4.0.1"
-
 shell-quote@^1.4.2, shell-quote@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.6.1.tgz#f4781949cce402697127430ea3b3c5476f481767"
@@ -5451,12 +5447,6 @@ watchify@^3.3.1:
     outpipe "^1.1.0"
     through2 "^2.0.0"
     xtend "^4.0.0"
-
-wayfarer@^6.2.1:
-  version "6.6.2"
-  resolved "https://registry.yarnpkg.com/wayfarer/-/wayfarer-6.6.2.tgz#3baadc1c4b85ef9be26ee75fac6cde9b075ae473"
-  dependencies:
-    xtend "^4.0.1"
 
 webidl-conversions@^3.0.0:
   version "3.0.1"

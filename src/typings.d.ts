@@ -1,4 +1,4 @@
-declare module 'sheet-router/href' {
+declare module 'nanohref' {
   const func: any
   export = func
 }
