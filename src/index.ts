@@ -115,23 +115,19 @@ export default function helix<S, A>(
   }
 
   function getComponent(path: string) {
-    if (configuration.routes) {
-      return router(path)
-    } else {
-      return configuration.component ? configuration.component : null
-    }
+    return configuration.routes
+      ? router(path)
+      : configuration.component
+        ? configuration.component
+        : null
   }
 
   function lifecycle(newLocation: Types.Helix.Route<S, A>) {
     if (typeof newLocation !== 'function') {
-      if (currentLocation === newLocation) {
-        if (newLocation.onUpdate) {
-          newLocation.onUpdate(currentState, previousState, currentActions)
-        }
-      } else {
-        if (newLocation.onEnter) {
-          newLocation.onEnter(currentState, previousState, currentActions)
-        }
+      if (currentLocation === newLocation && newLocation.onUpdate) {
+        newLocation.onUpdate(currentState, previousState, currentActions)
+      } else if (newLocation.onEnter) {
+        newLocation.onEnter(currentState, previousState, currentActions)
       }
     }
     if (onLeaveHook) {
@@ -142,16 +138,15 @@ export default function helix<S, A>(
   }
 
   function wrapRoutes(routeName: string, newLocation: Types.Helix.Route<S, A>) {
-    return function(params: Record<string, string>, _: any, pathname: string) {
+    return function (params: Record<string, string>, _: any, pathname: string) {
       const differentRoute = currentState.location.pathname !== pathname
       const differentQuery =
         stringifyQueryFromLocation(currentState.location.query) !== (window.location.search || '?')
       if (differentRoute || differentQuery) {
-        const query = parseQueryFromLocation(window.location.search)
         currentActions.location.receiveRoute({
           name: routeName,
           pathname,
-          query,
+          query: parseQueryFromLocation(window.location.search),
           params,
         })
         lifecycle(newLocation)

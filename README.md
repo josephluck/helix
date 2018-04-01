@@ -100,3 +100,15 @@ helix({ model, component, render })
 ```
 
 Over the course of [the documentation](https://josephluck.gitbooks.io/helix), we'll showcase Helix's architecture by building a simple blog application.
+
+# Contributing
+
+## Installation
+
+To run locally, clone this repository and install npm dependencies:
+
+```bash
+yarn install
+```
+
+You'll also need to install Google Chrome and Java on your machine to run the selenium-based tests.
