@@ -1,4 +1,4 @@
-# ⚒ Helix
+# :cyclone: Helix
 
 Helix is a batteries-included front-end framework designed with Typescript in mind.
 
